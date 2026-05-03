@@ -21,7 +21,7 @@ import { db, doc, getDoc, onSnapshot } from './firebase';
 export default function App() {
   const { user, loading, logout } = useAuth();
   const [activeAreaId, setActiveAreaId] = useState<string | 'dashboard' | 'settings'>('dashboard');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [userSettings, setUserSettings] = useState<any>(null);
   const [isLocked, setIsLocked] = useState(false);
 
@@ -71,10 +71,23 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* Sidebar Overlay for Mobile */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside 
-        className={`bg-black/40 backdrop-blur-xl border-r border-white/10 transition-all duration-300 flex flex-col z-40 ${
-          isSidebarOpen ? 'w-64' : 'w-20'
+        className={`bg-black/40 backdrop-blur-xl border-r border-white/10 transition-all duration-300 flex flex-col z-50 fixed inset-y-0 left-0 lg:sticky lg:h-screen ${
+          isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'
         }`}
       >
         <div className="p-6 flex items-center justify-between border-b border-white/5">
@@ -180,8 +193,14 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto h-screen relative">
         <div className="scanline" />
-        <header className="bg-black/20 backdrop-blur-md sticky top-0 z-30 border-b border-white/5 px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
+        <header className="bg-black/20 backdrop-blur-md sticky top-0 z-30 border-b border-white/5 px-4 sm:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-2 hover:bg-white/5 rounded-lg transition-colors text-gray-400 hover:text-[#00ff9d]"
+            >
+              <Menu size={20} />
+            </button>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#00ff9d] animate-pulse" />
               <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Sistema_Online</span>
@@ -204,7 +223,7 @@ export default function App() {
           </div>
         </header>
 
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeAreaId}

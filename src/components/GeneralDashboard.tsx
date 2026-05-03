@@ -15,10 +15,11 @@ import {
 } from 'recharts';
 import { CONFIG_AREAS } from '../config/areas';
 import { GenericRecord } from '../types';
-import { Award, Zap, Target, TrendingUp, Plus } from 'lucide-react';
+import { Award, Zap, Target, TrendingUp, Plus, Info, ChevronRight, BookOpen } from 'lucide-react';
 import { useRecords } from '../hooks/useRecords';
 import { useAuth } from './AuthContext';
 import { db, doc, onSnapshot as onSnapshotFirestore } from '../firebase';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface GeneralDashboardProps {
   onNavigate?: (areaId: string) => void;
@@ -29,6 +30,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
   const { records: allRecords, loading: recordsLoading } = useRecords();
   const [userSettings, setUserSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
+  const [showGuide, setShowGuide] = useState(true);
 
   React.useEffect(() => {
     if (!user) return;
@@ -87,6 +89,71 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Guia de Início Rápido */}
+      <AnimatePresence>
+        {showGuide && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 relative">
+              <button 
+                onClick={() => setShowGuide(false)}
+                className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"
+                title="Fechar Guia"
+              >
+                <Plus size={18} className="rotate-45" />
+              </button>
+              
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#00ff9d]/20 flex items-center justify-center shrink-0">
+                  <BookOpen size={20} className="text-[#00ff9d]" />
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">Guia_De_Inicializacao_Sistemica</h3>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-1">Como_Operar_Seu_LIFE_OS</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex gap-3 p-3 bg-black/20 rounded-2xl border border-white/5 group hover:border-[#00ff9d]/30 transition-all">
+                      <div className="text-[#00ff9d] mt-0.5"><ChevronRight size={14} /></div>
+                      <div>
+                        <p className="text-[11px] font-bold text-gray-200">1. Navegue Pelas Áreas</p>
+                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Use o menu lateral para acessar Saúde, Finanças, Carreira, etc.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 p-3 bg-black/20 rounded-2xl border border-white/5 group hover:border-[#00d4ff]/30 transition-all">
+                      <div className="text-[#00d4ff] mt-0.5"><ChevronRight size={14} /></div>
+                      <div>
+                        <p className="text-[11px] font-bold text-gray-200">2. Adicione Registros</p>
+                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Clique em <span className="text-white">+ NOVO REGISTRO</span> em qualquer área para alimentar o sistema.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 p-3 bg-black/20 rounded-2xl border border-white/5 group hover:border-amber-500/30 transition-all">
+                      <div className="text-amber-500 mt-0.5"><ChevronRight size={14} /></div>
+                      <div>
+                        <p className="text-[11px] font-bold text-gray-200">3. Expanda sua Roda</p>
+                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Conclua itens para ver seu Score Global e a Roda da Vida Digital crescerem.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 p-3 bg-black/20 rounded-2xl border border-white/5 group hover:border-purple-500/30 transition-all">
+                      <div className="text-purple-500 mt-0.5"><ChevronRight size={14} /></div>
+                      <div>
+                        <p className="text-[11px] font-bold text-gray-200">4. Domine as Visualizações</p>
+                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Alterne entre Kanban, Tabela e Calendário para gerenciar cada área.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Meta Suprema */}
       {userSettings?.supreme_goal && (
         <div className="bg-gradient-to-r from-[#00ff9d]/10 to-transparent border border-[#00ff9d]/20 p-8 rounded-3xl relative overflow-hidden">
@@ -145,13 +212,13 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Radar Chart */}
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-white/20 transition-all">
-          <h3 className="text-sm font-mono font-bold tracking-[0.3em] text-gray-500 mb-8 uppercase text-center">Roda_Da_Vida_Digital</h3>
-          <div className="h-[400px]">
+        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-8 hover:border-white/20 transition-all">
+          <h3 className="text-xs sm:text-sm font-mono font-bold tracking-[0.3em] text-gray-500 mb-4 sm:mb-8 uppercase text-center">Roda_Da_Vida_Digital</h3>
+          <div className="h-[300px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={areaScores}>
+              <RadarChart cx="50%" cy="50%" outerRadius={window.innerWidth < 640 ? "60%" : "80%"} data={areaScores}>
                 <PolarGrid stroke="rgba(255,255,255,0.05)" />
-                <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: 10 }} />
+                <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: window.innerWidth < 640 ? 8 : 10 }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Radar
@@ -170,13 +237,13 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
         </section>
 
         {/* Comparative Bars */}
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:border-white/20 transition-all">
-          <h3 className="text-sm font-mono font-bold tracking-[0.3em] text-gray-500 mb-8 uppercase text-center">Performance_Por_Área</h3>
-          <div className="h-[400px]">
+        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-8 hover:border-white/20 transition-all">
+          <h3 className="text-xs sm:text-sm font-mono font-bold tracking-[0.3em] text-gray-500 mb-4 sm:mb-8 uppercase text-center">Performance_Por_Área</h3>
+          <div className="h-[300px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={areaScores} layout="vertical">
                 <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" tick={{ fill: '#666', fontSize: 10 }} width={120} />
+                <YAxis dataKey="name" type="category" tick={{ fill: '#666', fontSize: window.innerWidth < 640 ? 8 : 10 }} width={window.innerWidth < 640 ? 80 : 120} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
                 <Bar 
                   dataKey="score" 

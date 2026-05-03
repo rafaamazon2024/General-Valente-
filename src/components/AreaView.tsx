@@ -162,7 +162,7 @@ export default function AreaView({ config }: AreaViewProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl w-fit">
+      <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar scroll-smooth">
         {config.views.map(view => (
           <button
             key={view}
@@ -181,12 +181,12 @@ export default function AreaView({ config }: AreaViewProps) {
 
       {/* Type Selector (if multiple types) */}
       {config.tiposItem.length > 1 && (activeView === 'Tabela' || activeView === 'Metas') && (
-        <div className="flex items-center gap-4 border-b border-white/10 pb-4">
+        <div className="flex items-center gap-4 border-b border-white/10 pb-4 overflow-x-auto no-scrollbar">
           {config.tiposItem.map(type => (
             <button
               key={type}
               onClick={() => setSelectedType(type)}
-              className={`text-[10px] font-mono font-bold uppercase tracking-[0.2em] pb-2 transition-all relative ${
+              className={`text-[10px] font-mono font-bold uppercase tracking-[0.2em] pb-2 transition-all relative whitespace-nowrap ${
                 selectedType === type ? 'text-white' : 'text-gray-600 hover:text-gray-400'
               }`}
             >

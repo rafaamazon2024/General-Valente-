@@ -25,8 +25,8 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md">
+      <div className="bg-[#0a0a0a] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in slide-in-from-bottom sm:zoom-in duration-300">
         <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
           <h3 className="text-lg font-mono font-bold tracking-widest uppercase text-[#00ff9d]">
             {title}
@@ -35,7 +35,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[85vh] sm:max-h-[70vh] overflow-y-auto custom-scrollbar pb-12 sm:pb-6">
           {fields.map((field) => {
             // Conditional logic for Rating
             if (field.nome === 'rating' && formData.status !== 'Lido') {

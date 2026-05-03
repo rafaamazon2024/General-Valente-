@@ -226,8 +226,8 @@ export default function DynamicTable({
   return (
     <div className="space-y-4">
       {/* Filter Bar */}
-      <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-wrap items-center gap-4">
-        <div className="flex-1 min-w-[200px] relative">
+      <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row md:items-center gap-4">
+        <div className="w-full md:flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
           <input
             type="text"
@@ -361,7 +361,7 @@ export default function DynamicTable({
                       </td>
                     ))}
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => setNoteModal({ record, isOpen: true })}
                           title="Bloco de Notas"
