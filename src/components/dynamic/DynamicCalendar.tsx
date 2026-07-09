@@ -37,51 +37,51 @@ export default function DynamicCalendar({ config, records, selectedType }: Dynam
   const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+    <div className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-sm font-mono font-bold tracking-widest text-[#00ff9d] uppercase">
+        <h3 className="text-sm font-mono font-bold tracking-widest text-[#d97706] uppercase">
           {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
         </h3>
         <div className="flex gap-2">
-          <button onClick={prevMonth} className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all">
+          <button onClick={prevMonth} className="p-2 hover:bg-black/5 rounded-xl text-gray-500 hover:text-[#14120d] transition-all">
             <ChevronLeft size={20} />
           </button>
-          <button onClick={() => setCurrentMonth(new Date())} className="px-4 py-2 hover:bg-white/5 rounded-xl text-[10px] font-mono font-bold text-gray-500 hover:text-white uppercase tracking-widest">
+          <button onClick={() => setCurrentMonth(new Date())} className="px-4 py-2 hover:bg-black/5 rounded-xl text-[10px] font-mono font-bold text-gray-500 hover:text-[#14120d] uppercase tracking-widest">
             Hoje
           </button>
-          <button onClick={nextMonth} className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all">
+          <button onClick={nextMonth} className="p-2 hover:bg-black/5 rounded-xl text-gray-500 hover:text-[#14120d] transition-all">
             <ChevronRight size={20} />
           </button>
         </div>
       </div>
-      
-      <div className="grid grid-cols-7 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden">
+
+      <div className="grid grid-cols-7 gap-px bg-black/5 border border-black/5 rounded-xl overflow-hidden">
         {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-          <div key={day} className="bg-black/60 p-2 text-center text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">
+          <div key={day} className="bg-black/5 p-2 text-center text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">
             {day}
           </div>
         ))}
-        
+
         {days.map((day, i) => {
           const dayRecords = getRecordsForDay(day);
           const isCurrentMonth = isSameDay(startOfMonth(day), monthStart);
           const isToday = isSameDay(day, new Date());
 
           return (
-            <div 
-              key={i} 
-              className={`min-h-[100px] p-2 bg-black/40 transition-colors hover:bg-white/5 ${!isCurrentMonth ? 'opacity-20' : ''}`}
+            <div
+              key={i}
+              className={`min-h-[100px] p-2 bg-white/50 transition-colors hover:bg-black/5 ${!isCurrentMonth ? 'opacity-30' : ''}`}
             >
               <div className="flex justify-between items-center mb-2">
-                <span className={`text-[10px] font-mono font-bold ${isToday ? 'text-[#00ff9d]' : 'text-gray-600'}`}>
+                <span className={`text-[10px] font-mono font-bold ${isToday ? 'text-[#d97706]' : 'text-gray-500'}`}>
                   {format(day, 'd')}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 {dayRecords.map(r => (
-                  <div 
-                    key={r.id} 
-                    className="text-[8px] font-mono p-1 rounded bg-white/5 border-l-2 truncate"
+                  <div
+                    key={r.id}
+                    className="text-[8px] font-mono p-1 rounded bg-black/5 border-l-2 truncate text-gray-700"
                     style={{ borderLeftColor: config.cor }}
                     title={r.data.titulo || r.data.nome}
                   >

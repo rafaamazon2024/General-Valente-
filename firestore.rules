@@ -14,6 +14,15 @@ service cloud.firestore {
     //   - alert_time: string (optional) - Settings
     //   - alerts_enabled: bool (optional) - Settings
     //   - created_at: string (ISO date-time)
+    //   - fcmTokens: list (optional) - Web Push tokens do dispositivo, gerenciados pelo próprio client
+    //   - streak_days / dias_sem_cumprir / total_points / punishment_active: escritos SOMENTE pelas
+    //     Cloud Functions via Admin SDK (que ignora estas regras) - o client nunca pode alterá-los.
+    //
+    // Collection: daily_checkins (doc id: "{uid}_{YYYY-MM-DD}") - escrito só pelas Cloud Functions
+    //   - uid, date, status ('pending'|'completed_yes'|'completed_no'|'auto_resolved_no'), responded_at
+    //
+    // Subcollection: users/{userId}/medals (doc id: auto) - escrito só pelas Cloud Functions
+    //   - granted_at, reason
     //
     // Collection: records
     // Document ID: recordId (Auto-generated)
@@ -50,7 +59,16 @@ service cloud.firestore {
              data.email is string &&
              (!('displayName' in data) || data.displayName is string) &&
              (!('alert_time' in data) || data.alert_time is string) &&
-             (!('alerts_enabled' in data) || data.alerts_enabled is bool);
+             (!('alerts_enabled' in data) || data.alerts_enabled is bool) &&
+             (!('fcmTokens' in data) || data.fcmTokens is list);
+    }
+
+    // Campos de progresso/punição só podem ser alterados pelas Cloud Functions (Admin SDK,
+    // que ignora estas regras) - bloqueia qualquer escrita direta do client a esses campos.
+    function progressFieldsLocked() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(
+        ['streak_days', 'dias_sem_cumprir', 'total_points', 'punishment_active']
+      );
     }
 
     function isValidRecord(data) {
@@ -68,19 +86,33 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && isValidUser(request.resource.data);
-      allow update: if isOwner(userId) && isValidUser(request.resource.data) && 
-                      request.resource.data.email == resource.data.email; // Email is immutable
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) &&
+                      !request.resource.data.keys().hasAny(
+                        ['streak_days', 'dias_sem_cumprir', 'total_points', 'punishment_active']
+                      );
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) &&
+                      request.resource.data.email == resource.data.email && // Email is immutable
+                      progressFieldsLocked();
       allow delete: if isAdmin();
+
+      match /medals/{medalId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if false; // só Cloud Functions (Admin SDK ignora esta regra)
+      }
     }
 
     match /records/{recordId} {
       allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
       allow create: if isAuthenticated() && isValidRecord(request.resource.data);
-      allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin()) && 
+      allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin()) &&
                       isValidRecord(request.resource.data) &&
                       request.resource.data.uid == resource.data.uid; // Cannot transfer ownership
       allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    match /daily_checkins/{checkinId} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow write: if false; // só Cloud Functions (Admin SDK ignora esta regra)
     }
   }
 }

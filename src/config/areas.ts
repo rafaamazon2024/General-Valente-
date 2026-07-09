@@ -1,5 +1,8 @@
 import { AreaConfig } from '../types';
 
+// Campos "prazo"/"data" (tipo:'date') + "status" com valor 'Concluído'/'Pago' definem o que conta
+// como "pendência do dia" pro sistema de notificação/punição. Ver functions/src/dailyCommitments.ts
+// (lista derivada manualmente destes campos — mantenha as duas em sincronia se mudar algo aqui).
 export const CONFIG_AREAS: AreaConfig[] = [
   {
     id: 'desenvolvimento',
@@ -81,6 +84,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Andamento', 'Concluído'] }
       ],
       rotina: [
@@ -118,6 +122,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
         { nome: 'valorAlvo', label: 'Valor Alvo', tipo: 'number' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Andamento', 'Concluído'] }
       ]
     },
@@ -172,13 +177,14 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Andamento', 'Concluído'] }
       ],
       acao: [
         { nome: 'titulo', label: 'Ação', tipo: 'text', required: true },
         { nome: 'tipo', label: 'Tipo', tipo: 'text' },
         { nome: 'frequencia', label: 'Frequência', tipo: 'text' },
-        { nome: 'prazo', label: 'Prazo', tipo: 'text' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Planejado', 'Concluído'] }
       ]
     },
@@ -202,10 +208,12 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
         { nome: 'frequencia', label: 'Frequência', tipo: 'text' },
         { nome: 'objetivo', label: 'Objetivo', tipo: 'text' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Pendente', 'Concluído'] }
       ],
       tarefa: [
         { nome: 'titulo', label: 'Tarefa', tipo: 'text', required: true },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta', 'Urgente'] },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] }
       ]
@@ -231,6 +239,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
         { nome: 'tipo', label: 'Tipo', tipo: 'text' },
         { nome: 'categoria', label: 'Categoria', tipo: 'text' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Planejado', 'Concluído'] }
       ]
     },
@@ -255,6 +264,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Andamento', 'Concluído'] }
       ]
     },
@@ -276,12 +286,13 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       tarefa: [
         { nome: 'titulo', label: 'Tarefa', tipo: 'text', required: true },
-        { nome: 'prazo', label: 'Prazo', tipo: 'text' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta'] },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Andamento', 'Concluído'] }
       ]
     },
@@ -303,7 +314,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
-        { nome: 'prazo', label: 'Prazo', tipo: 'text' },
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Prioritário', 'A Começar', 'Concluído'] }
       ],
       acao: [
@@ -330,7 +341,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
         { nome: 'tempo', label: 'Tempo/Mês', tipo: 'text' },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Começar', 'Planejado', 'Ativo'] }
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Começar', 'Planejado', 'Ativo', 'Concluído'] }
       ]
     },
     colunasKanban: ['Ideia', 'Planejado', 'Realizado'],
@@ -351,8 +363,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
-        { nome: 'prazo', label: 'Prazo', tipo: 'text' },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Começar', 'Planejado', 'Ativo'] }
+        { nome: 'prazo', label: 'Prazo', tipo: 'date' },
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Começar', 'Planejado', 'Ativo', 'Concluído'] }
       ],
       projeto: [
         { nome: 'titulo', label: 'Projeto Criativo', tipo: 'text', required: true },

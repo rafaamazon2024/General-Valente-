@@ -43,24 +43,24 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
         const progress = getProgress(record);
         const progressColor = getProgressColor(progress);
         return (
-          <div key={record.id} className="bg-black/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl relative overflow-hidden group hover:border-white/20 transition-all">
+          <div key={record.id} className="bg-white/50 backdrop-blur-xl border border-black/10 p-6 rounded-2xl relative overflow-hidden group hover:border-black/20 transition-all">
             <div className="absolute top-0 left-0 w-1 h-full transition-all duration-300" style={{ backgroundColor: progressColor }} />
-            
+
             <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-white/5 rounded-lg">
+              <div className="p-2 bg-black/5 rounded-lg">
                 <Target size={18} style={{ color: progressColor }} />
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => onEdit(record)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-all">
+                <button onClick={() => onEdit(record)} className="p-1.5 hover:bg-black/5 rounded-lg text-gray-500 hover:text-[#14120d] transition-all">
                   <Edit2 size={14} />
                 </button>
-                <button onClick={() => onDelete(record.id)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-red-500 transition-all">
+                <button onClick={() => onDelete(record.id)} className="p-1.5 hover:bg-black/5 rounded-lg text-gray-500 hover:text-red-500 transition-all">
                   <Trash2 size={14} />
                 </button>
               </div>
             </div>
 
-            <h4 className="text-lg font-bold text-gray-200 mb-4 truncate">
+            <h4 className="text-lg font-bold text-gray-700 mb-4 truncate">
               {record.data.titulo || record.data.nome || record.data.projeto || record.data.atividade || 'Meta'}
             </h4>
 
@@ -68,19 +68,19 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
               <div className="flex justify-between items-end">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">Progresso</span>
-                  <span className="text-2xl font-mono font-bold text-white">{progress}%</span>
+                  <span className="text-2xl font-mono font-bold text-[#14120d]">{progress}%</span>
                 </div>
-                {progress === 100 && <Award className="text-amber-500 animate-bounce" size={24} />}
+                {progress === 100 && <Award className="text-amber-600 animate-bounce" size={24} />}
               </div>
 
-              <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                <div 
-                  className="h-full transition-all duration-1000" 
+              <div className="w-full bg-black/5 h-2 rounded-full overflow-hidden">
+                <div
+                  className="h-full transition-all duration-1000"
                   style={{ width: `${progress}%`, backgroundColor: progressColor }}
                 />
               </div>
 
-              <div className="flex justify-between text-[9px] font-mono text-gray-600 uppercase tracking-widest">
+              <div className="flex justify-between text-[9px] font-mono text-gray-500 uppercase tracking-widest">
                 <span>{record.data.paginaAtual || record.data.aulaAtual || record.data.streakAtual || 0} unidades</span>
                 <span>{record.data.totalPaginas || record.data.totalAulas || record.data.metaStreak || '---'} total</span>
               </div>
@@ -89,7 +89,7 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
         );
       })}
       {typeRecords.length === 0 && (
-        <div className="col-span-full py-12 text-center text-gray-500 font-mono text-xs uppercase tracking-widest border border-dashed border-white/10 rounded-2xl">
+        <div className="col-span-full py-12 text-center text-gray-500 font-mono text-xs uppercase tracking-widest border border-dashed border-black/10 rounded-2xl">
           NENHUMA_META_DEFINIDA_PARA_{selectedType.toUpperCase()}
         </div>
       )}

@@ -26,7 +26,7 @@ interface DynamicChartProps {
 
 export default function DynamicChart({ config, records, selectedType, onFilterRequest }: DynamicChartProps) {
   const [hiddenSegments, setHiddenSegments] = useState<string[]>([]);
-  const COLORS = [config.cor, '#00d4ff', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'];
+  const COLORS = [config.cor, '#0e7490', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'];
 
   const typeRecords = React.useMemo(() => {
     return records.filter(r => r.type === selectedType);
@@ -35,12 +35,12 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
   if (typeRecords.length === 0) {
     // ...
     return (
-      <div className="flex flex-col items-center justify-center h-[400px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center">
-        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+      <div className="flex flex-col items-center justify-center h-[400px] bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-8 text-center">
+        <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-4">
           <span className="text-2xl opacity-50">{config.icon}</span>
         </div>
-        <h3 className="text-sm font-mono font-bold text-gray-400 uppercase tracking-widest">Nenhum dado disponível</h3>
-        <p className="text-[10px] font-mono text-gray-600 mt-2 uppercase tracking-widest">Adicione seu primeiro item para ver as estatísticas!</p>
+        <h3 className="text-sm font-mono font-bold text-gray-600 uppercase tracking-widest">Nenhum dado disponível</h3>
+        <p className="text-[10px] font-mono text-gray-500 mt-2 uppercase tracking-widest">Adicione seu primeiro item para ver as estatísticas!</p>
       </div>
     );
   }
@@ -83,9 +83,9 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#0a0a0a] border border-white/10 p-3 rounded-xl shadow-2xl backdrop-blur-md">
-          <p className="text-[10px] font-mono font-bold text-[#00ff9d] uppercase mb-1">{label || payload[0].name}</p>
-          <p className="text-xs text-white font-bold">
+        <div className="bg-white border border-black/10 p-3 rounded-xl shadow-2xl backdrop-blur-md">
+          <p className="text-[10px] font-mono font-bold text-[#d97706] uppercase mb-1">{label || payload[0].name}</p>
+          <p className="text-xs text-[#14120d] font-bold">
             {payload[0].value} {payload[0].name === 'value' ? 'R$' : 'Itens'}
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {config.graficos.includes('pizza') && pieData.length > 0 && (
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-sm hover:border-white/20 transition-all">
+        <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all">
           <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Distribuição_Por_Tipo</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -136,15 +136,15 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
       )}
 
       {config.graficos.includes('barras') && (
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-sm hover:border-white/20 transition-all">
+        <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all">
           <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Status_Geral</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#666' }} />
-                <YAxis tick={{ fontSize: 10, fill: '#666' }} />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(20,18,13,0.08)" />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#888' }} />
+                <YAxis tick={{ fontSize: 10, fill: '#888' }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(20,18,13,0.05)' }} />
                 <Bar 
                   dataKey="count" 
                   fill={config.cor} 
@@ -164,21 +164,21 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
       )}
 
       {config.graficos.includes('linha') && lineData.length > 0 && (
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-sm hover:border-white/20 transition-all lg:col-span-2">
+        <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all lg:col-span-2">
           <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Evolução_Temporal</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lineData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#666' }} />
-                <YAxis tick={{ fontSize: 10, fill: '#666' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(20,18,13,0.08)" />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#888' }} />
+                <YAxis tick={{ fontSize: 10, fill: '#888' }} />
                 <Tooltip content={<CustomTooltip />} />
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke={config.cor} 
-                  strokeWidth={2} 
-                  dot={{ r: 4, fill: config.cor, strokeWidth: 2, stroke: '#0a0a0a' }}
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke={config.cor}
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: config.cor, strokeWidth: 2, stroke: '#ffffff' }}
                   activeDot={{ r: 6, strokeWidth: 0 }}
                   animationDuration={500}
                 />

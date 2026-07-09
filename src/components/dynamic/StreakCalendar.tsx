@@ -16,26 +16,26 @@ export default function StreakCalendar({ streak, color, name }: StreakCalendarPr
   });
 
   return (
-    <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-2xl hover:border-white/20 transition-all">
+    <div className="bg-white/50 backdrop-blur-xl border border-black/10 p-4 rounded-2xl hover:border-black/20 transition-all">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest">{name || 'CALENDÁRIO_DE_STREAK'}</h3>
-          <p className="text-[8px] font-mono text-gray-600 uppercase tracking-widest">Últimas 12 semanas</p>
+          <p className="text-[8px] font-mono text-gray-500 uppercase tracking-widest">Últimas 12 semanas</p>
         </div>
-        <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
-          <span className="text-xl font-mono font-bold text-white">{streak}</span>
+        <div className="flex items-center gap-2 bg-black/5 px-3 py-1 rounded-lg border border-black/5">
+          <span className="text-xl font-mono font-bold text-[#14120d]">{streak}</span>
           <span className="text-[8px] font-mono text-gray-500 uppercase leading-none">DIAS<br/>STREAK</span>
         </div>
       </div>
-      
+
       <div className="flex justify-center">
         <div className="grid grid-flow-col grid-rows-7 gap-1 w-fit">
           {days.map((day, i) => (
-            <div 
+            <div
               key={i}
               className="w-2.5 h-2.5 rounded-sm transition-all duration-500"
-              style={{ 
-                backgroundColor: day.isFilled ? color : 'rgba(255, 255, 255, 0.05)',
+              style={{
+                backgroundColor: day.isFilled ? color : 'rgba(20, 18, 13, 0.06)',
                 opacity: day.opacity
               }}
             />

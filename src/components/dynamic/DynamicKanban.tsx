@@ -45,34 +45,34 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
   } : undefined;
 
   return (
-    <div 
+    <div
       ref={setNodeRef}
       style={style}
-      className={`bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-xl hover:border-white/20 transition-all group ${isDragging ? 'opacity-50 z-50 ring-2 ring-[#00ff9d]' : ''}`}
+      className={`bg-white/50 backdrop-blur-xl border border-black/10 p-4 rounded-xl hover:border-black/20 transition-all group ${isDragging ? 'opacity-50 z-50 ring-2 ring-[#d97706]' : ''}`}
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <div {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing p-1 text-gray-600 hover:text-gray-400">
+          <div {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing p-1 text-gray-500 hover:text-gray-700">
             <GripVertical size={12} />
           </div>
-          <span className="text-[9px] font-mono text-[#00ff9d] uppercase tracking-widest">{record.type}</span>
+          <span className="text-[9px] font-mono text-[#d97706] uppercase tracking-widest">{record.type}</span>
         </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onClick={() => onEdit(record)} className="p-1 text-gray-500 hover:text-white"><Edit2 size={12} /></button>
+          <button onClick={() => onEdit(record)} className="p-1 text-gray-500 hover:text-[#14120d]"><Edit2 size={12} /></button>
           <button onClick={() => onDelete(record.id)} className="p-1 text-gray-500 hover:text-red-500"><Trash2 size={12} /></button>
         </div>
       </div>
-      <h4 className="text-sm font-bold text-gray-200 mb-2">
+      <h4 className="text-sm font-bold text-gray-700 mb-2">
         {record.data.titulo || record.data.nome || record.data.projeto || record.data.atividade || record.data.item || 'Sem Título'}
       </h4>
-      
+
       {/* Content Snippet */}
       {(record.data.conteudo || record.data.descricao) && (
         <p className="text-[10px] text-gray-500 line-clamp-3 font-mono leading-relaxed mb-2">
           {record.data.conteudo || record.data.descricao}
         </p>
       )}
-      
+
       {/* Progress Bars */}
       {record.data.totalPaginas && record.data.paginaAtual !== undefined && (
         <div className="mt-3">
@@ -80,12 +80,12 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
             <span>Progresso</span>
             <span>{Math.round((record.data.paginaAtual / record.data.totalPaginas) * 100)}%</span>
           </div>
-          <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-            <div 
-              className="h-full transition-all duration-500" 
-              style={{ 
+          <div className="w-full bg-black/5 h-1 rounded-full overflow-hidden">
+            <div
+              className="h-full transition-all duration-500"
+              style={{
                 width: `${Math.min(100, (record.data.paginaAtual / record.data.totalPaginas) * 100)}%`,
-                backgroundColor: config.cor 
+                backgroundColor: config.cor
               }}
             />
           </div>
@@ -93,7 +93,7 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
       )}
 
       {record.data.valor && (
-        <p className="text-xs font-mono text-amber-500 mt-2">
+        <p className="text-xs font-mono text-amber-600 mt-2">
           {record.data.tipo === 'Despesa' ? '-' : '+'} R$ {Number(record.data.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
         </p>
       )}
@@ -107,14 +107,14 @@ function KanbanColumn({ column, records, config, onEdit, onDelete, onAdd, record
   });
 
   return (
-    <div ref={setNodeRef} className={`flex flex-col gap-4 rounded-2xl transition-colors ${isOver ? 'bg-white/5' : ''}`}>
+    <div ref={setNodeRef} className={`flex flex-col gap-4 rounded-2xl transition-colors ${isOver ? 'bg-black/5' : ''}`}>
       <div className="flex items-center justify-between px-2">
         <h3 className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em]">
           {column} <span className="ml-2 opacity-30">({records.filter((r: any) => recordDataToStatus(r.data) === column).length})</span>
         </h3>
-        <button 
+        <button
           onClick={() => onAdd(column)}
-          className="p-1 hover:bg-white/5 rounded-md text-gray-500 hover:text-[#00ff9d] transition-colors"
+          className="p-1 hover:bg-black/5 rounded-md text-gray-500 hover:text-[#d97706] transition-colors"
         >
           <Plus size={14} />
         </button>
@@ -208,8 +208,8 @@ export default function DynamicKanban({ config, records, selectedType, onEdit, o
       
       <DragOverlay>
         {activeId ? (
-          <div className="bg-black/60 backdrop-blur-2xl border border-[#00ff9d]/50 p-4 rounded-xl shadow-2xl opacity-90 scale-105">
-            <h4 className="text-sm font-bold text-white">
+          <div className="bg-white/80 backdrop-blur-2xl border border-[#d97706]/50 p-4 rounded-xl shadow-2xl opacity-90 scale-105">
+            <h4 className="text-sm font-bold text-[#14120d]">
               {records.find(r => r.id.toString() === activeId)?.data.titulo || 'Arrastando...'}
             </h4>
           </div>

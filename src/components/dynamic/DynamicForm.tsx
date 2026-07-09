@@ -25,13 +25,13 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md">
-      <div className="bg-[#0a0a0a] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in slide-in-from-bottom sm:zoom-in duration-300">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
-          <h3 className="text-lg font-mono font-bold tracking-widest uppercase text-[#00ff9d]">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-md">
+      <div className="bg-white border-t sm:border border-black/10 rounded-t-3xl sm:rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in slide-in-from-bottom sm:zoom-in duration-300">
+        <div className="p-6 border-b border-black/10 flex items-center justify-between bg-black/5">
+          <h3 className="text-lg font-mono font-bold tracking-widest uppercase text-[#d97706]">
             {title}
           </h3>
-          <button onClick={onCancel} className="p-2 hover:bg-white/5 rounded-full transition-colors text-gray-400">
+          <button onClick={onCancel} className="p-2 hover:bg-black/5 rounded-full transition-colors text-gray-500">
             <X size={20} />
           </button>
         </div>
@@ -48,17 +48,17 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                   {field.label}
                   {field.required && <span className="text-red-500">*</span>}
                 </label>
-                
+
                 {field.tipo === 'select' ? (
                   <select
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm appearance-none"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm appearance-none"
                   >
-                    <option value="" className="bg-[#0a0a0a]">Selecione...</option>
+                    <option value="" className="bg-white">Selecione...</option>
                     {field.options?.map((opt) => (
-                      <option key={opt} value={opt} className="bg-[#0a0a0a]">{opt}</option>
+                      <option key={opt} value={opt} className="bg-white">{opt}</option>
                     ))}
                   </select>
                 ) : field.tipo === 'textarea' ? (
@@ -66,18 +66,18 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm min-h-[100px] resize-none"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm min-h-[100px] resize-none"
                     placeholder={field.label.toUpperCase()}
                   />
                 ) : field.tipo === 'checkbox' ? (
-                  <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-black/5 border border-black/10">
                     <input
                       type="checkbox"
                       checked={formData[field.nome] || false}
                       onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.checked })}
-                      className="w-5 h-5 rounded border-white/10 bg-white/5 text-[#00ff9d] focus:ring-[#00ff9d]/20"
+                      className="w-5 h-5 rounded border-black/10 bg-black/5 text-[#d97706] focus:ring-[#d97706]/20"
                     />
-                    <span className="text-sm text-gray-400 font-mono">{field.label}</span>
+                    <span className="text-sm text-gray-600 font-mono">{field.label}</span>
                   </div>
                 ) : field.tipo === 'date' ? (
                   <input
@@ -85,7 +85,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm"
                   />
                 ) : field.tipo === 'time' ? (
                   <input
@@ -93,7 +93,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm"
                   />
                 ) : field.tipo === 'url' ? (
                   <input
@@ -101,7 +101,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm"
                     placeholder="HTTPS://..."
                   />
                 ) : field.tipo === 'number' ? (
@@ -110,7 +110,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm"
                     placeholder={field.label.toUpperCase()}
                   />
                 ) : (
@@ -119,7 +119,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                     required={field.required}
                     value={formData[field.nome] || ''}
                     onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-sm"
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm"
                     placeholder={field.label.toUpperCase()}
                   />
                 )}
@@ -128,7 +128,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
           })}
           <button
             type="submit"
-            className="w-full bg-[#00ff9d] hover:bg-[#00cc7d] text-black p-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#00ff9d]/20 uppercase tracking-[0.2em] text-xs"
+            className="w-full bg-[#d97706] hover:bg-[#c2680a] text-white p-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#d97706]/20 uppercase tracking-[0.2em] text-xs"
           >
             SALVAR_REGISTRO
           </button>

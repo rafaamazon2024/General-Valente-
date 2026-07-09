@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Save, Bell, User, Zap, Target, Clock, Loader2 } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { db, doc, getDoc, setDoc } from '../firebase';
+import { useFcm } from '../hooks/useFcm';
 
 export default function Settings() {
   const { user } = useAuth();
+  const { requestAndSave, revoke } = useFcm();
   const [settings, setSettings] = useState<any>({
     displayName: '',
     phrase: '',
@@ -67,11 +69,11 @@ export default function Settings() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white tracking-tight">Configurações do Sistema</h2>
+        <h2 className="text-2xl font-bold text-[#14120d] tracking-tight">Configurações do Sistema</h2>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2 bg-[#00ff9d] text-black font-bold rounded-xl hover:bg-[#00d4ff] transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-6 py-2 bg-[#d97706] text-white font-bold rounded-xl hover:bg-[#c2680a] transition-all disabled:opacity-50"
         >
           <Save size={18} />
           {saving ? 'SALVANDO...' : 'SALVAR_ALTERAÇÕES'}
@@ -80,12 +82,12 @@ export default function Settings() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Perfil */}
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 text-[#00ff9d] mb-2">
+        <section className="bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 text-[#d97706] mb-2">
             <User size={20} />
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest">Perfil_Do_Usuário</h3>
           </div>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Nome_De_Guerra</label>
@@ -93,7 +95,7 @@ export default function Settings() {
                 type="text"
                 value={settings.displayName}
                 onChange={e => setSettings({ ...settings, displayName: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00ff9d] outline-none transition-all"
+                className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
               />
             </div>
             <div>
@@ -102,7 +104,7 @@ export default function Settings() {
                 type="text"
                 value={settings.phrase}
                 onChange={e => setSettings({ ...settings, phrase: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00ff9d] outline-none transition-all"
+                className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
               />
             </div>
             <div>
@@ -111,25 +113,34 @@ export default function Settings() {
                 type="date"
                 value={settings.start_date}
                 onChange={e => setSettings({ ...settings, start_date: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00ff9d] outline-none transition-all"
+                className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
               />
             </div>
           </div>
         </section>
 
         {/* Notificações */}
-        <section className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 text-[#00d4ff] mb-2">
+        <section className="bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 text-[#0e7490] mb-2">
             <Bell size={20} />
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest">Alertas_E_Sincronização</h3>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5">
-              <span className="text-sm text-gray-300">Ativar Notificações do Sistema</span>
+            <div className="flex items-center justify-between p-4 bg-black/5 rounded-xl border border-black/5">
+              <span className="text-sm text-gray-700">Ativar Notificações do Sistema</span>
               <button
-                onClick={() => setSettings({ ...settings, alerts_enabled: !settings.alerts_enabled })}
-                className={`w-12 h-6 rounded-full transition-all relative ${settings.alerts_enabled ? 'bg-[#00ff9d]' : 'bg-white/10'}`}
+                onClick={async () => {
+                  const enabling = !settings.alerts_enabled;
+                  setSettings({ ...settings, alerts_enabled: enabling });
+                  if (enabling) {
+                    const granted = await requestAndSave();
+                    if (!granted) setSettings((prev: any) => ({ ...prev, alerts_enabled: false }));
+                  } else {
+                    await revoke();
+                  }
+                }}
+                className={`w-12 h-6 rounded-full transition-all relative ${settings.alerts_enabled ? 'bg-[#d97706]' : 'bg-black/10'}`}
               >
                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${settings.alerts_enabled ? 'left-7' : 'left-1'}`} />
               </button>
@@ -140,7 +151,7 @@ export default function Settings() {
                 type="time"
                 value={settings.alert_time}
                 onChange={e => setSettings({ ...settings, alert_time: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00d4ff] outline-none transition-all"
+                className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-[#0e7490] outline-none transition-all"
               />
             </div>
             <div>
@@ -149,15 +160,15 @@ export default function Settings() {
                 type="email"
                 value={settings.email}
                 onChange={e => setSettings({ ...settings, email: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00d4ff] outline-none transition-all"
+                className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-[#0e7490] outline-none transition-all"
               />
             </div>
           </div>
         </section>
 
         {/* Meta Suprema */}
-        <section className="col-span-full bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 text-amber-500 mb-2">
+        <section className="col-span-full bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 text-amber-600 mb-2">
             <Target size={20} />
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest">Meta_Suprema_2026</h3>
           </div>
@@ -165,34 +176,34 @@ export default function Settings() {
             value={settings.supreme_goal}
             onChange={e => setSettings({ ...settings, supreme_goal: e.target.value })}
             rows={3}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all resize-none text-lg font-bold"
+            className="w-full bg-black/5 border border-black/10 rounded-xl px-4 py-3 text-[#14120d] focus:border-amber-600 outline-none transition-all resize-none text-lg font-bold"
             placeholder="Qual é o seu objetivo final para este ano?"
           />
         </section>
 
         {/* Alarms */}
-        <section className="col-span-full bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 text-purple-500 mb-2">
+        <section className="col-span-full bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 text-purple-600 mb-2">
             <Clock size={20} />
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest">Rotina_De_Alarmes</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {settings.alarms.map((alarm: any, idx: number) => (
-              <div key={idx} className="bg-white/5 border border-white/5 p-4 rounded-xl">
+              <div key={idx} className="bg-black/5 border border-black/5 p-4 rounded-xl">
                 <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">{alarm.label}</p>
-                <p className="text-xl font-mono font-bold text-white">{alarm.time}</p>
+                <p className="text-xl font-mono font-bold text-[#14120d]">{alarm.time}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Data Migration */}
-        <section className="col-span-full bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 text-[#00ff9d] mb-2">
+        <section className="col-span-full bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 text-[#d97706] mb-2">
             <Zap size={20} />
             <h3 className="font-mono text-xs font-bold uppercase tracking-widest">Migração_De_Dados</h3>
           </div>
-          <p className="text-gray-400 text-xs">
+          <p className="text-gray-600 text-xs">
             Se você já utilizava o sistema anteriormente (offline), pode migrar seus registros locais para sua conta segura na nuvem.
           </p>
           <button
@@ -234,7 +245,7 @@ export default function Settings() {
                 alert('Erro durante a migração.');
               }
             }}
-            className="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-[10px] font-mono font-bold text-white hover:bg-[#00ff9d]/20 hover:border-[#00ff9d]/50 transition-all uppercase tracking-widest"
+            className="px-6 py-3 bg-black/5 border border-black/10 rounded-xl text-[10px] font-mono font-bold text-[#14120d] hover:bg-[#d97706]/20 hover:border-[#d97706]/50 transition-all uppercase tracking-widest"
           >
             Migrar_Registros_Locais_Para_Nuvem
           </button>

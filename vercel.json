@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/send-daily-reminders", "schedule": "0 2 * * *" },
+    { "path": "/api/auto-resolve-checkins", "schedule": "59 3 * * *" }
+  ]
+}

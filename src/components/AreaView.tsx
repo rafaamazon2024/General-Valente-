@@ -148,11 +148,11 @@ export default function AreaView({ config }: AreaViewProps) {
             {config.icon}
           </div>
           <div>
-            <h2 className="text-2xl font-mono font-bold tracking-tighter text-white uppercase">{config.nome}</h2>
+            <h2 className="text-2xl font-mono font-bold tracking-tighter text-[#14120d] uppercase">{config.nome}</h2>
             <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SISTEMA_OPERACIONAL_ATIVO</p>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => handleAdd()}
           className="px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg uppercase tracking-widest text-xs text-black"
           style={{ backgroundColor: config.cor }}
@@ -162,15 +162,15 @@ export default function AreaView({ config }: AreaViewProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="flex items-center gap-2 p-1 bg-black/5 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar scroll-smooth">
         {config.views.map(view => (
           <button
             key={view}
             onClick={() => setActiveView(view)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest transition-all ${
-              activeView === view 
-                ? 'bg-white/10 text-white shadow-inner' 
-                : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+              activeView === view
+                ? 'bg-white text-[#14120d] shadow-inner'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'
             }`}
           >
             {getViewIcon(view)}
@@ -181,13 +181,13 @@ export default function AreaView({ config }: AreaViewProps) {
 
       {/* Type Selector (if multiple types) */}
       {config.tiposItem.length > 1 && (activeView === 'Tabela' || activeView === 'Metas') && (
-        <div className="flex items-center gap-4 border-b border-white/10 pb-4 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-4 border-b border-black/10 pb-4 overflow-x-auto no-scrollbar">
           {config.tiposItem.map(type => (
             <button
               key={type}
               onClick={() => setSelectedType(type)}
               className={`text-[10px] font-mono font-bold uppercase tracking-[0.2em] pb-2 transition-all relative whitespace-nowrap ${
-                selectedType === type ? 'text-white' : 'text-gray-600 hover:text-gray-400'
+                selectedType === type ? 'text-[#14120d]' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               {type}

@@ -13,12 +13,27 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, onSnapshot, getDocFromServer, Timestamp, addDoc } from 'firebase/firestore';
+import { getMessaging, getToken, onMessage, isSupported as isMessagingSupported, type Messaging } from 'firebase/messaging';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 export const googleProvider = new GoogleAuthProvider();
+
+// Chave pública VAPID do projeto (Firebase Console > Configurações do Projeto > Cloud Messaging >
+// Certificados push da Web), gerada em 09/07/2026.
+export const VAPID_KEY = 'BLPuBNfqImE5g9Br9Qd7V2-WLkoIp116hEybw1hyYFi4Eln2hBEVNyz_5IjIacYXncfpQao3h3d7E8YhzE-BZW4';
+
+let messagingInstance: Messaging | null = null;
+export async function getMessagingIfSupported(): Promise<Messaging | null> {
+  if (messagingInstance) return messagingInstance;
+  if (!(await isMessagingSupported())) return null;
+  messagingInstance = getMessaging(app);
+  return messagingInstance;
+}
+
+export { getToken as getFcmToken, onMessage };
 
 // Connection test
 async function testConnection() {

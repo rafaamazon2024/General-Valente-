@@ -42,10 +42,42 @@ export default function App() {
     return () => unsub();
   }, [user]);
 
+  // Toque em SIM/NÃO na notificação push abre "/?action=sim|nao" — processa uma vez ao montar.
+  React.useEffect(() => {
+    if (!user) return;
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if (action !== 'sim' && action !== 'nao') return;
+
+    window.history.replaceState({}, '', window.location.pathname);
+
+    (async () => {
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch('/api/apply-daily-outcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
+          body: JSON.stringify({ action }),
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result?.error || 'Falha ao registrar check-in');
+
+        if (result.status === 'completed_yes') {
+          alert('Dia concluído! Sua missão foi registrada e você ganhou uma medalha. 🎖️');
+        } else {
+          alert('Sem problemas. Os itens pendentes continuam no sistema.');
+        }
+      } catch (error) {
+        console.error('Erro ao registrar check-in:', error);
+        alert('Não foi possível registrar sua resposta agora.');
+      }
+    })();
+  }, [user]);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4">
-        <div className="w-16 h-16 border-4 border-[#00ff9d]/20 border-t-[#00ff9d] rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#f7f5f0] flex flex-col items-center justify-center gap-4">
+        <div className="w-16 h-16 border-4 border-[#d97706]/20 border-t-[#d97706] rounded-full animate-spin" />
         <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest animate-pulse">Iniciando_Sistema...</p>
       </div>
     );
@@ -58,7 +90,7 @@ export default function App() {
   const activeArea = CONFIG_AREAS.find(a => a.id === activeAreaId);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans flex text-[13px]">
+    <div className="min-h-screen bg-[#f7f5f0] text-[#14120d] font-sans flex text-[13px]">
       <AnimatePresence>
         {isLocked && (
           <LockScreen 
@@ -85,19 +117,19 @@ export default function App() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside 
-        className={`bg-black/40 backdrop-blur-xl border-r border-white/10 transition-all duration-300 flex flex-col z-50 fixed inset-y-0 left-0 lg:sticky lg:h-screen ${
+      <aside
+        className={`bg-white/60 backdrop-blur-xl border-r border-black/10 transition-all duration-300 flex flex-col z-50 fixed inset-y-0 left-0 lg:sticky lg:h-screen ${
           isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'
         }`}
       >
-        <div className="p-6 flex items-center justify-between border-b border-white/5">
+        <div className="p-6 flex items-center justify-between border-b border-black/5">
           {isSidebarOpen && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="flex flex-col"
             >
-              <h1 className="font-bold text-xl tracking-tighter text-[#00ff9d] drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">
+              <h1 className="font-bold text-xl tracking-tighter text-[#d97706]">
                 {userSettings?.displayName?.toUpperCase().split(' ')[0] || 'LIFE'}_OS
               </h1>
               <p className="text-[8px] font-mono text-gray-500 uppercase tracking-widest mt-1 truncate max-w-[160px]">
@@ -105,9 +137,9 @@ export default function App() {
               </p>
             </motion.div>
           )}
-          <button 
+          <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors text-gray-400 hover:text-[#00ff9d]"
+            className="p-2 hover:bg-black/5 rounded-lg transition-colors text-gray-500 hover:text-[#d97706]"
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -117,16 +149,16 @@ export default function App() {
           <button
             onClick={() => setActiveAreaId('dashboard')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${
-              activeAreaId === 'dashboard' 
-                ? 'bg-[#00ff9d]/10 text-[#00ff9d] border border-[#00ff9d]/20 shadow-[0_0_15px_rgba(0,255,157,0.1)]' 
-                : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+              activeAreaId === 'dashboard'
+                ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20'
+                : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'
             }`}
           >
-            <LayoutDashboard size={20} className={activeAreaId === 'dashboard' ? 'text-[#00ff9d]' : 'group-hover:text-[#00ff9d] transition-colors'} />
+            <LayoutDashboard size={20} className={activeAreaId === 'dashboard' ? 'text-[#d97706]' : 'group-hover:text-[#d97706] transition-colors'} />
             {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Visão Geral</span>}
           </button>
 
-          <div className={`pt-4 pb-2 px-4 text-[9px] font-mono font-bold text-gray-600 uppercase tracking-[0.3em] ${!isSidebarOpen && 'hidden'}`}>
+          <div className={`pt-4 pb-2 px-4 text-[9px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em] ${!isSidebarOpen && 'hidden'}`}>
             Áreas_Da_Vida
           </div>
 
@@ -135,9 +167,9 @@ export default function App() {
               key={area.id}
               onClick={() => setActiveAreaId(area.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${
-                activeAreaId === area.id 
-                  ? 'bg-white/10 text-white border border-white/10' 
-                  : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+                activeAreaId === area.id
+                  ? 'bg-black/5 text-[#14120d] border border-black/10'
+                  : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'
               }`}
             >
               <span className="text-xl w-5 flex justify-center">{area.icon}</span>
@@ -149,9 +181,9 @@ export default function App() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-white/5 space-y-2">
-          <div className="flex items-center gap-3 px-4 py-2 mb-2 bg-white/5 rounded-xl border border-white/5 overflow-hidden">
-             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/10 ring-2 ring-[#00ff9d]/20">
+        <div className="p-4 border-t border-black/5 space-y-2">
+          <div className="flex items-center gap-3 px-4 py-2 mb-2 bg-black/5 rounded-xl border border-black/5 overflow-hidden">
+             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-black/10 ring-2 ring-[#d97706]/20">
                {user.photoURL ? (
                  <img src={user.photoURL} alt="User" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                ) : (
@@ -160,31 +192,31 @@ export default function App() {
              </div>
              {isSidebarOpen && (
                <div className="flex flex-col min-w-0">
-                 <span className="text-[10px] font-bold text-white truncate">{user.displayName}</span>
+                 <span className="text-[10px] font-bold text-[#14120d] truncate">{user.displayName}</span>
                  <span className="text-[8px] font-mono text-gray-500 truncate uppercase mt-0.5">Sessão_Ativa</span>
                </div>
              )}
           </div>
 
-          <button 
+          <button
             onClick={() => setActiveAreaId('settings')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-              activeAreaId === 'settings' 
-                ? 'bg-white/10 text-white border border-white/10' 
-                : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+              activeAreaId === 'settings'
+                ? 'bg-black/5 text-[#14120d] border border-black/10'
+                : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'
             }`}
           >
-            <SettingsIcon size={20} className={activeAreaId === 'settings' ? 'text-[#00d4ff]' : 'group-hover:text-[#00d4ff] transition-colors'} />
+            <SettingsIcon size={20} className={activeAreaId === 'settings' ? 'text-[#0e7490]' : 'group-hover:text-[#0e7490] transition-colors'} />
             {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Configurações</span>}
           </button>
 
-          <button 
+          <button
             onClick={() => {
               logout();
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-red-500/10 hover:text-red-500 group"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-red-500/10 hover:text-red-600 group"
           >
-            <LogOut size={20} className="group-hover:text-red-500 transition-colors" />
+            <LogOut size={20} className="group-hover:text-red-600 transition-colors" />
             {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Efetuar Logout</span>}
           </button>
         </div>
@@ -193,31 +225,31 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto h-screen relative">
         <div className="scanline" />
-        <header className="bg-black/20 backdrop-blur-md sticky top-0 z-30 border-b border-white/5 px-4 sm:px-8 py-4 flex items-center justify-between">
+        <header className="bg-white/50 backdrop-blur-md sticky top-0 z-30 border-b border-black/5 px-4 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6">
-            <button 
+            <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-2 hover:bg-white/5 rounded-lg transition-colors text-gray-400 hover:text-[#00ff9d]"
+              className="lg:hidden p-2 hover:bg-black/5 rounded-lg transition-colors text-gray-500 hover:text-[#d97706]"
             >
               <Menu size={20} />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#00ff9d] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#d97706] animate-pulse" />
               <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Sistema_Online</span>
             </div>
-            <div className="h-4 w-px bg-white/10" />
+            <div className="h-4 w-px bg-black/10" />
             <div className="flex items-center gap-2">
-              <Cpu size={14} className="text-[#00d4ff]" />
+              <Cpu size={14} className="text-[#0e7490]" />
               <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Core_v3.1.0</span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-[10px] text-[#00ff9d] uppercase tracking-[0.3em] font-bold">SYSTEM_TIME</p>
-              <p className="text-xs font-mono text-gray-400">{new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+              <p className="text-[10px] text-[#d97706] uppercase tracking-[0.3em] font-bold">SYSTEM_TIME</p>
+              <p className="text-xs font-mono text-gray-600">{new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-black/5 to-black/10 border border-black/10 flex items-center justify-center overflow-hidden">
               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Valente" alt="Avatar" className="w-full h-full object-cover" />
             </div>
           </div>

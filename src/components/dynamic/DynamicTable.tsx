@@ -154,7 +154,7 @@ export default function DynamicTable({
     if (field.tipo === 'progress') {
       const progress = value || 0;
       return (
-        <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden mt-1">
+        <div className="w-full bg-black/5 h-1.5 rounded-full overflow-hidden mt-1">
           <div 
             className="h-full transition-all duration-500" 
             style={{ width: `${progress}%`, backgroundColor: getProgressColor(progress) }}
@@ -174,7 +174,7 @@ export default function DynamicTable({
     if (field.nome === 'valor' && value) {
       const isNegative = record.data.tipo === 'Despesa';
       return (
-        <span className={isNegative ? 'text-red-400' : 'text-emerald-400'}>
+        <span className={isNegative ? 'text-red-600' : 'text-emerald-600'}>
           {isNegative ? '-' : '+'} R$ {Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
         </span>
       );
@@ -190,7 +190,7 @@ export default function DynamicTable({
 
     if (field.tipo === 'url' && value) {
       return (
-        <a href={value} target="_blank" rel="noreferrer" className="text-[#00ff9d] hover:underline flex items-center gap-1">
+        <a href={value} target="_blank" rel="noreferrer" className="text-[#d97706] hover:underline flex items-center gap-1">
           Link <ExternalLink size={10} />
         </a>
       );
@@ -226,7 +226,7 @@ export default function DynamicTable({
   return (
     <div className="space-y-4">
       {/* Filter Bar */}
-      <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-4 flex flex-col md:flex-row md:items-center gap-4">
         <div className="w-full md:flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
           <input
@@ -234,7 +234,7 @@ export default function DynamicTable({
             placeholder="BUSCAR..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/5 border border-white/10 focus:border-[#00ff9d]/50 outline-none transition-all font-mono text-xs uppercase tracking-widest"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-xs uppercase tracking-widest"
           />
         </div>
 
@@ -242,7 +242,7 @@ export default function DynamicTable({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest outline-none focus:border-[#00ff9d]/50"
+            className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest outline-none focus:border-[#d97706]/50"
           >
             <option value="recent">Mais Recente</option>
             <option value="oldest">Mais Antigo</option>
@@ -256,12 +256,12 @@ export default function DynamicTable({
 
           {availableStatuses.length > 0 && (
             <div className="relative group">
-              <button className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
+              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
                 Status <ChevronDown size={12} />
               </button>
-              <div className="absolute top-full right-0 mt-2 w-48 bg-[#0a0a0a] border border-white/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-black/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
                 {availableStatuses.map(status => (
-                  <label key={status} className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+                  <label key={status} className="flex items-center gap-2 p-2 hover:bg-black/5 rounded-lg cursor-pointer">
                     <input
                       type="checkbox"
                       checked={statusFilter.includes(status)}
@@ -269,9 +269,9 @@ export default function DynamicTable({
                         if (e.target.checked) setStatusFilter([...statusFilter, status]);
                         else setStatusFilter(statusFilter.filter(s => s !== status));
                       }}
-                      className="rounded border-white/10 bg-white/5 text-[#00ff9d]"
+                      className="rounded border-black/10 bg-black/5 text-[#d97706]"
                     />
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400">{status}</span>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-600">{status}</span>
                   </label>
                 ))}
               </div>
@@ -280,12 +280,12 @@ export default function DynamicTable({
 
           {availableCategories.length > 0 && (
             <div className="relative group">
-              <button className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
+              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
                 Categoria <ChevronDown size={12} />
               </button>
-              <div className="absolute top-full right-0 mt-2 w-48 bg-[#0a0a0a] border border-white/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-black/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
                 {availableCategories.map(cat => (
-                  <label key={cat} className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+                  <label key={cat} className="flex items-center gap-2 p-2 hover:bg-black/5 rounded-lg cursor-pointer">
                     <input
                       type="checkbox"
                       checked={categoryFilter.includes(cat)}
@@ -293,9 +293,9 @@ export default function DynamicTable({
                         if (e.target.checked) setCategoryFilter([...categoryFilter, cat]);
                         else setCategoryFilter(categoryFilter.filter(c => c !== cat));
                       }}
-                      className="rounded border-white/10 bg-white/5 text-[#00ff9d]"
+                      className="rounded border-black/10 bg-black/5 text-[#d97706]"
                     />
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400">{cat}</span>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-600">{cat}</span>
                   </label>
                 ))}
               </div>
@@ -305,7 +305,7 @@ export default function DynamicTable({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="p-2 hover:bg-white/5 rounded-xl text-red-500 transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest"
+              className="p-2 hover:bg-black/5 rounded-xl text-red-600 transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest"
             >
               <X size={14} /> Limpar
             </button>
@@ -317,27 +317,27 @@ export default function DynamicTable({
         </div>
       </div>
 
-      <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+      <div className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/5 border-b border-white/10">
+              <tr className="bg-black/5 border-b border-black/10">
                 {fields.map(field => (
-                  <th key={field.nome} className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                  <th key={field.nome} className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-600">
                     {field.label}
                   </th>
                 ))}
-                <th className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Ações</th>
+                <th className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-600 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-black/5">
               {filteredRecords.map((record) => {
                 const progress = getProgress(record);
                 return (
-                  <tr key={record.id} className="hover:bg-white/5 transition-colors group">
+                  <tr key={record.id} className="hover:bg-black/5 transition-colors group">
                     {fields.map(field => (
                       <td key={field.nome} className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-200">
+                        <div className="text-sm font-medium text-gray-700">
                           {renderValue(field, record.data[field.nome], record)}
                         </div>
                         {/* Progress bar logic for specific items */}
@@ -347,12 +347,12 @@ export default function DynamicTable({
                               <span>{progress.percent}%</span>
                               <span>{progress.current}/{progress.total} {progress.label}</span>
                             </div>
-                            <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full transition-all duration-500" 
-                                style={{ 
+                            <div className="w-full bg-black/5 h-1 rounded-full overflow-hidden">
+                              <div
+                                className="h-full transition-all duration-500"
+                                style={{
                                   width: `${progress.percent}%`,
-                                  backgroundColor: getProgressColor(progress.percent) 
+                                  backgroundColor: getProgressColor(progress.percent)
                                 }}
                               />
                             </div>
@@ -362,31 +362,31 @@ export default function DynamicTable({
                     ))}
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
-                        <button 
+                        <button
                           onClick={() => setNoteModal({ record, isOpen: true })}
                           title="Bloco de Notas"
-                          className="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-amber-500 transition-colors"
+                          className="p-2 hover:bg-black/5 rounded-lg text-gray-500 hover:text-amber-600 transition-colors"
                         >
                           <FileText size={16} />
                         </button>
-                        <button 
+                        <button
                           onClick={() => alert('Funcionalidade de upload de arquivos em desenvolvimento para este registro.')}
                           title="Anexar Arquivo"
-                          className="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-blue-400 transition-colors"
+                          className="p-2 hover:bg-black/5 rounded-lg text-gray-500 hover:text-blue-500 transition-colors"
                         >
                           <Paperclip size={16} />
                         </button>
-                        <button 
+                        <button
                           onClick={() => onEdit(record)}
                           title="Editar"
-                          className="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-[#00ff9d] transition-colors"
+                          className="p-2 hover:bg-black/5 rounded-lg text-gray-500 hover:text-[#d97706] transition-colors"
                         >
                           <Edit2 size={16} />
                         </button>
-                        <button 
+                        <button
                           onClick={() => onDelete(record.id)}
                           title="Excluir"
-                          className="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-red-500 transition-colors"
+                          className="p-2 hover:bg-black/5 rounded-lg text-gray-500 hover:text-red-600 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -410,21 +410,21 @@ export default function DynamicTable({
       {/* Note Modal */}
       <AnimatePresence>
         {noteModal.isOpen && noteModal.record && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <motion.div 
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-[#0a0a0a] border border-white/10 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl"
+              className="bg-white border border-black/10 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl"
             >
-              <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+              <div className="p-6 border-b border-black/5 flex justify-between items-center bg-black/5">
                 <div>
-                  <h3 className="text-sm font-mono font-bold text-white uppercase tracking-widest">
+                  <h3 className="text-sm font-mono font-bold text-[#14120d] uppercase tracking-widest">
                     Bloco de Notas: {noteModal.record.data.titulo || noteModal.record.data.nome}
                   </h3>
                   <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-1">Registro #{noteModal.record.id}</p>
                 </div>
-                <button onClick={() => setNoteModal({ record: null, isOpen: false })} className="p-2 hover:bg-white/10 rounded-xl text-gray-500 hover:text-white transition-all">
+                <button onClick={() => setNoteModal({ record: null, isOpen: false })} className="p-2 hover:bg-black/10 rounded-xl text-gray-500 hover:text-[#14120d] transition-all">
                   <X size={20} />
                 </button>
               </div>
@@ -433,21 +433,21 @@ export default function DynamicTable({
                   defaultValue={noteModal.record.data.notas || ''}
                   id="note-textarea"
                   placeholder="Escreva suas notas, resumos ou informações importantes aqui..."
-                  className="w-full h-64 bg-white/5 border border-white/10 rounded-2xl p-4 text-gray-200 font-mono text-sm focus:border-amber-500/50 outline-none transition-all resize-none"
+                  className="w-full h-64 bg-black/5 border border-black/10 rounded-2xl p-4 text-[#14120d] font-mono text-sm focus:border-amber-600/50 outline-none transition-all resize-none"
                 />
                 <div className="flex justify-end gap-4 mt-6">
-                  <button 
+                  <button
                     onClick={() => setNoteModal({ record: null, isOpen: false })}
-                    className="px-6 py-2 rounded-xl font-mono text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-white transition-all"
+                    className="px-6 py-2 rounded-xl font-mono text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-[#14120d] transition-all"
                   >
                     Cancelar
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       const note = (document.getElementById('note-textarea') as HTMLTextAreaElement).value;
                       handleSaveNote(noteModal.record!, note);
                     }}
-                    className="px-8 py-2 rounded-xl bg-amber-500 text-black font-bold text-[10px] uppercase tracking-widest hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20"
+                    className="px-8 py-2 rounded-xl bg-amber-500 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
                   >
                     Salvar Notas
                   </button>
