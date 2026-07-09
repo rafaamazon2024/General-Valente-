@@ -15,12 +15,14 @@ import {
 } from 'recharts';
 import { CONFIG_AREAS } from '../config/areas';
 import { GenericRecord } from '../types';
-import { Award, Zap, Target, TrendingUp, Plus, Info, ChevronRight, BookOpen } from 'lucide-react';
+import { Award, Zap, Target, TrendingUp, Plus, Info, ChevronRight, BookOpen, Dumbbell, Moon } from 'lucide-react';
 import { useRecords } from '../hooks/useRecords';
 import { useAuth } from './AuthContext';
 import { db, doc, onSnapshot as onSnapshotFirestore } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
 import { PunishmentBanner } from './PunishmentBanner';
+import { useExercicios } from '../hooks/useExercicios';
+import { useTreinoHoje } from '../hooks/useTreinoHoje';
 
 interface GeneralDashboardProps {
   onNavigate?: (areaId: string) => void;
@@ -32,6 +34,8 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
   const [userSettings, setUserSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(true);
+  const { exercicios } = useExercicios();
+  const { log: treinoLog, grupos: gruposHoje } = useTreinoHoje();
 
   React.useEffect(() => {
     if (!user) return;
@@ -91,6 +95,34 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <PunishmentBanner active={!!userSettings?.punishment_active} />
+
+      {/* Treino de Hoje */}
+      {(() => {
+        const isDescanso = gruposHoje.length === 0;
+        const exerciciosDoDia = exercicios.filter(e => gruposHoje.includes(e.grupo_muscular));
+        const feitos = treinoLog?.exercicios_feitos || [];
+        const feitosHoje = feitos.filter(id => exerciciosDoDia.some(e => e.id === id)).length;
+        const completo = exerciciosDoDia.length > 0 && feitosHoje === exerciciosDoDia.length;
+
+        return (
+          <button
+            onClick={() => onNavigate?.('saude')}
+            className="w-full text-left bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-5 flex items-center gap-4 hover:border-[#10b981]/30 transition-all"
+          >
+            <div className="w-10 h-10 rounded-full bg-[#10b981]/10 flex items-center justify-center shrink-0">
+              {isDescanso ? <Moon size={18} className="text-[#10b981]" /> : <Dumbbell size={18} className="text-[#10b981]" />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] font-mono font-bold text-gray-500 uppercase tracking-widest">Treino_De_Hoje</p>
+              <p className="font-bold text-gray-700 truncate">
+                {isDescanso ? 'Dia de Descanso' : `${gruposHoje.join(' + ')} — ${feitosHoje}/${exerciciosDoDia.length} feitos`}
+              </p>
+            </div>
+            {completo && <span className="text-[12px] font-mono font-bold text-[#10b981] uppercase tracking-widest shrink-0">Concluído 🎉</span>}
+            <ChevronRight size={18} className="text-gray-400 shrink-0" />
+          </button>
+        );
+      })()}
 
       {/* Guia de Início Rápido */}
       <AnimatePresence>

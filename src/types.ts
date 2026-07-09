@@ -89,3 +89,23 @@ export interface Settings {
   alert_time: string;
   alerts_enabled: number;
 }
+
+export interface Exercicio {
+  id: string;
+  uid: string;
+  nome: string;
+  grupo_muscular: string;
+  link_video: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TreinoLog {
+  id: string;
+  uid: string;
+  date: string; // YYYY-MM-DD
+  grupos: string[];
+  exercicios_feitos: string[]; // ids de Exercicio marcados
+  completo: boolean;
+  updated_at: string;
+}

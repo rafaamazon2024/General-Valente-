@@ -94,7 +94,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ]
     },
     colunasKanban: ['Planejado', 'Em Execução', 'Concluído'],
-    views: ['Dashboard', 'Tabela', 'Calendário', 'Kanban', 'Metas'],
+    views: ['Treino Hoje', 'Biblioteca', 'Dashboard', 'Tabela', 'Calendário', 'Kanban', 'Metas'],
     graficos: ['linha', 'barras']
   },
   {

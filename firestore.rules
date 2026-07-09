@@ -34,6 +34,12 @@ service cloud.firestore {
     //   - created_at: string (ISO date-time)
     //   - updated_at: string (ISO date-time)
     //
+    // Collection: exercicios (Biblioteca de Exercícios, área Saúde & Fitness)
+    //   - uid, nome, grupo_muscular, link_video, created_at, updated_at
+    //
+    // Collection: treino_logs (doc id: "{uid}_{YYYY-MM-DD}")
+    //   - uid, date, grupos: list, exercicios_feitos: list, completo: bool, updated_at
+    //
     // ===============================================================
 
     // ===============================================================
@@ -113,6 +119,20 @@ service cloud.firestore {
     match /daily_checkins/{checkinId} {
       allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
       allow write: if false; // só Cloud Functions (Admin SDK ignora esta regra)
+    }
+
+    match /exercicios/{exercicioId} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    match /treino_logs/{logId} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin()) &&
+                      request.resource.data.uid == resource.data.uid;
+      allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
     }
   }
 }

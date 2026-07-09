@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AreaConfig, GenericRecord } from '../types';
-import { Plus, LayoutGrid, Table as TableIcon, Calendar as CalendarIcon, Kanban as KanbanIcon, Target as TargetIcon } from 'lucide-react';
+import { Plus, LayoutGrid, Table as TableIcon, Calendar as CalendarIcon, Kanban as KanbanIcon, Target as TargetIcon, Dumbbell, BookOpen } from 'lucide-react';
 import DynamicForm from './dynamic/DynamicForm';
 import DynamicTable from './dynamic/DynamicTable';
 import DynamicKanban from './dynamic/DynamicKanban';
@@ -8,6 +8,8 @@ import DynamicChart from './dynamic/DynamicChart';
 import DynamicCalendar from './dynamic/DynamicCalendar';
 import DynamicGoals from './dynamic/DynamicGoals';
 import ChallengeTracker from './dynamic/ChallengeTracker';
+import TreinoHoje from './dynamic/TreinoHoje';
+import BibliotecaExercicios from './dynamic/BibliotecaExercicios';
 import { useRecords } from '../hooks/useRecords';
 
 interface AreaViewProps {
@@ -91,6 +93,8 @@ export default function AreaView({ config }: AreaViewProps) {
 
   const renderView = () => {
     switch (activeView) {
+      case 'Treino Hoje': return <TreinoHoje />;
+      case 'Biblioteca': return <BibliotecaExercicios />;
       case 'Dashboard': return <DynamicChart config={config} records={records} selectedType={selectedType} onFilterRequest={handleFilterRequest} />;
       case 'Tabela': return (
         <DynamicTable
@@ -143,6 +147,8 @@ export default function AreaView({ config }: AreaViewProps) {
 
   const getViewIcon = (view: string) => {
     switch (view) {
+      case 'Treino Hoje': return <Dumbbell size={16} />;
+      case 'Biblioteca': return <BookOpen size={16} />;
       case 'Dashboard': return <LayoutGrid size={16} />;
       case 'Tabela': return <TableIcon size={16} />;
       case 'Calendário': return <CalendarIcon size={16} />;
@@ -165,13 +171,15 @@ export default function AreaView({ config }: AreaViewProps) {
             <p className="text-[14px] font-mono text-gray-500 uppercase tracking-widest">SISTEMA_OPERACIONAL_ATIVO</p>
           </div>
         </div>
-        <button
-          onClick={() => handleAdd()}
-          className="px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg uppercase tracking-widest text-xs text-black"
-          style={{ backgroundColor: config.cor }}
-        >
-          <Plus size={18} /> Novo Registro
-        </button>
+        {activeView !== 'Treino Hoje' && activeView !== 'Biblioteca' && (
+          <button
+            onClick={() => handleAdd()}
+            className="px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg uppercase tracking-widest text-xs text-black"
+            style={{ backgroundColor: config.cor }}
+          >
+            <Plus size={18} /> Novo Registro
+          </button>
+        )}
       </div>
 
       {/* Tabs */}
