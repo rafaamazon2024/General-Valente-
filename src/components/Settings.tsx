@@ -90,7 +90,7 @@ export default function Settings() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Nome_De_Guerra</label>
+              <label className="block text-[14px] font-mono text-gray-500 uppercase tracking-widest mb-2">Nome_De_Guerra</label>
               <input
                 type="text"
                 value={settings.displayName}
@@ -99,7 +99,7 @@ export default function Settings() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Frase_De_Efeito</label>
+              <label className="block text-[14px] font-mono text-gray-500 uppercase tracking-widest mb-2">Frase_De_Efeito</label>
               <input
                 type="text"
                 value={settings.phrase}
@@ -108,7 +108,7 @@ export default function Settings() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Data_De_Início_Da_Transformação</label>
+              <label className="block text-[14px] font-mono text-gray-500 uppercase tracking-widest mb-2">Data_De_Início_Da_Transformação</label>
               <input
                 type="date"
                 value={settings.start_date}
@@ -146,7 +146,7 @@ export default function Settings() {
               </button>
             </div>
             <div>
-              <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Horário_Padrão_De_Alerta</label>
+              <label className="block text-[14px] font-mono text-gray-500 uppercase tracking-widest mb-2">Horário_Padrão_De_Alerta</label>
               <input
                 type="time"
                 value={settings.alert_time}
@@ -155,7 +155,7 @@ export default function Settings() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Email_De_Recuperação</label>
+              <label className="block text-[14px] font-mono text-gray-500 uppercase tracking-widest mb-2">Email_De_Recuperação</label>
               <input
                 type="email"
                 value={settings.email}
@@ -190,7 +190,7 @@ export default function Settings() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {settings.alarms.map((alarm: any, idx: number) => (
               <div key={idx} className="bg-black/5 border border-black/5 p-4 rounded-xl">
-                <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">{alarm.label}</p>
+                <p className="text-[14px] font-mono text-gray-500 uppercase mb-1">{alarm.label}</p>
                 <p className="text-xl font-mono font-bold text-[#14120d]">{alarm.time}</p>
               </div>
             ))}
@@ -245,7 +245,7 @@ export default function Settings() {
                 alert('Erro durante a migração.');
               }
             }}
-            className="px-6 py-3 bg-black/5 border border-black/10 rounded-xl text-[10px] font-mono font-bold text-[#14120d] hover:bg-[#d97706]/20 hover:border-[#d97706]/50 transition-all uppercase tracking-widest"
+            className="px-6 py-3 bg-black/5 border border-black/10 rounded-xl text-[14px] font-mono font-bold text-[#14120d] hover:bg-[#d97706]/20 hover:border-[#d97706]/50 transition-all uppercase tracking-widest"
           >
             Migrar_Registros_Locais_Para_Nuvem
           </button>

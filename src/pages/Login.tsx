@@ -77,7 +77,7 @@ export default function Login() {
                       <Target size={20} className="text-blue-500" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[10px]">Gestão de Metas</h3>
+                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[14px]">Gestão de Metas</h3>
                       <p className="text-xs text-gray-500">Acompanhe seu progresso em tempo real.</p>
                     </div>
                   </div>
@@ -87,7 +87,7 @@ export default function Login() {
                       <Zap size={20} className="text-[#d97706]" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[10px]">Habilidades & Hábitos</h3>
+                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[14px]">Habilidades & Hábitos</h3>
                       <p className="text-xs text-gray-500">Construa rotinas sólidas.</p>
                     </div>
                   </div>
@@ -107,19 +107,19 @@ export default function Login() {
 
                   <div className="flex items-center gap-4 my-6">
                     <div className="h-px flex-1 bg-black/10" />
-                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">OU</span>
+                    <span className="text-[14px] font-mono text-gray-500 uppercase tracking-widest">OU</span>
                     <div className="h-px flex-1 bg-black/10" />
                   </div>
 
                   <button
                     onClick={() => setMode('login')}
-                    className="w-full py-4 border border-black/10 rounded-2xl text-gray-600 hover:text-[#14120d] hover:bg-black/5 transition-all font-mono text-[10px] uppercase tracking-widest"
+                    className="w-full py-4 border border-black/10 rounded-2xl text-gray-600 hover:text-[#14120d] hover:bg-black/5 transition-all font-mono text-[14px] uppercase tracking-widest"
                   >
                     ACESSAR COM E-MAIL
                   </button>
                   <button
                     onClick={() => setMode('register')}
-                    className="w-full py-2 text-gray-500 hover:text-[#d97706] transition-all font-mono text-[9px] uppercase tracking-widest"
+                    className="w-full py-2 text-gray-500 hover:text-[#d97706] transition-all font-mono text-[13px] uppercase tracking-widest"
                   >
                     NÃO TEM CONTA? CRIE AGORA
                   </button>
@@ -137,7 +137,7 @@ export default function Login() {
                   className="flex items-center gap-2 text-gray-500 hover:text-[#14120d] transition-all mb-8 group"
                 >
                   <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                  <span className="text-[10px] font-mono uppercase tracking-widest">Voltar</span>
+                  <span className="text-[14px] font-mono uppercase tracking-widest">Voltar</span>
                 </button>
 
                 <h2 className="text-2xl font-bold text-[#14120d] mb-2">{mode === 'login' ? 'Identificação' : 'Criar Conta'}</h2>
@@ -148,7 +148,7 @@ export default function Login() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {mode === 'register' && (
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-gray-600 uppercase tracking-widest ml-1">Nome Completo</label>
+                      <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">Nome Completo</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         <input
@@ -164,7 +164,7 @@ export default function Login() {
                   )}
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono text-gray-600 uppercase tracking-widest ml-1">E-mail</label>
+                    <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">E-mail</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                       <input
@@ -179,7 +179,7 @@ export default function Login() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono text-gray-600 uppercase tracking-widest ml-1">Senha</label>
+                    <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">Senha</label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                       <input
@@ -195,7 +195,7 @@ export default function Login() {
 
                   {error && (
                     <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                      <p className="text-[10px] text-red-600 font-mono uppercase tracking-tight leading-tight">
+                      <p className="text-[14px] text-red-600 font-mono uppercase tracking-tight leading-tight">
                         ERRO: {error}
                       </p>
                     </div>
@@ -204,7 +204,7 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 bg-[#d97706] text-white font-bold rounded-2xl hover:bg-[#c2680a] transition-all disabled:opacity-50 mt-4 uppercase tracking-widest text-[11px]"
+                    className="w-full py-4 bg-[#d97706] text-white font-bold rounded-2xl hover:bg-[#c2680a] transition-all disabled:opacity-50 mt-4 uppercase tracking-widest text-[15px]"
                   >
                     {isSubmitting ? 'PROCESSANDO...' : mode === 'login' ? 'ENTRAR_SISTEMA' : 'REGISTRAR_CONTA'}
                   </button>
@@ -213,7 +213,7 @@ export default function Login() {
                 <div className="mt-6 text-center">
                   <button
                     onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(null); }}
-                    className="text-[9px] font-mono text-gray-500 hover:text-[#14120d] uppercase tracking-widest transition-all"
+                    className="text-[13px] font-mono text-gray-500 hover:text-[#14120d] uppercase tracking-widest transition-all"
                   >
                     {mode === 'login' ? 'NÃO TEM CONTA? REGISTRE-SE' : 'JÁ TEM CONTA? FAÇA LOGIN'}
                   </button>
@@ -226,14 +226,14 @@ export default function Login() {
             <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
               <div className="flex gap-3">
                 <ExternalLink className="text-amber-600 shrink-0" size={16} />
-                <p className="text-[10px] text-amber-700 leading-relaxed font-mono uppercase tracking-tight">
+                <p className="text-[14px] text-amber-700 leading-relaxed font-mono uppercase tracking-tight">
                   Se o login Google não abrir, use a opção de <span className="text-amber-700 font-bold">E-mail</span> ou toque em <span className="text-amber-700 font-bold">Abrir em nova aba</span> no topo do AI Studio.
                 </p>
               </div>
             </div>
           )}
 
-          <p className="text-center mt-8 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+          <p className="text-center mt-8 text-[14px] font-mono text-gray-500 uppercase tracking-widest">
             LIFE_MANAGER_V2.0 // SECURITY_ENABLED
           </p>
         </div>

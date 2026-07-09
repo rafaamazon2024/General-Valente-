@@ -44,7 +44,7 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
 
             return (
               <div key={field.nome} className="space-y-2">
-                <label className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                <label className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
                   {field.label}
                   {field.required && <span className="text-red-500">*</span>}
                 </label>

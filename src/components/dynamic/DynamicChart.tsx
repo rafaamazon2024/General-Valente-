@@ -40,7 +40,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
           <span className="text-2xl opacity-50">{config.icon}</span>
         </div>
         <h3 className="text-sm font-mono font-bold text-gray-600 uppercase tracking-widest">Nenhum dado disponível</h3>
-        <p className="text-[10px] font-mono text-gray-500 mt-2 uppercase tracking-widest">Adicione seu primeiro item para ver as estatísticas!</p>
+        <p className="text-[14px] font-mono text-gray-500 mt-2 uppercase tracking-widest">Adicione seu primeiro item para ver as estatísticas!</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
     if (active && payload && payload.length) {
       return (
         <div className="bg-white border border-black/10 p-3 rounded-xl shadow-2xl backdrop-blur-md">
-          <p className="text-[10px] font-mono font-bold text-[#d97706] uppercase mb-1">{label || payload[0].name}</p>
+          <p className="text-[14px] font-mono font-bold text-[#d97706] uppercase mb-1">{label || payload[0].name}</p>
           <p className="text-xs text-[#14120d] font-bold">
             {payload[0].value} {payload[0].name === 'value' ? 'R$' : 'Itens'}
           </p>
@@ -104,7 +104,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {config.graficos.includes('pizza') && pieData.length > 0 && (
         <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all">
-          <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Distribuição_Por_Tipo</h3>
+          <h3 className="text-[14px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Distribuição_Por_Tipo</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -137,7 +137,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
 
       {config.graficos.includes('barras') && (
         <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all">
-          <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Status_Geral</h3>
+          <h3 className="text-[14px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Status_Geral</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData}>
@@ -165,7 +165,7 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
 
       {config.graficos.includes('linha') && lineData.length > 0 && (
         <section className="bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-6 shadow-sm hover:border-black/20 transition-all lg:col-span-2">
-          <h3 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Evolução_Temporal</h3>
+          <h3 className="text-[14px] font-mono font-bold tracking-widest text-gray-500 mb-6 uppercase">Evolução_Temporal</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lineData}>

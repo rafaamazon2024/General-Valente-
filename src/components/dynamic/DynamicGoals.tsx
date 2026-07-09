@@ -67,7 +67,7 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">Progresso</span>
+                  <span className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">Progresso</span>
                   <span className="text-2xl font-mono font-bold text-[#14120d]">{progress}%</span>
                 </div>
                 {progress === 100 && <Award className="text-amber-600 animate-bounce" size={24} />}
@@ -80,7 +80,7 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
                 />
               </div>
 
-              <div className="flex justify-between text-[9px] font-mono text-gray-500 uppercase tracking-widest">
+              <div className="flex justify-between text-[13px] font-mono text-gray-500 uppercase tracking-widest">
                 <span>{record.data.paginaAtual || record.data.aulaAtual || record.data.streakAtual || 0} unidades</span>
                 <span>{record.data.totalPaginas || record.data.totalAulas || record.data.metaStreak || '---'} total</span>
               </div>

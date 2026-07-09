@@ -7,6 +7,7 @@ import DynamicKanban from './dynamic/DynamicKanban';
 import DynamicChart from './dynamic/DynamicChart';
 import DynamicCalendar from './dynamic/DynamicCalendar';
 import DynamicGoals from './dynamic/DynamicGoals';
+import ChallengeTracker from './dynamic/ChallengeTracker';
 import { useRecords } from '../hooks/useRecords';
 
 interface AreaViewProps {
@@ -38,8 +39,8 @@ export default function AreaView({ config }: AreaViewProps) {
   };
 
   const handleAdd = (status?: string) => {
+    if (activeView === 'Metas' && selectedType === 'desafio') return;
     setEditingRecord(null);
-    setSelectedType(config.tiposItem[0]);
     setIsModalOpen(true);
   };
 
@@ -74,7 +75,7 @@ export default function AreaView({ config }: AreaViewProps) {
   const handleStatusChange = async (record: GenericRecord, newStatus: string) => {
     const statusFieldName = getStatusField(config);
     const updatedData = { ...record.data, [statusFieldName]: newStatus };
-    
+
     await updateRecord(String(record.id), {
       data: updatedData
     });
@@ -92,12 +93,12 @@ export default function AreaView({ config }: AreaViewProps) {
     switch (activeView) {
       case 'Dashboard': return <DynamicChart config={config} records={records} selectedType={selectedType} onFilterRequest={handleFilterRequest} />;
       case 'Tabela': return (
-        <DynamicTable 
-          fields={config.campos[selectedType] || []} 
-          records={records} 
+        <DynamicTable
+          fields={config.campos[selectedType] || []}
+          records={records}
           selectedType={selectedType}
-          onEdit={handleEdit} 
-          onDelete={handleDelete} 
+          onEdit={handleEdit}
+          onDelete={handleDelete}
           color={config.cor}
           externalFilters={externalFilters}
           onFiltersChange={setExternalFilters}
@@ -105,21 +106,33 @@ export default function AreaView({ config }: AreaViewProps) {
       );
       case 'Calendário': return <DynamicCalendar config={config} records={records} selectedType={selectedType} />;
       case 'Kanban': return (
-        <DynamicKanban 
-          config={config} 
-          records={records} 
+        <DynamicKanban
+          config={config}
+          records={records}
           selectedType={selectedType}
-          onEdit={handleEdit} 
-          onDelete={handleDelete} 
-          onAdd={handleAdd} 
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onAdd={handleAdd}
           onStatusChange={handleStatusChange}
         />
       );
-      case 'Metas': return (
-        <DynamicGoals 
-          config={config} 
-          records={records} 
-          selectedType={selectedType} 
+      case 'Metas':
+        if (selectedType === 'desafio') {
+        return (
+        <ChallengeTracker
+        config={config}
+        records={records}
+        onDelete={removeRecord}
+        onAdd={(data) => addRecord({ area_id: config.id, type: 'desafio', data })}
+        onUpdate={updateRecord}
+        />
+        );
+        }
+        return (
+        <DynamicGoals
+          config={config}
+          records={records}
+          selectedType={selectedType}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -149,7 +162,7 @@ export default function AreaView({ config }: AreaViewProps) {
           </div>
           <div>
             <h2 className="text-2xl font-mono font-bold tracking-tighter text-[#14120d] uppercase">{config.nome}</h2>
-            <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SISTEMA_OPERACIONAL_ATIVO</p>
+            <p className="text-[14px] font-mono text-gray-500 uppercase tracking-widest">SISTEMA_OPERACIONAL_ATIVO</p>
           </div>
         </div>
         <button
@@ -167,7 +180,7 @@ export default function AreaView({ config }: AreaViewProps) {
           <button
             key={view}
             onClick={() => setActiveView(view)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[14px] font-mono font-bold uppercase tracking-widest transition-all ${
               activeView === view
                 ? 'bg-white text-[#14120d] shadow-inner'
                 : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'
@@ -186,7 +199,7 @@ export default function AreaView({ config }: AreaViewProps) {
             <button
               key={type}
               onClick={() => setSelectedType(type)}
-              className={`text-[10px] font-mono font-bold uppercase tracking-[0.2em] pb-2 transition-all relative whitespace-nowrap ${
+              className={`text-[14px] font-mono font-bold uppercase tracking-[0.2em] pb-2 transition-all relative whitespace-nowrap ${
                 selectedType === type ? 'text-[#14120d]' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -206,7 +219,7 @@ export default function AreaView({ config }: AreaViewProps) {
 
       {/* Modal */}
       {isModalOpen && (
-        <DynamicForm 
+        <DynamicForm
           title={editingRecord ? `EDITAR_${selectedType.toUpperCase()}` : `NOVO_${selectedType.toUpperCase()}`}
           fields={config.campos[selectedType] || []}
           initialData={editingRecord?.data}

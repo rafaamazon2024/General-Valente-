@@ -68,7 +68,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
       <div className="flex items-center justify-center h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-[#d97706]/20 border-t-[#d97706] rounded-full animate-spin" />
-          <p className="font-mono text-[10px] uppercase tracking-widest text-gray-500">Sincronizando_Dados...</p>
+          <p className="font-mono text-[14px] uppercase tracking-widest text-gray-500">Sincronizando_Dados...</p>
         </div>
       </div>
     );
@@ -79,9 +79,9 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
       const data = payload[0].payload;
       return (
         <div className="bg-white border border-black/10 p-3 rounded-xl shadow-2xl backdrop-blur-md">
-          <p className="text-[10px] font-mono font-bold text-[#d97706] uppercase mb-1">{data.name}</p>
+          <p className="text-[14px] font-mono font-bold text-[#d97706] uppercase mb-1">{data.name}</p>
           <p className="text-xs text-[#14120d] font-bold">{data.score}% Completo</p>
-          <p className="text-[9px] text-gray-500 mt-1 uppercase">{data.count} Itens Registrados</p>
+          <p className="text-[13px] text-gray-500 mt-1 uppercase">{data.count} Itens Registrados</p>
         </div>
       );
     }
@@ -117,36 +117,36 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-sm font-mono font-bold text-[#14120d] uppercase tracking-widest">Guia_De_Inicializacao_Sistemica</h3>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-1">Como_Operar_Seu_LIFE_OS</p>
+                    <p className="text-[14px] font-mono text-gray-500 uppercase tracking-widest mt-1">Como_Operar_Seu_LIFE_OS</p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex gap-3 p-3 bg-black/5 rounded-2xl border border-black/5 group hover:border-[#d97706]/30 transition-all">
                       <div className="text-[#d97706] mt-0.5"><ChevronRight size={14} /></div>
                       <div>
-                        <p className="text-[11px] font-bold text-gray-700">1. Navegue Pelas Áreas</p>
-                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Use o menu lateral para acessar Saúde, Finanças, Carreira, etc.</p>
+                        <p className="text-[15px] font-bold text-gray-700">1. Navegue Pelas Áreas</p>
+                        <p className="text-[13px] font-mono text-gray-500 uppercase mt-1">Use o menu lateral para acessar Saúde, Finanças, Carreira, etc.</p>
                       </div>
                     </div>
                     <div className="flex gap-3 p-3 bg-black/5 rounded-2xl border border-black/5 group hover:border-[#0e7490]/30 transition-all">
                       <div className="text-[#0e7490] mt-0.5"><ChevronRight size={14} /></div>
                       <div>
-                        <p className="text-[11px] font-bold text-gray-700">2. Adicione Registros</p>
-                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Clique em <span className="text-[#14120d]">+ NOVO REGISTRO</span> em qualquer área para alimentar o sistema.</p>
+                        <p className="text-[15px] font-bold text-gray-700">2. Adicione Registros</p>
+                        <p className="text-[13px] font-mono text-gray-500 uppercase mt-1">Clique em <span className="text-[#14120d]">+ NOVO REGISTRO</span> em qualquer área para alimentar o sistema.</p>
                       </div>
                     </div>
                     <div className="flex gap-3 p-3 bg-black/5 rounded-2xl border border-black/5 group hover:border-amber-500/30 transition-all">
                       <div className="text-amber-600 mt-0.5"><ChevronRight size={14} /></div>
                       <div>
-                        <p className="text-[11px] font-bold text-gray-700">3. Expanda sua Roda</p>
-                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Conclua itens para ver seu Score Global e a Roda da Vida Digital crescerem.</p>
+                        <p className="text-[15px] font-bold text-gray-700">3. Expanda sua Roda</p>
+                        <p className="text-[13px] font-mono text-gray-500 uppercase mt-1">Conclua itens para ver seu Score Global e a Roda da Vida Digital crescerem.</p>
                       </div>
                     </div>
                     <div className="flex gap-3 p-3 bg-black/5 rounded-2xl border border-black/5 group hover:border-purple-500/30 transition-all">
                       <div className="text-purple-600 mt-0.5"><ChevronRight size={14} /></div>
                       <div>
-                        <p className="text-[11px] font-bold text-gray-700">4. Domine as Visualizações</p>
-                        <p className="text-[9px] font-mono text-gray-500 uppercase mt-1">Alterne entre Kanban, Tabela e Calendário para gerenciar cada área.</p>
+                        <p className="text-[15px] font-bold text-gray-700">4. Domine as Visualizações</p>
+                        <p className="text-[13px] font-mono text-gray-500 uppercase mt-1">Alterne entre Kanban, Tabela e Calendário para gerenciar cada área.</p>
                       </div>
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
             <Award size={120} className="text-[#d97706]" />
           </div>
           <div className="relative z-10">
-            <p className="text-[10px] font-mono font-bold text-[#d97706] uppercase tracking-[0.5em] mb-4">Meta_Suprema_2026</p>
+            <p className="text-[14px] font-mono font-bold text-[#d97706] uppercase tracking-[0.5em] mb-4">Meta_Suprema_2026</p>
             <h2 className="text-2xl md:text-3xl font-bold text-[#14120d] leading-tight max-w-3xl">
               "{userSettings.supreme_goal}"
             </h2>
@@ -178,7 +178,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <Zap size={64} className="text-[#d97706]" />
           </div>
-          <p className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Score_Global</p>
+          <p className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Score_Global</p>
           <h3 className="text-4xl font-mono font-bold text-[#14120d]">{overallScore}%</h3>
           <div className="w-full bg-black/5 h-1 rounded-full mt-4 overflow-hidden">
             <div className="h-full bg-[#d97706] transition-all duration-1000" style={{ width: `${overallScore}%` }} />
@@ -189,27 +189,27 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <Target size={64} className="text-[#0e7490]" />
           </div>
-          <p className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Registros_Totais</p>
+          <p className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Registros_Totais</p>
           <h3 className="text-4xl font-mono font-bold text-[#14120d]">{allRecords.length}</h3>
-          <p className="text-[10px] font-mono text-[#0e7490] mt-4 uppercase tracking-widest">SISTEMA_OPERACIONAL</p>
+          <p className="text-[14px] font-mono text-[#0e7490] mt-4 uppercase tracking-widest">SISTEMA_OPERACIONAL</p>
         </div>
 
         <div className="bg-white/50 backdrop-blur-xl border border-black/10 p-6 rounded-3xl relative overflow-hidden group hover:border-amber-500/30 transition-all">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <Award size={64} className="text-amber-600" />
           </div>
-          <p className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Áreas_Ativas</p>
+          <p className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Áreas_Ativas</p>
           <h3 className="text-4xl font-mono font-bold text-[#14120d]">{CONFIG_AREAS.filter(a => allRecords.some(r => r.area_id === a.id)).length}</h3>
-          <p className="text-[10px] font-mono text-amber-600 mt-4 uppercase tracking-widest">MAPA_DA_VIDA</p>
+          <p className="text-[14px] font-mono text-amber-600 mt-4 uppercase tracking-widest">MAPA_DA_VIDA</p>
         </div>
 
         <div className="bg-white/50 backdrop-blur-xl border border-black/10 p-6 rounded-3xl relative overflow-hidden group hover:border-purple-500/30 transition-all">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <TrendingUp size={64} className="text-purple-600" />
           </div>
-          <p className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Status_Geral</p>
+          <p className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-2">Status_Geral</p>
           <h3 className="text-4xl font-mono font-bold text-[#14120d]">ESTÁVEL</h3>
-          <p className="text-[10px] font-mono text-purple-600 mt-4 uppercase tracking-widest">SINCRONIZADO</p>
+          <p className="text-[14px] font-mono text-purple-600 mt-4 uppercase tracking-widest">SINCRONIZADO</p>
         </div>
       </div>
 
@@ -278,7 +278,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
             className="bg-white/50 border border-black/5 p-4 rounded-2xl flex flex-col items-center text-center group hover:border-black/20 hover:bg-black/5 transition-all"
           >
             <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">{CONFIG_AREAS.find(a => a.nome === area.name)?.icon}</span>
-            <span className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">{area.name}</span>
+            <span className="text-[13px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">{area.name}</span>
             <span className="text-lg font-mono font-bold text-[#14120d]">{area.score}%</span>
             <div className="w-full bg-black/5 h-0.5 mt-2 rounded-full overflow-hidden">
               <div className="h-full transition-all duration-1000" style={{ width: `${area.score}%`, backgroundColor: area.color }} />
@@ -311,7 +311,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-xl">{area.icon}</span>
                   <h4 className="text-xs font-mono font-bold text-[#14120d] uppercase tracking-widest">{area.nome}</h4>
-                  <span className="ml-auto text-[10px] font-mono text-gray-500">{areaTasks.length}</span>
+                  <span className="ml-auto text-[14px] font-mono text-gray-500">{areaTasks.length}</span>
                 </div>
 
                 <div className="space-y-3 flex-1">
@@ -323,9 +323,9 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                           {task.data.titulo || task.data.nome || task.data.projeto || task.data.item}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[8px] font-mono text-gray-500 uppercase tracking-widest">{task.data.status || 'Pendente'}</span>
+                          <span className="text-[12px] font-mono text-gray-500 uppercase tracking-widest">{task.data.status || 'Pendente'}</span>
                           {task.data.deadline && (
-                            <span className="text-[8px] font-mono text-amber-600/80 uppercase tracking-widest">
+                            <span className="text-[12px] font-mono text-amber-600/80 uppercase tracking-widest">
                               {new Date(task.data.deadline).toLocaleDateString('pt-BR')}
                             </span>
                           )}
@@ -336,7 +336,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                   {areaTasks.length > 3 && (
                     <button
                       onClick={() => onNavigate?.(area.id)}
-                      className="w-full py-2 text-[9px] font-mono text-gray-500 hover:text-[#14120d] uppercase tracking-widest transition-colors"
+                      className="w-full py-2 text-[13px] font-mono text-gray-500 hover:text-[#14120d] uppercase tracking-widest transition-colors"
                     >
                       + {areaTasks.length - 3} outras tarefas
                     </button>
@@ -345,7 +345,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
 
                 <button
                   onClick={() => onNavigate?.(area.id)}
-                  className="mt-4 w-full py-2 rounded-xl bg-black/5 hover:bg-black/10 text-[9px] font-mono font-bold text-gray-600 hover:text-[#14120d] uppercase tracking-[0.2em] transition-all"
+                  className="mt-4 w-full py-2 rounded-xl bg-black/5 hover:bg-black/10 text-[13px] font-mono font-bold text-gray-600 hover:text-[#14120d] uppercase tracking-[0.2em] transition-all"
                 >
                   Gerenciar Área
                 </button>
@@ -374,15 +374,15 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                 className="bg-white/50 backdrop-blur-xl border border-black/10 p-5 rounded-2xl hover:border-black/20 transition-all text-left group"
               >
                 <div className="flex justify-between items-start mb-3">
-                  <span className="text-[8px] font-mono text-[#64748b] uppercase tracking-widest">{note.data.categoria || 'Nota'}</span>
+                  <span className="text-[12px] font-mono text-[#64748b] uppercase tracking-widest">{note.data.categoria || 'Nota'}</span>
                   {note.data.status === 'Fixado' && <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />}
                 </div>
                 <h4 className="text-xs font-bold text-gray-700 mb-2 group-hover:text-[#14120d] transition-colors truncate">{note.data.titulo}</h4>
-                <p className="text-[10px] font-mono text-gray-500 line-clamp-3 leading-relaxed">
+                <p className="text-[14px] font-mono text-gray-500 line-clamp-3 leading-relaxed">
                   {note.data.conteudo}
                 </p>
                 <div className="mt-4 pt-3 border-t border-black/5 flex justify-between items-center">
-                  <span className="text-[8px] font-mono text-gray-500 uppercase">
+                  <span className="text-[12px] font-mono text-gray-500 uppercase">
                     {new Date(note.created_at || '').toLocaleDateString('pt-BR')}
                   </span>
                 </div>
@@ -394,7 +394,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
             className="bg-black/5 border border-dashed border-black/10 rounded-2xl flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-[#14120d] hover:bg-black/10 hover:border-black/20 transition-all min-h-[160px]"
           >
             <Plus size={24} />
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Nova_Nota</span>
+            <span className="text-[14px] font-mono font-bold uppercase tracking-widest">Nova_Nota</span>
           </button>
         </div>
       </section>

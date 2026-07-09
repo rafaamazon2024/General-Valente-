@@ -242,7 +242,7 @@ export default function DynamicTable({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest outline-none focus:border-[#d97706]/50"
+            className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[14px] uppercase tracking-widest outline-none focus:border-[#d97706]/50"
           >
             <option value="recent">Mais Recente</option>
             <option value="oldest">Mais Antigo</option>
@@ -256,7 +256,7 @@ export default function DynamicTable({
 
           {availableStatuses.length > 0 && (
             <div className="relative group">
-              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
+              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[14px] uppercase tracking-widest flex items-center gap-2">
                 Status <ChevronDown size={12} />
               </button>
               <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-black/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
@@ -271,7 +271,7 @@ export default function DynamicTable({
                       }}
                       className="rounded border-black/10 bg-black/5 text-[#d97706]"
                     />
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-600">{status}</span>
+                    <span className="text-[14px] font-mono uppercase tracking-widest text-gray-600">{status}</span>
                   </label>
                 ))}
               </div>
@@ -280,7 +280,7 @@ export default function DynamicTable({
 
           {availableCategories.length > 0 && (
             <div className="relative group">
-              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2">
+              <button className="bg-black/5 border border-black/10 text-[#14120d] rounded-xl px-4 py-2 font-mono text-[14px] uppercase tracking-widest flex items-center gap-2">
                 Categoria <ChevronDown size={12} />
               </button>
               <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-black/10 rounded-xl p-2 hidden group-hover:block z-50 shadow-2xl">
@@ -295,7 +295,7 @@ export default function DynamicTable({
                       }}
                       className="rounded border-black/10 bg-black/5 text-[#d97706]"
                     />
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-600">{cat}</span>
+                    <span className="text-[14px] font-mono uppercase tracking-widest text-gray-600">{cat}</span>
                   </label>
                 ))}
               </div>
@@ -305,14 +305,14 @@ export default function DynamicTable({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="p-2 hover:bg-black/5 rounded-xl text-red-600 transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest"
+              className="p-2 hover:bg-black/5 rounded-xl text-red-600 transition-colors flex items-center gap-2 font-mono text-[14px] uppercase tracking-widest"
             >
               <X size={14} /> Limpar
             </button>
           )}
         </div>
 
-        <div className="ml-auto font-mono text-[10px] text-gray-500 uppercase tracking-widest">
+        <div className="ml-auto font-mono text-[14px] text-gray-500 uppercase tracking-widest">
           Mostrando {filteredRecords.length} de {records.length} itens
         </div>
       </div>
@@ -323,11 +323,11 @@ export default function DynamicTable({
             <thead>
               <tr className="bg-black/5 border-b border-black/10">
                 {fields.map(field => (
-                  <th key={field.nome} className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                  <th key={field.nome} className="px-6 py-4 font-mono text-[14px] font-bold uppercase tracking-widest text-gray-600">
                     {field.label}
                   </th>
                 ))}
-                <th className="px-6 py-4 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-600 text-right">Ações</th>
+                <th className="px-6 py-4 font-mono text-[14px] font-bold uppercase tracking-widest text-gray-600 text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
@@ -343,7 +343,7 @@ export default function DynamicTable({
                         {/* Progress bar logic for specific items */}
                         {((field.nome === 'titulo' || field.nome === 'nome') && progress) && (
                           <div className="mt-2 w-32">
-                            <div className="flex justify-between text-[9px] font-mono text-gray-500 mb-1">
+                            <div className="flex justify-between text-[13px] font-mono text-gray-500 mb-1">
                               <span>{progress.percent}%</span>
                               <span>{progress.current}/{progress.total} {progress.label}</span>
                             </div>
@@ -422,7 +422,7 @@ export default function DynamicTable({
                   <h3 className="text-sm font-mono font-bold text-[#14120d] uppercase tracking-widest">
                     Bloco de Notas: {noteModal.record.data.titulo || noteModal.record.data.nome}
                   </h3>
-                  <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-1">Registro #{noteModal.record.id}</p>
+                  <p className="text-[14px] font-mono text-gray-500 uppercase tracking-widest mt-1">Registro #{noteModal.record.id}</p>
                 </div>
                 <button onClick={() => setNoteModal({ record: null, isOpen: false })} className="p-2 hover:bg-black/10 rounded-xl text-gray-500 hover:text-[#14120d] transition-all">
                   <X size={20} />
@@ -438,7 +438,7 @@ export default function DynamicTable({
                 <div className="flex justify-end gap-4 mt-6">
                   <button
                     onClick={() => setNoteModal({ record: null, isOpen: false })}
-                    className="px-6 py-2 rounded-xl font-mono text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-[#14120d] transition-all"
+                    className="px-6 py-2 rounded-xl font-mono text-[14px] font-bold uppercase tracking-widest text-gray-500 hover:text-[#14120d] transition-all"
                   >
                     Cancelar
                   </button>
@@ -447,7 +447,7 @@ export default function DynamicTable({
                       const note = (document.getElementById('note-textarea') as HTMLTextAreaElement).value;
                       handleSaveNote(noteModal.record!, note);
                     }}
-                    className="px-8 py-2 rounded-xl bg-amber-500 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
+                    className="px-8 py-2 rounded-xl bg-amber-500 text-white font-bold text-[14px] uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
                   >
                     Salvar Notas
                   </button>

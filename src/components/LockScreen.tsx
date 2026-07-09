@@ -42,13 +42,13 @@ export default function LockScreen({ onUnlock, userName }: LockScreenProps) {
         <h1 className="text-2xl font-mono font-bold text-[#14120d] tracking-tighter uppercase mb-2">
           {userName.toUpperCase().replace(' ', '_')}_OS
         </h1>
-        <p className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mb-12">
+        <p className="text-[14px] font-mono text-gray-500 uppercase tracking-[0.4em] mb-12">
           SISTEMA_BLOQUEADO
         </p>
 
         <form onSubmit={handleUnlock} className="w-full space-y-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest ml-1">Insira o PIN de Acesso</label>
+            <label className="text-[14px] font-mono text-gray-500 uppercase tracking-widest ml-1">Insira o PIN de Acesso</label>
             <div className="relative">
               <input
                 type="password"
@@ -63,7 +63,7 @@ export default function LockScreen({ onUnlock, userName }: LockScreenProps) {
               </div>
             </div>
             {error && (
-              <p className="text-[10px] font-mono text-red-600 text-center uppercase tracking-widest animate-pulse">Acesso Negado: PIN Incorreto</p>
+              <p className="text-[14px] font-mono text-red-600 text-center uppercase tracking-widest animate-pulse">Acesso Negado: PIN Incorreto</p>
             )}
           </div>
 
@@ -78,13 +78,13 @@ export default function LockScreen({ onUnlock, userName }: LockScreenProps) {
         <div className="mt-12 flex items-center gap-4 opacity-40">
           <div className="flex items-center gap-2">
             <Zap size={12} className="text-[#d97706]" />
-            <span className="text-[8px] font-mono text-[#14120d] uppercase tracking-widest">Encrypted_v2.0</span>
+            <span className="text-[12px] font-mono text-[#14120d] uppercase tracking-widest">Encrypted_v2.0</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-gray-500" />
-          <span className="text-[8px] font-mono text-[#14120d] uppercase tracking-widest">Core_Active</span>
+          <span className="text-[12px] font-mono text-[#14120d] uppercase tracking-widest">Core_Active</span>
         </div>
 
-        <p className="mt-8 text-[9px] font-mono text-gray-500 uppercase tracking-widest text-center">
+        <p className="mt-8 text-[13px] font-mono text-gray-500 uppercase tracking-widest text-center">
           Dica: O PIN padrão é <span className="text-gray-700">2026</span>
         </p>
       </motion.div>

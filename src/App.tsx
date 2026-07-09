@@ -78,7 +78,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#f7f5f0] flex flex-col items-center justify-center gap-4">
         <div className="w-16 h-16 border-4 border-[#d97706]/20 border-t-[#d97706] rounded-full animate-spin" />
-        <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest animate-pulse">Iniciando_Sistema...</p>
+        <p className="text-[14px] font-mono text-gray-500 uppercase tracking-widest animate-pulse">Iniciando_Sistema...</p>
       </div>
     );
   }
@@ -132,7 +132,7 @@ export default function App() {
               <h1 className="font-bold text-xl tracking-tighter text-[#d97706]">
                 {userSettings?.displayName?.toUpperCase().split(' ')[0] || 'LIFE'}_OS
               </h1>
-              <p className="text-[8px] font-mono text-gray-500 uppercase tracking-widest mt-1 truncate max-w-[160px]">
+              <p className="text-[12px] font-mono text-gray-500 uppercase tracking-widest mt-1 truncate max-w-[160px]">
                 {userSettings?.email || 'SISTEMA_ATIVO'}
               </p>
             </motion.div>
@@ -158,7 +158,7 @@ export default function App() {
             {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Visão Geral</span>}
           </button>
 
-          <div className={`pt-4 pb-2 px-4 text-[9px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em] ${!isSidebarOpen && 'hidden'}`}>
+          <div className={`pt-4 pb-2 px-4 text-[13px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em] ${!isSidebarOpen && 'hidden'}`}>
             Áreas_Da_Vida
           </div>
 
@@ -192,8 +192,8 @@ export default function App() {
              </div>
              {isSidebarOpen && (
                <div className="flex flex-col min-w-0">
-                 <span className="text-[10px] font-bold text-[#14120d] truncate">{user.displayName}</span>
-                 <span className="text-[8px] font-mono text-gray-500 truncate uppercase mt-0.5">Sessão_Ativa</span>
+                 <span className="text-[14px] font-bold text-[#14120d] truncate">{user.displayName}</span>
+                 <span className="text-[12px] font-mono text-gray-500 truncate uppercase mt-0.5">Sessão_Ativa</span>
                </div>
              )}
           </div>
@@ -235,18 +235,18 @@ export default function App() {
             </button>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#d97706] animate-pulse" />
-              <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Sistema_Online</span>
+              <span className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest">Sistema_Online</span>
             </div>
             <div className="h-4 w-px bg-black/10" />
             <div className="flex items-center gap-2">
               <Cpu size={14} className="text-[#0e7490]" />
-              <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Core_v3.1.0</span>
+              <span className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest">Core_v3.1.0</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-[10px] text-[#d97706] uppercase tracking-[0.3em] font-bold">SYSTEM_TIME</p>
+              <p className="text-[14px] text-[#d97706] uppercase tracking-[0.3em] font-bold">SYSTEM_TIME</p>
               <p className="text-xs font-mono text-gray-600">{new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-black/5 to-black/10 border border-black/10 flex items-center justify-center overflow-hidden">

@@ -55,7 +55,7 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
           <div {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing p-1 text-gray-500 hover:text-gray-700">
             <GripVertical size={12} />
           </div>
-          <span className="text-[9px] font-mono text-[#d97706] uppercase tracking-widest">{record.type}</span>
+          <span className="text-[13px] font-mono text-[#d97706] uppercase tracking-widest">{record.type}</span>
         </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button onClick={() => onEdit(record)} className="p-1 text-gray-500 hover:text-[#14120d]"><Edit2 size={12} /></button>
@@ -68,7 +68,7 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
 
       {/* Content Snippet */}
       {(record.data.conteudo || record.data.descricao) && (
-        <p className="text-[10px] text-gray-500 line-clamp-3 font-mono leading-relaxed mb-2">
+        <p className="text-[14px] text-gray-500 line-clamp-3 font-mono leading-relaxed mb-2">
           {record.data.conteudo || record.data.descricao}
         </p>
       )}
@@ -76,7 +76,7 @@ function KanbanCard({ record, config, onEdit, onDelete }: KanbanCardProps) {
       {/* Progress Bars */}
       {record.data.totalPaginas && record.data.paginaAtual !== undefined && (
         <div className="mt-3">
-          <div className="flex justify-between text-[9px] font-mono text-gray-500 mb-1 uppercase">
+          <div className="flex justify-between text-[13px] font-mono text-gray-500 mb-1 uppercase">
             <span>Progresso</span>
             <span>{Math.round((record.data.paginaAtual / record.data.totalPaginas) * 100)}%</span>
           </div>
@@ -109,7 +109,7 @@ function KanbanColumn({ column, records, config, onEdit, onDelete, onAdd, record
   return (
     <div ref={setNodeRef} className={`flex flex-col gap-4 rounded-2xl transition-colors ${isOver ? 'bg-black/5' : ''}`}>
       <div className="flex items-center justify-between px-2">
-        <h3 className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em]">
+        <h3 className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em]">
           {column} <span className="ml-2 opacity-30">({records.filter((r: any) => recordDataToStatus(r.data) === column).length})</span>
         </h3>
         <button
