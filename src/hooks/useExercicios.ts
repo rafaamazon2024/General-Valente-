@@ -8,6 +8,8 @@ export function useExercicios() {
   const { user } = useAuth();
   const [exercicios, setExercicios] = useState<Exercicio[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const seeded = useRef(false);
 
   useEffect(() => {
@@ -17,6 +19,9 @@ export function useExercicios() {
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     const q = query(collection(db, 'exercicios'), where('uid', '==', user.uid));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
@@ -24,26 +29,37 @@ export function useExercicios() {
       // com EXERCICIOS_SEED. `seeded` evita reseedar em cada re-render antes do snapshot atualizar.
       if (snapshot.empty && !seeded.current) {
         seeded.current = true;
-        for (const ex of EXERCICIOS_SEED) {
-          await addDoc(collection(db, 'exercicios'), {
-            ...ex,
-            uid: user.uid,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          });
+        try {
+          for (const ex of EXERCICIOS_SEED) {
+            await addDoc(collection(db, 'exercicios'), {
+              ...ex,
+              uid: user.uid,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            });
+          }
+        } catch (err) {
+          seeded.current = false; // permite tentar de novo (ex.: após corrigir as regras)
+          const message = handleFirestoreError(err, OperationType.CREATE, 'exercicios');
+          setError(message);
+          setLoading(false);
         }
-        return; // o próprio addDoc vai disparar um novo snapshot com os dados
+        return; // sucesso: o próprio addDoc vai disparar um novo snapshot com os dados
       }
 
       const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Exercicio[];
       setExercicios(data);
       setLoading(false);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, 'exercicios');
+    }, (err) => {
+      const message = handleFirestoreError(err, OperationType.LIST, 'exercicios');
+      setError(message);
+      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [user, retryCount]);
+
+  const retry = () => setRetryCount(c => c + 1);
 
   const addExercicio = async (data: { nome: string; grupo_muscular: string; link_video: string }) => {
     if (!user) return;
@@ -75,5 +91,5 @@ export function useExercicios() {
     }
   };
 
-  return { exercicios, loading, addExercicio, updateExercicio, removeExercicio };
+  return { exercicios, loading, error, retry, addExercicio, updateExercicio, removeExercicio };
 }

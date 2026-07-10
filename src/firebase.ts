@@ -76,7 +76,11 @@ export interface FirestoreErrorInfo {
   }
 }
 
-export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+// Loga o erro e devolve uma mensagem pra UI. NÃO dá throw: todo call site roda dentro de um
+// listener onSnapshot ou de um catch de escrita já finalizado - um throw aqui vira uma exceção
+// não tratada dentro do callback do SDK do Firestore, que nunca chega no setLoading(false) do
+// hook chamador e pode derrubar o processamento de outros listeners onSnapshot da mesma página.
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null): string {
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
@@ -96,7 +100,7 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     path
   }
   console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+  return errInfo.error;
 }
 
 export { 

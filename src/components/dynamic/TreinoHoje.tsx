@@ -1,14 +1,15 @@
-import { Check, PlayCircle, Moon, Trophy } from 'lucide-react';
+import { Check, PlayCircle, Moon, Trophy, AlertTriangle } from 'lucide-react';
 import { useExercicios } from '../../hooks/useExercicios';
 import { useTreinoHoje } from '../../hooks/useTreinoHoje';
 
 const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 export default function TreinoHoje() {
-  const { exercicios, loading: loadingExercicios } = useExercicios();
-  const { log, loading: loadingLog, grupos, toggleExercicio } = useTreinoHoje();
+  const { exercicios, loading: loadingExercicios, error: errorExercicios, retry: retryExercicios } = useExercicios();
+  const { log, loading: loadingLog, error: errorLog, retry: retryLog, grupos, toggleExercicio } = useTreinoHoje();
 
   const loading = loadingExercicios || loadingLog;
+  const error = errorExercicios || errorLog;
   const hoje = new Date();
   const isDescanso = grupos.length === 0;
   const exerciciosDoDia = exercicios.filter(e => grupos.includes(e.grupo_muscular));
@@ -17,6 +18,21 @@ export default function TreinoHoje() {
 
   if (loading) {
     return <div className="py-12 text-center text-gray-500 font-mono text-[14px] uppercase tracking-widest">Carregando_Treino...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border border-red-500/20 rounded-2xl bg-red-500/5">
+        <AlertTriangle size={32} className="text-red-500" />
+        <p className="text-[14px] font-mono font-bold uppercase tracking-widest text-red-500">Erro ao carregar treino</p>
+        <button
+          onClick={() => { retryExercicios(); retryLog(); }}
+          className="mt-2 px-5 py-2 rounded-xl text-[12px] font-mono font-bold uppercase tracking-widest bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
+        >
+          Tentar Novamente
+        </button>
+      </div>
+    );
   }
 
   if (isDescanso) {

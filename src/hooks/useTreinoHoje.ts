@@ -13,6 +13,8 @@ export function useTreinoHoje() {
   const { user } = useAuth();
   const [log, setLog] = useState<TreinoLog | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const date = todayStr();
   const grupos = getGruposDoDia(new Date());
 
@@ -23,6 +25,9 @@ export function useTreinoHoje() {
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     const ref = doc(db, 'treino_logs', `${user.uid}_${date}`);
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) {
@@ -31,12 +36,16 @@ export function useTreinoHoje() {
         setLog(null);
       }
       setLoading(false);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `treino_logs/${user.uid}_${date}`);
+    }, (err) => {
+      const message = handleFirestoreError(err, OperationType.GET, `treino_logs/${user.uid}_${date}`);
+      setError(message);
+      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user, date]);
+  }, [user, date, retryCount]);
+
+  const retry = () => setRetryCount(c => c + 1);
 
   const toggleExercicio = async (exercicioId: string, exercicioIdsDoGrupoHoje: string[]) => {
     if (!user) return;
@@ -60,5 +69,5 @@ export function useTreinoHoje() {
     }
   };
 
-  return { log, loading, date, grupos, toggleExercicio };
+  return { log, loading, error, retry, date, grupos, toggleExercicio };
 }

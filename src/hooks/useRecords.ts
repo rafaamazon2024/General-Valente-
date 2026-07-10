@@ -29,6 +29,7 @@ export function useRecords(areaId?: string) {
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'records');
+      setLoading(false);
     });
 
     return () => unsubscribe();
