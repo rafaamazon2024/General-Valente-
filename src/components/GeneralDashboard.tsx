@@ -57,7 +57,10 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
 
     const somaProgresso = areaRecords.reduce((acc, r) => acc + getRecordProgress(r), 0);
     const score = Math.round(somaProgresso / areaRecords.length);
-    return { id: area.id, name: area.nome, score: score || 20, full: 100, color: area.cor, count: areaRecords.length }; // Min 20 for visual
+    // Piso de 4 só pra evitar o gomo da roda colapsar visualmente num ponto - baixo o
+    // suficiente pra não competir com progresso real pequeno (ex.: 1 dia de streak numa
+    // meta de 30 já passa disso e aparece maior que uma área ainda intocada).
+    return { id: area.id, name: area.nome, score: score || 4, full: 100, color: area.cor, count: areaRecords.length };
   });
 
   const overallScore = Math.round(areaScores.reduce((acc, curr) => acc + curr.score, 0) / areaScores.length);
