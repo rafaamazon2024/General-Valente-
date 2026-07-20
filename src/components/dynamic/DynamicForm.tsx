@@ -8,9 +8,10 @@ interface DynamicFormProps {
   onCancel: () => void;
   initialData?: any;
   title: string;
+  metaOptions?: { id: string; label: string }[];
 }
 
-export default function DynamicForm({ fields, onSubmit, onCancel, initialData, title }: DynamicFormProps) {
+export default function DynamicForm({ fields, onSubmit, onCancel, initialData, title, metaOptions }: DynamicFormProps) {
   const [formData, setFormData] = useState<any>(initialData || {});
 
   useEffect(() => {
@@ -49,7 +50,18 @@ export default function DynamicForm({ fields, onSubmit, onCancel, initialData, t
                   {field.required && <span className="text-red-500">*</span>}
                 </label>
 
-                {field.tipo === 'select' ? (
+                {field.tipo === 'metaRef' ? (
+                  <select
+                    value={formData[field.nome] || ''}
+                    onChange={(e) => setFormData({ ...formData, [field.nome]: e.target.value })}
+                    className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-[#d97706]/50 outline-none transition-all font-mono text-sm appearance-none"
+                  >
+                    <option value="" className="bg-white">Nenhuma</option>
+                    {metaOptions?.map((opt) => (
+                      <option key={opt.id} value={opt.id} className="bg-white">{opt.label}</option>
+                    ))}
+                  </select>
+                ) : field.tipo === 'select' ? (
                   <select
                     required={field.required}
                     value={formData[field.nome] || ''}

@@ -43,7 +43,12 @@ export function useHabitosHoje() {
 
   const retry = () => setRetryCount(c => c + 1);
 
-  const habitosAtivos = records.filter(r => r.type === 'habito' && r.data.status !== 'Pausado' && r.data.status !== 'Concluído');
+  // Hábito (Desenvolvimento Pessoal) e Prática (Espiritualidade) são o mesmo conceito -
+  // recorrência diária - mas usam nomes de campo diferentes no schema (streakAtual/
+  // melhorSequencia vs streak, e prática não tem "melhor sequência" registrada).
+  const habitosAtivos = records.filter(r =>
+    (r.type === 'habito' || r.type === 'pratica') && r.data.status !== 'Pausado' && r.data.status !== 'Concluído'
+  );
   const feitosHoje = log?.habitos_feitos || [];
 
   const toggleHabito = async (habitoId: string) => {
@@ -60,15 +65,18 @@ export function useHabitosHoje() {
       }, { merge: true });
 
       if (habito) {
-        const streakAtual = Number(habito.data.streakAtual) || 0;
-        const melhorSequencia = Number(habito.data.melhorSequencia) || 0;
+        const streakField = habito.type === 'pratica' ? 'streak' : 'streakAtual';
+        const streakAtual = Number(habito.data[streakField]) || 0;
         const novoStreak = jaFeito ? Math.max(0, streakAtual - 1) : streakAtual + 1;
-        const novoMelhor = Math.max(melhorSequencia, novoStreak);
-        await updateDoc(doc(db, 'records', habitoId), {
-          'data.streakAtual': novoStreak,
-          'data.melhorSequencia': novoMelhor,
+        const updates: Record<string, unknown> = {
+          [`data.${streakField}`]: novoStreak,
           updated_at: new Date().toISOString(),
-        });
+        };
+        if (habito.type === 'habito') {
+          const melhorSequencia = Number(habito.data.melhorSequencia) || 0;
+          updates['data.melhorSequencia'] = Math.max(melhorSequencia, novoStreak);
+        }
+        await updateDoc(doc(db, 'records', habitoId), updates);
       }
     } catch (err) {
       handleFirestoreError(err, OperationType.UPDATE, `habito_logs/${user.uid}_${date}`);

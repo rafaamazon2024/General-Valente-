@@ -1,7 +1,9 @@
 import React from 'react';
 import { GenericRecord, AreaConfig } from '../../types';
-import { Target, Award, Edit2, Trash2, Check } from 'lucide-react';
+import { Target, Award, Edit2, Trash2, Check, Link2 } from 'lucide-react';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { getRecordProgress, DONE_STATUSES } from '../../utils/progress';
+import { useHabitosHoje } from '../../hooks/useHabitosHoje';
 
 interface DynamicGoalsProps {
   config: AreaConfig;
@@ -27,9 +29,17 @@ function getUndoneValue(options?: string[]): string | undefined {
   return options?.find(o => !DONE_STATUSES.includes(o)) ?? options?.[0];
 }
 
+function isDesafioFeitoHoje(desafio: GenericRecord): boolean {
+  const { dataInicio, duracao, checkedDays = [] } = desafio.data || {};
+  if (!dataInicio) return false;
+  const todayIndex = differenceInCalendarDays(new Date(), parseISO(dataInicio));
+  return Array.isArray(checkedDays) && checkedDays.includes(todayIndex) && todayIndex >= 0 && todayIndex < (Number(duracao) || 30);
+}
+
 export default function DynamicGoals({ config, records, selectedType, onEdit, onDelete, onUpdateRecord }: DynamicGoalsProps) {
   const typeRecords = records.filter(r => r.type === selectedType);
   const getProgress = getRecordProgress;
+  const { feitosHoje } = useHabitosHoje();
 
   const statusOptions = getStatusOptions(config, selectedType);
   const doneValue = getDoneValue(statusOptions);
@@ -49,12 +59,25 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
     return '#22c55e'; // Green
   };
 
+  const getVinculados = (meta: GenericRecord) => {
+    if (selectedType !== 'meta') return [];
+    return records.filter(r =>
+      ['habito', 'pratica', 'desafio'].includes(r.type) && String(r.data?.metaId) === String(meta.id)
+    );
+  };
+
+  const isFeitoHoje = (item: GenericRecord) => {
+    if (item.type === 'desafio') return isDesafioFeitoHoje(item);
+    return feitosHoje.includes(String(item.id));
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {typeRecords.map((record) => {
         const progress = getProgress(record);
         const progressColor = getProgressColor(progress);
         const isDone = doneValue && record.data.status === doneValue;
+        const vinculados = getVinculados(record);
         return (
           <div key={record.id} className="bg-white/50 backdrop-blur-xl border border-black/10 p-6 rounded-2xl relative overflow-hidden group hover:border-black/20 transition-all">
             <div className="absolute top-0 left-0 w-1 h-full transition-all duration-300" style={{ backgroundColor: progressColor }} />
@@ -106,6 +129,25 @@ export default function DynamicGoals({ config, records, selectedType, onEdit, on
                 <span>{record.data.paginaAtual || record.data.aulaAtual || record.data.streakAtual || 0} unidades</span>
                 <span>{record.data.totalPaginas || record.data.totalAulas || record.data.metaStreak || '---'} total</span>
               </div>
+
+              {vinculados.length > 0 && (
+                <div className="pt-3 border-t border-black/5 space-y-2">
+                  <div className="flex items-center gap-1.5 text-[12px] font-mono font-bold text-gray-500 uppercase tracking-widest">
+                    <Link2 size={12} />
+                    {vinculados.filter(isFeitoHoje).length}/{vinculados.length} em dia hoje
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {vinculados.map(v => (
+                      <span
+                        key={String(v.id)}
+                        className={`text-[11px] font-mono px-2 py-1 rounded-lg border ${isFeitoHoje(v) ? 'bg-[#10b981]/10 border-[#10b981]/30 text-[#10b981]' : 'bg-black/5 border-black/10 text-gray-500'}`}
+                      >
+                        {v.data.nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );

@@ -18,9 +18,11 @@ export default function ChallengeTracker({ config, records, onDelete, onAdd, onU
     nome: '',
     dataInicio: format(new Date(), 'yyyy-MM-dd'),
     duracao: 30,
+    metaId: '',
   });
 
   const desafios = records.filter(r => r.type === 'desafio');
+  const metas = records.filter(r => r.type === 'meta');
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +30,11 @@ export default function ChallengeTracker({ config, records, onDelete, onAdd, onU
       nome: formData.nome,
       dataInicio: formData.dataInicio,
       duracao: Number(formData.duracao),
+      metaId: formData.metaId || undefined,
       checkedDays: [],
     });
     setIsFormOpen(false);
-    setFormData({ nome: '', dataInicio: format(new Date(), 'yyyy-MM-dd'), duracao: 30 });
+    setFormData({ nome: '', dataInicio: format(new Date(), 'yyyy-MM-dd'), duracao: 30, metaId: '' });
   };
 
   const toggleDay = async (record: GenericRecord, dayIndex: number) => {
@@ -192,6 +195,21 @@ export default function ChallengeTracker({ config, records, onDelete, onAdd, onU
                   onChange={e => setFormData({ ...formData, duracao: Number(e.target.value) })}
                   className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-black/30 outline-none font-mono text-sm transition-colors"
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[14px] font-mono font-bold text-gray-500 uppercase tracking-widest">
+                  Meta Vinculada
+                </label>
+                <select
+                  value={formData.metaId}
+                  onChange={e => setFormData({ ...formData, metaId: e.target.value })}
+                  className="w-full p-4 rounded-xl bg-black/5 border border-black/10 text-[#14120d] focus:border-black/30 outline-none font-mono text-sm appearance-none"
+                >
+                  <option value="">Nenhuma</option>
+                  {metas.map(m => (
+                    <option key={String(m.id)} value={String(m.id)}>{m.data.titulo || 'Meta'}</option>
+                  ))}
+                </select>
               </div>
               <button
                 type="submit"

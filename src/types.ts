@@ -58,7 +58,7 @@ export interface Task {
 export interface AreaField {
   nome: string;
   label: string;
-  tipo: 'text' | 'number' | 'date' | 'select' | 'progress' | 'checkbox' | 'url' | 'time' | 'textarea';
+  tipo: 'text' | 'number' | 'date' | 'select' | 'progress' | 'checkbox' | 'url' | 'time' | 'textarea' | 'metaRef';
   options?: string[];
   required?: boolean;
 }

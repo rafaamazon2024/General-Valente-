@@ -234,6 +234,9 @@ export default function AreaView({ config }: AreaViewProps) {
           initialData={editingRecord?.data}
           onSubmit={handleSubmit}
           onCancel={() => setIsModalOpen(false)}
+          metaOptions={records
+            .filter(r => r.type === 'meta')
+            .map(r => ({ id: String(r.id), label: r.data.titulo || 'Meta' }))}
         />
       )}
     </div>

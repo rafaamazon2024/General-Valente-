@@ -18,6 +18,9 @@ export function getRecordProgress(record: GenericRecord): number {
   if (data.metaStreak && data.streakAtual !== undefined) {
     return Math.min(100, Math.round((data.streakAtual / data.metaStreak) * 100));
   }
+  if (record.type === 'pratica' && data.meta && data.streak !== undefined) {
+    return Math.min(100, Math.round((data.streak / data.meta) * 100));
+  }
   if (record.type === 'desafio') {
     const dias = Number(data.duracao) || 30;
     const feitos = Array.isArray(data.checkedDays) ? data.checkedDays.length : 0;

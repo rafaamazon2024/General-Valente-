@@ -44,6 +44,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'frequencia', label: 'Frequência', tipo: 'select', options: ['Diária', '3x por semana', 'Semanal', 'Mensal'] },
         { nome: 'duracaoAlvo', label: 'Duração Alvo', tipo: 'text' },
         { nome: 'meta', label: 'Meta', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' },
         { nome: 'metaStreak', label: 'Meta de Dias (Streak)', tipo: 'number' },
         { nome: 'streakAtual', label: 'Streak Atual', tipo: 'number' },
         { nome: 'melhorSequencia', label: 'Melhor Sequência', tipo: 'number' },
@@ -260,6 +261,7 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'horario', label: 'Horário', tipo: 'time' },
         { nome: 'streak', label: 'Streak', tipo: 'number' },
         { nome: 'meta', label: 'Meta (dias)', tipo: 'number' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Pausado'] }
       ],
       meta: [
