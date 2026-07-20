@@ -1,6 +1,6 @@
 import { GenericRecord } from '../types';
 
-const DONE_STATUSES = ['Lido', 'Concluído', 'Finalizado', 'Realizado', 'Pago', 'Feito', 'Mestre'];
+export const DONE_STATUSES = ['Lido', 'Concluído', 'Finalizado', 'Realizado', 'Pago', 'Feito', 'Mestre', 'Dominado'];
 
 // Progresso 0-100 de um registro individual. Usado tanto pelos cards de Metas
 // (DynamicGoals) quanto pelo score de área na Visão Geral, pra manter as duas

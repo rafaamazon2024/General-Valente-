@@ -3,33 +3,55 @@ import { GenericRecord, AreaConfig } from '../../types';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useHabitoLogsHistory } from '../../hooks/useHabitoLogsHistory';
+import { dateStr } from '../../utils/date';
 
 interface DynamicCalendarProps {
   config: AreaConfig;
   records: GenericRecord[];
   selectedType: string;
+  onEdit?: (record: GenericRecord) => void;
 }
 
-export default function DynamicCalendar({ config, records, selectedType }: DynamicCalendarProps) {
+export default function DynamicCalendar({ config, records, selectedType, onEdit }: DynamicCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  
+  const { logs: habitoLogs } = useHabitoLogsHistory();
+
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
   const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
-  
+
   const days = eachDayOfInterval({
     start: calendarStart,
     end: calendarEnd,
   });
 
   const typeRecords = records.filter(r => r.type === selectedType);
+  const isHabito = selectedType === 'habito';
 
-  const getRecordsForDay = (day: Date) => {
+  // Hábito não tem campo de data (é recorrente) - o dia em que "aconteceu" vem do
+  // check-in em habito_logs, não de um campo prazo/deadline como os outros tipos.
+  const habitosPorDia = React.useMemo(() => {
+    if (!isHabito) return new Map<string, GenericRecord[]>();
+    const map = new Map<string, GenericRecord[]>();
+    for (const log of habitoLogs) {
+      const feitos = (log.habitos_feitos || [])
+        .map(id => typeRecords.find(r => String(r.id) === id))
+        .filter((r): r is GenericRecord => Boolean(r));
+      if (feitos.length) map.set(log.date, feitos);
+    }
+    return map;
+  }, [isHabito, habitoLogs, typeRecords]);
+
+  const getRecordsForDay = (day: Date): GenericRecord[] => {
+    if (isHabito) {
+      return habitosPorDia.get(dateStr(day)) || [];
+    }
     return typeRecords.filter(r => {
-      const dateStr = r.data.data || r.data.deadline || r.data.ultimoEncontro || r.data.dataInicio || r.data.dataFim;
-      if (!dateStr) return false;
-      return isSameDay(new Date(dateStr), day);
+      const dateValue = r.data.data || r.data.deadline || r.data.ultimoEncontro || r.data.dataInicio || r.data.dataFim;
+      if (!dateValue) return false;
+      return isSameDay(new Date(dateValue), day);
     });
   };
 
@@ -79,14 +101,15 @@ export default function DynamicCalendar({ config, records, selectedType }: Dynam
               </div>
               <div className="flex flex-col gap-1">
                 {dayRecords.map(r => (
-                  <div
-                    key={r.id}
-                    className="text-[12px] font-mono p-1 rounded bg-black/5 border-l-2 truncate text-gray-700"
-                    style={{ borderLeftColor: config.cor }}
+                  <button
+                    key={String(r.id)}
+                    onClick={() => onEdit?.(r)}
                     title={r.data.titulo || r.data.nome}
+                    className="text-left text-[12px] font-mono p-1 rounded bg-black/5 border-l-2 truncate text-gray-700 hover:bg-black/10 transition-colors cursor-pointer"
+                    style={{ borderLeftColor: config.cor }}
                   >
                     {r.data.titulo || r.data.nome || r.data.projeto || r.data.atividade || 'Evento'}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

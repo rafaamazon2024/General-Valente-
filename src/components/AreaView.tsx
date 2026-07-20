@@ -108,7 +108,7 @@ export default function AreaView({ config }: AreaViewProps) {
           onFiltersChange={setExternalFilters}
         />
       );
-      case 'Calendário': return <DynamicCalendar config={config} records={records} selectedType={selectedType} />;
+      case 'Calendário': return <DynamicCalendar config={config} records={records} selectedType={selectedType} onEdit={handleEdit} />;
       case 'Kanban': return (
         <DynamicKanban
           config={config}
@@ -139,6 +139,7 @@ export default function AreaView({ config }: AreaViewProps) {
           selectedType={selectedType}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onUpdateRecord={updateRecord}
         />
       );
       default: return null;
