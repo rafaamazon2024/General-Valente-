@@ -109,3 +109,11 @@ export interface TreinoLog {
   completo: boolean;
   updated_at: string;
 }
+
+export interface HabitoLog {
+  id: string;
+  uid: string;
+  date: string; // YYYY-MM-DD
+  habitos_feitos: string[]; // ids de records (type: habito) marcados nesse dia
+  updated_at: string;
+}

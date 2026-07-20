@@ -12,7 +12,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth';
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, onSnapshot, getDocFromServer, Timestamp, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot, getDocFromServer, Timestamp, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getMessaging, getToken, onMessage, isSupported as isMessagingSupported, type Messaging } from 'firebase/messaging';
 import firebaseConfig from '../firebase-applet-config.json';
 
@@ -111,10 +111,13 @@ export {
   setDoc, 
   updateDoc, 
   deleteDoc, 
-  query, 
-  where, 
+  query,
+  where,
+  orderBy,
   onSnapshot,
   addDoc,
+  arrayUnion,
+  arrayRemove,
   Timestamp,
   signInWithPopup,
   signInWithRedirect,

@@ -15,14 +15,14 @@ import {
 } from 'recharts';
 import { CONFIG_AREAS } from '../config/areas';
 import { GenericRecord } from '../types';
-import { Award, Zap, Target, TrendingUp, Plus, Info, ChevronRight, BookOpen, Dumbbell, Moon } from 'lucide-react';
+import { Award, Zap, Target, TrendingUp, Plus, Info, ChevronRight, BookOpen } from 'lucide-react';
 import { useRecords } from '../hooks/useRecords';
 import { useAuth } from './AuthContext';
 import { db, doc, onSnapshot as onSnapshotFirestore } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
 import { PunishmentBanner } from './PunishmentBanner';
-import { useExercicios } from '../hooks/useExercicios';
-import { useTreinoHoje } from '../hooks/useTreinoHoje';
+import HojePanel from './HojePanel';
+import { getRecordProgress } from '../utils/progress';
 
 interface GeneralDashboardProps {
   onNavigate?: (areaId: string) => void;
@@ -30,12 +30,10 @@ interface GeneralDashboardProps {
 
 export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) {
   const { user } = useAuth();
-  const { records: allRecords, loading: recordsLoading } = useRecords();
+  const { records: allRecords, loading: recordsLoading, updateRecord } = useRecords();
   const [userSettings, setUserSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(true);
-  const { exercicios } = useExercicios();
-  const { log: treinoLog, grupos: gruposHoje } = useTreinoHoje();
 
   React.useEffect(() => {
     if (!user) return;
@@ -50,18 +48,15 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
 
   const loading = recordsLoading || settingsLoading;
 
-  // Calculate scores per area (0-100)
+  // Score por área (0-100): média do progresso individual de cada registro. Hábito usa a
+  // razão streakAtual/metaStreak (evolui dia a dia conforme os check-ins), livro/curso usa
+  // páginas/aulas, o resto é binário (status concluído = 100%). Ver src/utils/progress.ts.
   const areaScores = CONFIG_AREAS.map(area => {
     const areaRecords = allRecords.filter(r => r.area_id === area.id);
     if (areaRecords.length === 0) return { id: area.id, name: area.nome, score: 0, full: 100, color: area.cor, count: 0 };
 
-    // Simple score logic: % of items that are "Done/Lido/Concluido"
-    const completed = areaRecords.filter(r => {
-      const status = r.data.status || r.data.tipo || r.data.categoria;
-      return ['Lido', 'Concluído', 'Finalizado', 'Realizado', 'Pago', 'Feito', 'Mestre'].includes(status);
-    }).length;
-
-    const score = Math.round((completed / areaRecords.length) * 100);
+    const somaProgresso = areaRecords.reduce((acc, r) => acc + getRecordProgress(r), 0);
+    const score = Math.round(somaProgresso / areaRecords.length);
     return { id: area.id, name: area.nome, score: score || 20, full: 100, color: area.cor, count: areaRecords.length }; // Min 20 for visual
   });
 
@@ -96,33 +91,7 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <PunishmentBanner active={!!userSettings?.punishment_active} />
 
-      {/* Treino de Hoje */}
-      {(() => {
-        const isDescanso = gruposHoje.length === 0;
-        const exerciciosDoDia = exercicios.filter(e => gruposHoje.includes(e.grupo_muscular));
-        const feitos = treinoLog?.exercicios_feitos || [];
-        const feitosHoje = feitos.filter(id => exerciciosDoDia.some(e => e.id === id)).length;
-        const completo = exerciciosDoDia.length > 0 && feitosHoje === exerciciosDoDia.length;
-
-        return (
-          <button
-            onClick={() => onNavigate?.('saude')}
-            className="w-full text-left bg-white/50 backdrop-blur-xl border border-black/10 rounded-2xl p-5 flex items-center gap-4 hover:border-[#10b981]/30 transition-all"
-          >
-            <div className="w-10 h-10 rounded-full bg-[#10b981]/10 flex items-center justify-center shrink-0">
-              {isDescanso ? <Moon size={18} className="text-[#10b981]" /> : <Dumbbell size={18} className="text-[#10b981]" />}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-mono font-bold text-gray-500 uppercase tracking-widest">Treino_De_Hoje</p>
-              <p className="font-bold text-gray-700 truncate">
-                {isDescanso ? 'Dia de Descanso' : `${gruposHoje.join(' + ')} — ${feitosHoje}/${exerciciosDoDia.length} feitos`}
-              </p>
-            </div>
-            {completo && <span className="text-[12px] font-mono font-bold text-[#10b981] uppercase tracking-widest shrink-0">Concluído 🎉</span>}
-            <ChevronRight size={18} className="text-gray-400 shrink-0" />
-          </button>
-        );
-      })()}
+      <HojePanel allRecords={allRecords} updateRecord={updateRecord} onNavigate={onNavigate} />
 
       {/* Guia de Início Rápido */}
       <AnimatePresence>

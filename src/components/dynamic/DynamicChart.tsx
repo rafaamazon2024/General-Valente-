@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { AreaConfig, GenericRecord } from '../../types';
 import StreakCalendar from './StreakCalendar';
+import { useHabitoLogsHistory } from '../../hooks/useHabitoLogsHistory';
 
 interface DynamicChartProps {
   config: AreaConfig;
@@ -26,7 +27,19 @@ interface DynamicChartProps {
 
 export default function DynamicChart({ config, records, selectedType, onFilterRequest }: DynamicChartProps) {
   const [hiddenSegments, setHiddenSegments] = useState<string[]>([]);
+  const { logs: habitoLogs } = useHabitoLogsHistory();
   const COLORS = [config.cor, '#0e7490', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'];
+
+  const completedDatesByHabito = React.useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const log of habitoLogs) {
+      for (const habitoId of log.habitos_feitos || []) {
+        if (!map.has(habitoId)) map.set(habitoId, new Set());
+        map.get(habitoId)!.add(log.date);
+      }
+    }
+    return map;
+  }, [habitoLogs]);
 
   const typeRecords = React.useMemo(() => {
     return records.filter(r => r.type === selectedType);
@@ -191,10 +204,11 @@ export default function DynamicChart({ config, records, selectedType, onFilterRe
       {/* Streak Calendars for Habits */}
       {typeRecords.filter(r => r.type === 'habito').map(habit => (
         <div key={habit.id} className="lg:col-span-1">
-          <StreakCalendar 
+          <StreakCalendar
             name={habit.data.nome}
-            streak={habit.data.streakAtual || 0} 
-            color={config.cor} 
+            streak={habit.data.streakAtual || 0}
+            color={config.cor}
+            completedDates={completedDatesByHabito.get(String(habit.id))}
           />
         </div>
       ))}

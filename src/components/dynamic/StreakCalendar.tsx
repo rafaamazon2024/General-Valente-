@@ -1,18 +1,20 @@
 import React from 'react';
+import { dateStrDaysAgo } from '../../utils/date';
 
 interface StreakCalendarProps {
   streak: number;
   color: string;
   name?: string;
+  completedDates?: Set<string>;
 }
 
-export default function StreakCalendar({ streak, color, name }: StreakCalendarProps) {
-  // Generate a mock grid for the last 12 weeks (84 days)
+export default function StreakCalendar({ streak, color, name, completedDates }: StreakCalendarProps) {
+  // Últimas 12 semanas (84 dias), do mais antigo pro mais recente, com dado real de
+  // habito_logs (dias em que o hábito foi marcado como feito).
   const days = Array.from({ length: 84 }, (_, i) => {
-    // Mock logic: higher streak means more filled squares recently
-    const isFilled = i > 84 - streak - (Math.random() * 5);
-    const opacity = isFilled ? (Math.random() * 0.5 + 0.5) : 0.05;
-    return { isFilled, opacity };
+    const date = dateStrDaysAgo(83 - i);
+    const isFilled = completedDates?.has(date) ?? false;
+    return { date, isFilled };
   });
 
   return (
@@ -30,13 +32,14 @@ export default function StreakCalendar({ streak, color, name }: StreakCalendarPr
 
       <div className="flex justify-center">
         <div className="grid grid-flow-col grid-rows-7 gap-1 w-fit">
-          {days.map((day, i) => (
+          {days.map((day) => (
             <div
-              key={i}
+              key={day.date}
+              title={day.date}
               className="w-2.5 h-2.5 rounded-sm transition-all duration-500"
               style={{
                 backgroundColor: day.isFilled ? color : 'rgba(20, 18, 13, 0.06)',
-                opacity: day.opacity
+                opacity: day.isFilled ? 1 : 0.4
               }}
             />
           ))}

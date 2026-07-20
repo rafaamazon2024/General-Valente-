@@ -1,6 +1,7 @@
 import React from 'react';
 import { GenericRecord, AreaConfig } from '../../types';
 import { Target, TrendingUp, Award, Edit2, Trash2 } from 'lucide-react';
+import { getRecordProgress } from '../../utils/progress';
 
 interface DynamicGoalsProps {
   config: AreaConfig;
@@ -12,22 +13,7 @@ interface DynamicGoalsProps {
 
 export default function DynamicGoals({ config, records, selectedType, onEdit, onDelete }: DynamicGoalsProps) {
   const typeRecords = records.filter(r => r.type === selectedType);
-
-  const getProgress = (record: GenericRecord) => {
-    if (record.data.totalPaginas && record.data.paginaAtual !== undefined) {
-      return Math.min(100, Math.round((record.data.paginaAtual / record.data.totalPaginas) * 100));
-    }
-    if (record.data.totalAulas && record.data.aulaAtual !== undefined) {
-      return Math.min(100, Math.round((record.data.aulaAtual / record.data.totalAulas) * 100));
-    }
-    if (record.data.metaStreak && record.data.streakAtual !== undefined) {
-      return Math.min(100, Math.round((record.data.streakAtual / record.data.metaStreak) * 100));
-    }
-    if (record.data.status === 'Lido' || record.data.status === 'Concluído' || record.data.status === 'Finalizado') {
-      return 100;
-    }
-    return 0;
-  };
+  const getProgress = getRecordProgress;
 
   const getProgressColor = (percent: number) => {
     if (percent < 25) return '#ef4444'; // Red
