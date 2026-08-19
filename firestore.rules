@@ -44,6 +44,10 @@ service cloud.firestore {
     //   (registros de qualquer área com type=='habito'), usado pela seção "Hoje" da Visão Geral.
     //   - uid, date, habitos_feitos: list (ids de records), updated_at
     //
+    // Collection: rotina_logs (doc id: "{uid}_{YYYY-MM-DD}") - check-in diário dos blocos fixos
+    //   da rotina (ids vêm de src/config/rotinaSeed.ts, não do Firestore), usado pela página Rotina.
+    //   - uid, date, blocos_feitos: list (ids de BlocoRotina), updated_at
+    //
     // ===============================================================
 
     // ===============================================================
@@ -148,6 +152,16 @@ service cloud.firestore {
     match /habito_logs/{logId} {
       // Mesmo padrão do treino_logs: doc "{uid}_{date}" só existe a partir do primeiro check-in
       // do dia, então o `get` inicial precisa do resource == null pra não virar permission-denied.
+      allow read: if isAuthenticated() && (resource == null || resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin()) &&
+                      request.resource.data.uid == resource.data.uid;
+      allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    match /rotina_logs/{logId} {
+      // Mesmo padrão do habito_logs: o doc "{uid}_{date}" só nasce no primeiro check do dia,
+      // então o `get` inicial precisa aceitar resource == null.
       allow read: if isAuthenticated() && (resource == null || resource.data.uid == request.auth.uid || isAdmin());
       allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
       allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin()) &&

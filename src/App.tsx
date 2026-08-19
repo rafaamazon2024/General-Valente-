@@ -6,7 +6,8 @@ import {
   X,
   LogOut,
   User as UserIcon,
-  Cpu
+  Cpu,
+  CalendarClock
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CONFIG_AREAS } from './config/areas';
@@ -15,12 +16,13 @@ import GeneralDashboard from './components/GeneralDashboard';
 import Settings from './components/Settings';
 import LockScreen from './components/LockScreen';
 import Login from './pages/Login';
+import Rotina from './pages/Rotina';
 import { useAuth } from './components/AuthContext';
 import { db, doc, getDoc, onSnapshot } from './firebase';
 
 export default function App() {
   const { user, loading, logout } = useAuth();
-  const [activeAreaId, setActiveAreaId] = useState<string | 'dashboard' | 'settings'>('dashboard');
+  const [activeAreaId, setActiveAreaId] = useState<string | 'dashboard' | 'settings' | 'rotina'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [userSettings, setUserSettings] = useState<any>(null);
   const [isLocked, setIsLocked] = useState(false);
@@ -158,6 +160,18 @@ export default function App() {
             {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Visão Geral</span>}
           </button>
 
+          <button
+            onClick={() => setActiveAreaId('rotina')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${
+              activeAreaId === 'rotina'
+                ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20'
+                : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'
+            }`}
+          >
+            <CalendarClock size={20} className={activeAreaId === 'rotina' ? 'text-[#d97706]' : 'group-hover:text-[#d97706] transition-colors'} />
+            {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Rotina</span>}
+          </button>
+
           <div className={`pt-4 pb-2 px-4 text-[13px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em] ${!isSidebarOpen && 'hidden'}`}>
             Áreas_Da_Vida
           </div>
@@ -266,6 +280,8 @@ export default function App() {
             >
               {activeAreaId === 'dashboard' ? (
                 <GeneralDashboard onNavigate={setActiveAreaId} />
+              ) : activeAreaId === 'rotina' ? (
+                <Rotina />
               ) : activeAreaId === 'settings' ? (
                 <Settings />
               ) : activeArea ? (
