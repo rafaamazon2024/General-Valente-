@@ -168,5 +168,13 @@ service cloud.firestore {
                       request.resource.data.uid == resource.data.uid;
       allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
     }
+
+    // Configuração editável da agenda recorrente. O documento usa o UID como ID e
+    // guarda somente os blocos semanais do próprio usuário.
+    match /rotina_config/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isOwner(userId) && request.resource.data.uid == request.auth.uid;
+      allow delete: if isOwner(userId) || isAdmin();
+    }
   }
 }

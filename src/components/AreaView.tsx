@@ -11,6 +11,7 @@ import ChallengeTracker from './dynamic/ChallengeTracker';
 import TreinoHoje from './dynamic/TreinoHoje';
 import BibliotecaExercicios from './dynamic/BibliotecaExercicios';
 import PenseMagroJourney from './dynamic/PenseMagroJourney';
+import AreaTodayPlan from './AreaTodayPlan';
 import { useRecords } from '../hooks/useRecords';
 
 interface AreaViewProps {
@@ -188,6 +189,9 @@ export default function AreaView({ config }: AreaViewProps) {
           </button>
         )}
       </div>
+
+      {/* Tabs */}
+      <AreaTodayPlan areaId={config.id} color={config.cor} />
 
       {/* Tabs */}
       <div className="flex items-center gap-2 p-1 bg-black/5 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar scroll-smooth">

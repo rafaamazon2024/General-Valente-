@@ -299,7 +299,7 @@ export default function App() {
               {activeAreaId === 'dashboard' || activeAreaId === 'prioridades' || activeAreaId === 'evolucao' ? (
                 <PriorityDashboard view={(activeAreaId === 'dashboard' ? 'hoje' : activeAreaId) as PriorityView} onNavigate={setActiveAreaId} />
               ) : activeAreaId === 'rotina' ? (
-                <Rotina />
+                <Rotina onNavigate={setActiveAreaId} />
               ) : activeAreaId === 'settings' ? (
                 <Settings />
               ) : activeArea ? (

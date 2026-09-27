@@ -21,7 +21,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'dataFim', label: 'Data de Conclusão', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Quero Ler', 'Lendo', 'Lido', 'Pausado'] },
         { nome: 'rating', label: 'Rating', tipo: 'select', options: ['1 Estrela', '2 Estrelas', '3 Estrelas', '4 Estrelas', '5 Estrelas'] },
-        { nome: 'notas', label: 'Notas/Resumo', tipo: 'textarea' }
+        { nome: 'notas', label: 'Notas/Resumo', tipo: 'textarea' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       curso: [
         { nome: 'nome', label: 'Nome do Curso', tipo: 'text', required: true },
@@ -36,7 +37,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'dataInicio', label: 'Data de Início', tipo: 'date' },
         { nome: 'previsaoConclusao', label: 'Previsão de Conclusão', tipo: 'date' },
         { nome: 'categoria', label: 'Categoria', tipo: 'select', options: ['Tecnologia', 'Negócios', 'Design', 'Outros'] },
-        { nome: 'notas', label: 'Notas', tipo: 'textarea' }
+        { nome: 'notas', label: 'Notas', tipo: 'textarea' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       habito: [
         { nome: 'nome', label: 'Nome do Hábito', tipo: 'text', required: true },
@@ -76,12 +78,14 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'calorias', label: 'Calorias', tipo: 'number' },
         { nome: 'tipo', label: 'Tipo', tipo: 'select', options: ['Cardio', 'Força', 'Flexibilidade', 'Outro'] },
         { nome: 'data', label: 'Data', tipo: 'date' },
-        { nome: 'notas', label: 'Notas', tipo: 'text' }
+        { nome: 'notas', label: 'Notas', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       medicao: [
         { nome: 'tipo', label: 'Tipo', tipo: 'select', options: ['Peso', 'Gordura %', 'Sono (h)'] },
         { nome: 'valor', label: 'Valor', tipo: 'number' },
-        { nome: 'data', label: 'Data', tipo: 'date' }
+        { nome: 'data', label: 'Data', tipo: 'date' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -91,7 +95,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       rotina: [
         { nome: 'dia', label: 'Dia da Semana', tipo: 'select', options: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'] },
         { nome: 'treino', label: 'Treino', tipo: 'text' },
-        { nome: 'extra', label: 'Extra (Caminhada/Corrida)', tipo: 'text' }
+        { nome: 'extra', label: 'Extra (Caminhada/Corrida)', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ]
     },
     colunasKanban: ['Planejado', 'Em Execução', 'Concluído'],
@@ -112,13 +117,15 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'categoria', label: 'Categoria', tipo: 'select', options: ['Trabalho', 'Utilidades', 'Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Investimentos', 'Poupança/CDB', 'Outros'] },
         { nome: 'data', label: 'Data', tipo: 'date' },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Pago', 'Agendado'] },
-        { nome: 'recorrencia', label: 'Recorrência', tipo: 'select', options: ['Nenhuma', 'Mensal', 'Semanal', 'Anual'] }
+        { nome: 'recorrencia', label: 'Recorrência', tipo: 'select', options: ['Nenhuma', 'Mensal', 'Semanal', 'Anual'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       divida: [
         { nome: 'descricao', label: 'Descrição', tipo: 'text', required: true },
         { nome: 'valorTotal', label: 'Valor Total', tipo: 'number' },
         { nome: 'parcelas', label: 'Parcelas', tipo: 'text' },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Quitação', 'Pago'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Quitação', 'Pago'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -145,14 +152,16 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'deadline', label: 'Deadline', tipo: 'date' },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta', 'Urgente'] },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Prospecção', 'Planejando', 'Em Andamento', 'Concluído', 'Pausado'] },
-        { nome: 'descricao', label: 'Descrição', tipo: 'textarea' }
+        { nome: 'descricao', label: 'Descrição', tipo: 'textarea' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       habilidade: [
         { nome: 'nome', label: 'Habilidade', tipo: 'text', required: true },
         { nome: 'tipo', label: 'Tipo', tipo: 'select', options: ['Técnica', 'Soft Skill', 'Idioma'] },
         { nome: 'status', label: 'Status', tipo: 'select', options: ['Iniciando', 'Estudando', 'Praticando', 'Dominado'] },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta'] },
-        { nome: 'meta', label: 'Meta', tipo: 'text' }
+        { nome: 'meta', label: 'Meta', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -174,7 +183,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       interacao: [
         { nome: 'pessoa', label: 'Pessoa', tipo: 'text', required: true },
         { nome: 'ultimoEncontro', label: 'Último Encontro', tipo: 'date' },
-        { nome: 'proximaAcao', label: 'Próxima Ação', tipo: 'text' }
+        { nome: 'proximaAcao', label: 'Próxima Ação', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -186,7 +196,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'tipo', label: 'Tipo', tipo: 'text' },
         { nome: 'frequencia', label: 'Frequência', tipo: 'text' },
         { nome: 'prazo', label: 'Prazo', tipo: 'date' },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Planejado', 'Concluído'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['Ativo', 'Planejado', 'Concluído'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ]
     },
     colunasKanban: ['Planejado', 'Agendado', 'Realizado'],
@@ -203,7 +214,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       evento: [
         { nome: 'titulo', label: 'Evento', tipo: 'text', required: true },
         { nome: 'data', label: 'Data', tipo: 'date' },
-        { nome: 'descricao', label: 'Descrição', tipo: 'text' }
+        { nome: 'descricao', label: 'Descrição', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -216,7 +228,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'titulo', label: 'Tarefa', tipo: 'text', required: true },
         { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta', 'Urgente'] },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ]
     },
     colunasKanban: ['Ideia', 'Confirmado', 'Realizado'],
@@ -234,7 +247,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
         { nome: 'nome', label: 'Atividade', tipo: 'text', required: true },
         { nome: 'data', label: 'Data', tipo: 'date' },
         { nome: 'categoria', label: 'Categoria', tipo: 'text' },
-        { nome: 'frequencia', label: 'Frequência', tipo: 'text' }
+        { nome: 'frequencia', label: 'Frequência', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -284,13 +298,15 @@ export const CONFIG_AREAS: AreaConfig[] = [
       melhoria: [
         { nome: 'item', label: 'Item/Cômodo', tipo: 'text', required: true },
         { nome: 'acao', label: 'Ação', tipo: 'text' },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Progresso', 'Finalizado'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['Pendente', 'Em Progresso', 'Finalizado'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       tarefa: [
         { nome: 'titulo', label: 'Tarefa', tipo: 'text', required: true },
         { nome: 'prazo', label: 'Prazo', tipo: 'date' },
         { nome: 'prioridade', label: 'Prioridade', tipo: 'select', options: ['Baixa', 'Média', 'Alta'] },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -312,7 +328,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       evento: [
         { nome: 'nome', label: 'Evento/Encontro', tipo: 'text', required: true },
         { nome: 'data', label: 'Data', tipo: 'date' },
-        { nome: 'local', label: 'Local', tipo: 'text' }
+        { nome: 'local', label: 'Local', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -321,7 +338,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       ],
       acao: [
         { nome: 'titulo', label: 'Ação', tipo: 'text', required: true },
-        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] }
+        { nome: 'status', label: 'Status', tipo: 'select', options: ['A Fazer', 'Em Andamento', 'Concluído'] },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ]
     },
     colunasKanban: ['Convite', 'Confirmado', 'Fui'],
@@ -338,7 +356,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       acao: [
         { nome: 'causa', label: 'Causa/Projeto', tipo: 'text', required: true },
         { nome: 'valor', label: 'Valor/Tempo', tipo: 'text' },
-        { nome: 'data', label: 'Data', tipo: 'date' }
+        { nome: 'data', label: 'Data', tipo: 'date' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -361,7 +380,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       atividade: [
         { nome: 'hobby', label: 'Hobby', tipo: 'text', required: true },
         { nome: 'tempoGasto', label: 'Tempo Gasto (min)', tipo: 'number' },
-        { nome: 'data', label: 'Data', tipo: 'date' }
+        { nome: 'data', label: 'Data', tipo: 'date' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ],
       meta: [
         { nome: 'titulo', label: 'Meta', tipo: 'text', required: true },
@@ -371,7 +391,8 @@ export const CONFIG_AREAS: AreaConfig[] = [
       projeto: [
         { nome: 'titulo', label: 'Projeto Criativo', tipo: 'text', required: true },
         { nome: 'beneficio', label: 'Benefício', tipo: 'text' },
-        { nome: 'prazo', label: 'Prazo', tipo: 'text' }
+        { nome: 'prazo', label: 'Prazo', tipo: 'text' },
+        { nome: 'metaId', label: 'Meta Vinculada', tipo: 'metaRef' }
       ]
     },
     colunasKanban: ['Ideia', 'Praticando', 'Mestre'],
