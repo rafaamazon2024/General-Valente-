@@ -7,12 +7,14 @@ import {
   LogOut,
   User as UserIcon,
   Cpu,
-  CalendarClock
+  CalendarClock,
+  CheckSquare2,
+  TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CONFIG_AREAS } from './config/areas';
 import AreaView from './components/AreaView';
-import GeneralDashboard from './components/GeneralDashboard';
+import PriorityDashboard, { PriorityView } from './components/PriorityDashboard';
 import Settings from './components/Settings';
 import LockScreen from './components/LockScreen';
 import Login from './pages/Login';
@@ -22,7 +24,7 @@ import { db, doc, getDoc, onSnapshot } from './firebase';
 
 export default function App() {
   const { user, loading, logout } = useAuth();
-  const [activeAreaId, setActiveAreaId] = useState<string | 'dashboard' | 'settings' | 'rotina'>('dashboard');
+  const [activeAreaId, setActiveAreaId] = useState<string | 'dashboard' | 'prioridades' | 'evolucao' | 'settings' | 'rotina'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [userSettings, setUserSettings] = useState<any>(null);
   const [isLocked, setIsLocked] = useState(false);
@@ -157,7 +159,23 @@ export default function App() {
             }`}
           >
             <LayoutDashboard size={20} className={activeAreaId === 'dashboard' ? 'text-[#d97706]' : 'group-hover:text-[#d97706] transition-colors'} />
-            {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Visão Geral</span>}
+            {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Hoje</span>}
+          </button>
+
+          <button
+            onClick={() => setActiveAreaId('prioridades')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${activeAreaId === 'prioridades' ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20' : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'}`}
+          >
+            <CheckSquare2 size={20} />
+            {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Prioridades</span>}
+          </button>
+
+          <button
+            onClick={() => setActiveAreaId('evolucao')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${activeAreaId === 'evolucao' ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20' : 'text-gray-500 hover:bg-black/5 hover:text-gray-700'}`}
+          >
+            <TrendingUp size={20} />
+            {isSidebarOpen && <span className="font-mono text-xs tracking-widest uppercase">Evolução</span>}
           </button>
 
           <button
@@ -278,8 +296,8 @@ export default function App() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              {activeAreaId === 'dashboard' ? (
-                <GeneralDashboard onNavigate={setActiveAreaId} />
+              {activeAreaId === 'dashboard' || activeAreaId === 'prioridades' || activeAreaId === 'evolucao' ? (
+                <PriorityDashboard view={(activeAreaId === 'dashboard' ? 'hoje' : activeAreaId) as PriorityView} onNavigate={setActiveAreaId} />
               ) : activeAreaId === 'rotina' ? (
                 <Rotina />
               ) : activeAreaId === 'settings' ? (
