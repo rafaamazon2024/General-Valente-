@@ -46,18 +46,18 @@ export default function PriorityDashboard({ view, onNavigate }: Props) {
     const areaRecords = records.filter(record => record.area_id === priority.id);
     const habits = habitosAtivos.filter(record => record.area_id === priority.id);
     const primaryHabit = habits[0];
-    const checkedToday = primaryHabit
-      ? feitosHoje.includes(String(primaryHabit.id))
-      : areaRecords.some(record => DONE.includes(record.data?.status) && record.updated_at?.slice(0, 10) === days[6].date);
+    const checkinId = primaryHabit ? String(primaryHabit.id) : `priority:${priority.id}`;
+    const checkedToday = feitosHoje.includes(checkinId) || (!primaryHabit &&
+      areaRecords.some(record => DONE.includes(record.data?.status) && record.updated_at?.slice(0, 10) === days[6].date));
     const week = days.map(day => {
       const log = logs.find(item => item.date === day.date);
-      return habits.length > 0 && habits.some(habit => log?.habitos_feitos?.includes(String(habit.id)));
+      return log?.habitos_feitos?.includes(checkinId) || (habits.length > 0 && habits.some(habit => log?.habitos_feitos?.includes(String(habit.id))));
     });
     const weekDone = week.filter(Boolean).length;
     const score = areaRecords.length
       ? Math.round(areaRecords.reduce((sum, record) => sum + getRecordProgress(record), 0) / areaRecords.length)
       : 0;
-    return { ...priority, areaRecords, primaryHabit, checkedToday, week, weekDone, score };
+    return { ...priority, areaRecords, primaryHabit, checkinId, checkedToday, week, weekDone, score };
   });
 
   if (loading || habitsLoading || historyLoading) {
@@ -83,7 +83,7 @@ function TodayView({ data, onNavigate, toggleHabito }: any) {
         <div className="w-28 h-28 rounded-full grid place-items-center" style={{ background: `conic-gradient(#d97706 ${done / 5 * 360}deg, #e8e4dc 0)` }}><div className="w-20 h-20 rounded-full bg-[#f7f5f0] grid place-items-center text-center"><div><strong className="text-2xl">{done}/5</strong><p className="text-[10px] font-mono uppercase text-gray-500">prioridades</p></div></div></div>
       </div>
     </div>
-    <div className="space-y-3">{data.map((item: any) => { const Icon = item.icon; return <button key={item.id} onClick={() => item.primaryHabit ? toggleHabito(String(item.primaryHabit.id)) : onNavigate?.(item.id)} className="w-full bg-white/70 border border-black/10 rounded-2xl p-4 flex items-center gap-4 text-left hover:-translate-y-0.5 hover:shadow-md transition-all" style={{ borderLeftColor: item.color, borderLeftWidth: 5 }}>
+    <div className="space-y-3">{data.map((item: any) => { const Icon = item.icon; return <button key={item.id} onClick={() => toggleHabito(item.checkinId)} className="w-full bg-white/70 border border-black/10 rounded-2xl p-4 flex items-center gap-4 text-left hover:-translate-y-0.5 hover:shadow-md transition-all" style={{ borderLeftColor: item.color, borderLeftWidth: 5 }}>
       <div className="w-11 h-11 rounded-xl grid place-items-center" style={{ backgroundColor: `${item.color}16`, color: item.color }}><Icon size={22} /></div>
       <div className="flex-1"><p className="text-sm font-bold uppercase tracking-wide">{item.label}</p><p className="text-sm text-gray-500 mt-0.5">{item.primaryHabit?.data?.nome || item.action}</p></div>
       <div className={`w-8 h-8 rounded-lg border-2 grid place-items-center ${item.checkedToday ? 'text-white' : 'text-transparent'}`} style={{ borderColor: item.color, backgroundColor: item.checkedToday ? item.color : 'transparent' }}><Check size={18} /></div>
