@@ -3,6 +3,7 @@ import { Save, Bell, User, Zap, Target, Clock, Loader2 } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { db, doc, getDoc, setDoc } from '../firebase';
 import { useFcm } from '../hooks/useFcm';
+import InitialPlanImporter from './InitialPlanImporter';
 
 export default function Settings() {
   const { user } = useAuth();
@@ -81,6 +82,7 @@ export default function Settings() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <InitialPlanImporter />
         {/* Perfil */}
         <section className="bg-white/50 backdrop-blur-xl border border-black/10 p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 text-[#d97706] mb-2">
