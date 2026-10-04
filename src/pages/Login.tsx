@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { ArrowLeft, ExternalLink, Lock, LogIn, Mail, User } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
-import { motion, AnimatePresence } from 'motion/react';
-import { Layout, LogIn, Target, ShieldCheck, Zap, ExternalLink, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import Capacete from '../valente/ui/Capacete';
+import TemaToggle from '../valente/ui/TemaToggle';
 
 export default function Login() {
   const { login, loginWithEmail, registerWithEmail, isMobile } = useAuth();
@@ -18,226 +19,101 @@ export default function Login() {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
-
     try {
-      if (mode === 'login') {
-        await loginWithEmail(email, password);
-      } else {
-        await registerWithEmail(email, password, name);
-      }
+      if (mode === 'login') await loginWithEmail(email, password);
+      else await registerWithEmail(email, password, name);
     } catch (err: any) {
-      if (err.code === 'auth/invalid-credential') {
-        setError('E-mail ou senha incorretos.');
-      } else if (err.code === 'auth/email-already-in-use') {
-        setError('Este e-mail já está em uso.');
-      } else if (err.code === 'auth/weak-password') {
-        setError('A senha deve ter pelo menos 6 caracteres.');
-      } else {
-        setError('Ocorreu um erro. Verifique os dados e tente novamente.');
-      }
+      if (err.code === 'auth/invalid-credential') setError('E-mail ou senha incorretos.');
+      else if (err.code === 'auth/email-already-in-use') setError('Este e-mail já está em uso.');
+      else if (err.code === 'auth/weak-password') setError('A senha deve ter pelo menos 6 caracteres.');
+      else setError('Ocorreu um erro. Verifique os dados e tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const Campo = ({ label, icon: Icon, ...props }: { label: string; icon: React.ComponentType<{ size?: number; className?: string }> } & React.InputHTMLAttributes<HTMLInputElement>) => (
+    <label className="block">
+      <span className="rotulo">{label}</span>
+      <span className="relative block mt-1">
+        <Icon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-mute" />
+        <input {...props} style={{ paddingLeft: 38 }} />
+      </span>
+    </label>
+  );
+
   return (
-    <div className="min-h-screen bg-[#f7f5f0] flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#d97706]/10 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full" />
+    <div className="min-h-screen bg-bg text-ink flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="absolute top-4 right-4"><TemaToggle /></div>
+      <div className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full blur-[120px] opacity-30" style={{ background: 'var(--color-deep)' }} />
+      <div className="absolute -bottom-32 -right-24 w-[420px] h-[420px] rounded-full blur-[120px] opacity-20" style={{ background: 'var(--color-cyan)' }} />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full"
-      >
-        <div className="bg-white/60 backdrop-blur-2xl border border-black/10 rounded-[32px] p-8 md:p-12 shadow-2xl relative">
+      <div className="w-full max-w-sm relative">
+        <div className="flex flex-col items-center text-center mb-8">
+          <span className="text-cyan mb-4"><Capacete size={64} /></span>
+          <span className="block text-[11px] tracking-[0.4em] text-mute font-mono">GENERAL</span>
+          <h1 className="text-3xl font-bold tracking-[0.14em] mt-1">VALENTE</h1>
+          <p className="rotulo mt-3">Disciplina constrói liberdade.</p>
+        </div>
 
-          <AnimatePresence mode="wait">
-            {mode === 'initial' ? (
-              <motion.div
-                key="initial"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+        <div className="painel p-6">
+          {mode === 'initial' ? (
+            <div className="space-y-3">
+              <button
+                onClick={login}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-sm bg-cyan font-semibold cursor-pointer hover:brightness-110 transition rotulo"
+                style={{ color: 'var(--color-on-accent)' }}
               >
-                <div className="flex flex-col items-center text-center mb-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-[#d97706] to-blue-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-[#d97706]/20">
-                    <Layout size={40} className="text-white" />
-                  </div>
-                  <h1 className="text-3xl font-bold text-[#14120d] mb-2 tracking-tight">Life Manager</h1>
-                  <p className="text-gray-600 text-sm max-w-[280px]">
-                    Sua central de produtividade e gestão pessoal com segurança avançada.
-                  </p>
-                </div>
-
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-center gap-4 text-left p-4 rounded-2xl bg-black/5 border border-black/5 transition-all">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                      <Target size={20} className="text-blue-500" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[14px]">Gestão de Metas</h3>
-                      <p className="text-xs text-gray-500">Acompanhe seu progresso em tempo real.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-left p-4 rounded-2xl bg-black/5 border border-black/5 transition-all">
-                    <div className="w-10 h-10 rounded-xl bg-[#d97706]/10 flex items-center justify-center shrink-0">
-                      <Zap size={20} className="text-[#d97706]" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-[#14120d] uppercase tracking-widest text-[14px]">Habilidades & Hábitos</h3>
-                      <p className="text-xs text-gray-500">Construa rotinas sólidas.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <button
-                    onClick={login}
-                    className="w-full relative group"
-                  >
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-[#d97706] to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
-                    <div className="relative flex items-center justify-center gap-3 w-full py-4 bg-[#d97706] text-white font-bold rounded-2xl hover:bg-[#c2680a] transition-all">
-                      <LogIn size={20} />
-                      ENTRAR COM GOOGLE
-                    </div>
-                  </button>
-
-                  <div className="flex items-center gap-4 my-6">
-                    <div className="h-px flex-1 bg-black/10" />
-                    <span className="text-[14px] font-mono text-gray-500 uppercase tracking-widest">OU</span>
-                    <div className="h-px flex-1 bg-black/10" />
-                  </div>
-
-                  <button
-                    onClick={() => setMode('login')}
-                    className="w-full py-4 border border-black/10 rounded-2xl text-gray-600 hover:text-[#14120d] hover:bg-black/5 transition-all font-mono text-[14px] uppercase tracking-widest"
-                  >
-                    ACESSAR COM E-MAIL
-                  </button>
-                  <button
-                    onClick={() => setMode('register')}
-                    className="w-full py-2 text-gray-500 hover:text-[#d97706] transition-all font-mono text-[13px] uppercase tracking-widest"
-                  >
-                    NÃO TEM CONTA? CRIE AGORA
-                  </button>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-              >
-                <button
-                  onClick={() => { setMode('initial'); setError(null); }}
-                  className="flex items-center gap-2 text-gray-500 hover:text-[#14120d] transition-all mb-8 group"
-                >
-                  <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                  <span className="text-[14px] font-mono uppercase tracking-widest">Voltar</span>
-                </button>
-
-                <h2 className="text-2xl font-bold text-[#14120d] mb-2">{mode === 'login' ? 'Identificação' : 'Criar Conta'}</h2>
-                <p className="text-gray-500 text-xs mb-8 uppercase tracking-widest font-mono">
-                  {mode === 'login' ? 'SISTEMA_ACESSO_RESTRITO' : 'SISTEMA_REGISTRO_NOVO'}
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {mode === 'register' && (
-                    <div className="space-y-2">
-                      <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">Nome Completo</label>
-                      <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                        <input
-                          type="text"
-                          required
-                          value={name}
-                          onChange={e => setName(e.target.value)}
-                          className="w-full bg-black/5 border border-black/10 rounded-xl pl-12 pr-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
-                          placeholder="Como quer ser chamado?"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">E-mail</label>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        className="w-full bg-black/5 border border-black/10 rounded-xl pl-12 pr-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
-                        placeholder="seu@email.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[14px] font-mono text-gray-600 uppercase tracking-widest ml-1">Senha</label>
-                    <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                      <input
-                        type="password"
-                        required
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="w-full bg-black/5 border border-black/10 rounded-xl pl-12 pr-4 py-3 text-[#14120d] focus:border-[#d97706] outline-none transition-all"
-                        placeholder="••••••••"
-                      />
-                    </div>
-                  </div>
-
-                  {error && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                      <p className="text-[14px] text-red-600 font-mono uppercase tracking-tight leading-tight">
-                        ERRO: {error}
-                      </p>
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 bg-[#d97706] text-white font-bold rounded-2xl hover:bg-[#c2680a] transition-all disabled:opacity-50 mt-4 uppercase tracking-widest text-[15px]"
-                  >
-                    {isSubmitting ? 'PROCESSANDO...' : mode === 'login' ? 'ENTRAR_SISTEMA' : 'REGISTRAR_CONTA'}
-                  </button>
-                </form>
-
-                <div className="mt-6 text-center">
-                  <button
-                    onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(null); }}
-                    className="text-[13px] font-mono text-gray-500 hover:text-[#14120d] uppercase tracking-widest transition-all"
-                  >
-                    {mode === 'login' ? 'NÃO TEM CONTA? REGISTRE-SE' : 'JÁ TEM CONTA? FAÇA LOGIN'}
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {isMobile && isIframe && mode === 'initial' && (
-            <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
-              <div className="flex gap-3">
-                <ExternalLink className="text-amber-600 shrink-0" size={16} />
-                <p className="text-[14px] text-amber-700 leading-relaxed font-mono uppercase tracking-tight">
-                  Se o login Google não abrir, use a opção de <span className="text-amber-700 font-bold">E-mail</span> ou toque em <span className="text-amber-700 font-bold">Abrir em nova aba</span> no topo do AI Studio.
-                </p>
+                <LogIn size={16} />Entrar com Google
+              </button>
+              <div className="flex items-center gap-3 py-1">
+                <div className="h-px flex-1 bg-line" /><span className="rotulo">ou</span><div className="h-px flex-1 bg-line" />
               </div>
+              <button onClick={() => setMode('login')} className="w-full py-3 border border-line2 rounded-sm rotulo text-ink hover:border-cyan hover:text-cyan cursor-pointer transition-colors">
+                Acessar com e-mail
+              </button>
+              <button onClick={() => setMode('register')} className="w-full py-2 rotulo hover:text-cyan cursor-pointer transition-colors">
+                Não tem conta? Crie agora
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button onClick={() => { setMode('initial'); setError(null); }} className="flex items-center gap-2 rotulo mb-5 cursor-pointer hover:text-cyan">
+                <ArrowLeft size={14} />Voltar
+              </button>
+              <h2 className="text-xl font-semibold mb-4">{mode === 'login' ? 'Identificação' : 'Criar conta'}</h2>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                {mode === 'register' && (
+                  <Campo label="Nome" icon={User} type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Como quer ser chamado?" />
+                )}
+                <Campo label="E-mail" icon={Mail} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" />
+                <Campo label="Senha" icon={Lock} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+                {error && (
+                  <p className="text-sm rounded-sm px-3 py-2 border" style={{ color: 'var(--color-bad)', borderColor: 'color-mix(in srgb, var(--color-bad) 40%, transparent)' }}>{error}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 rounded-sm bg-cyan font-semibold cursor-pointer hover:brightness-110 disabled:opacity-50 transition rotulo mt-2"
+                  style={{ color: 'var(--color-on-accent)' }}
+                >
+                  {isSubmitting ? 'Processando...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+                </button>
+              </form>
+              <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(null); }} className="w-full mt-4 rotulo hover:text-cyan cursor-pointer transition-colors">
+                {mode === 'login' ? 'Não tem conta? Registre-se' : 'Já tem conta? Faça login'}
+              </button>
             </div>
           )}
 
-          <p className="text-center mt-8 text-[14px] font-mono text-gray-500 uppercase tracking-widest">
-            LIFE_MANAGER_V2.0 // SECURITY_ENABLED
-          </p>
+          {isMobile && isIframe && mode === 'initial' && (
+            <div className="mt-5 p-3 border border-line2 rounded-sm flex gap-3">
+              <ExternalLink className="text-warn shrink-0" size={16} />
+              <p className="text-xs text-mute leading-relaxed">Se o login Google não abrir, use a opção de e-mail ou abra o app em uma nova aba.</p>
+            </div>
+          )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
