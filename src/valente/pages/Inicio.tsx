@@ -81,7 +81,7 @@ export function InicioMobile({ ir }: { ir: Ir }) {
     <div className="pb-6">
       <CabecalhoMobile r={r} />
       <div className="px-2">
-        <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="w-full max-w-[460px] mx-auto block" />
+        <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[460px] mx-auto" />
       </div>
       <div className="px-4 space-y-3 mt-2">
         <div className="grid grid-cols-2 gap-2">
@@ -146,7 +146,7 @@ export function InicioDesktop({ ir }: { ir: Ir }) {
         {/* Zona esquerda */}
         <section className="painel p-4 lg:row-span-2 xl:row-span-1">
           <Titulo>O homem que estou construindo</Titulo>
-          <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="w-full max-w-[420px] mx-auto block" />
+          <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[440px] mx-auto" />
         </section>
 
         {/* Zona central */}

@@ -288,6 +288,11 @@ function diagnosticoArea(r: R, def: AreaDef): string[] {
   return out;
 }
 
+const POSICAO_BANNER: Record<AreaId, string> = {
+  espiritual: 'center 28%', comunicacao: 'center 45%', leitura: 'center 68%', memorizacao: 'center 25%',
+  carreira: 'center 62%', mindfulness: 'center 58%', alimentacao: 'center 8%', esporte: 'center 45%',
+};
+
 // ---------- Página ----------
 
 export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
@@ -309,14 +314,16 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
     <div className="p-4 lg:p-6 max-w-[1200px] mx-auto space-y-4">
       <button onClick={() => ir({ t: 'inicio' })} className="rotulo flex items-center gap-1.5 cursor-pointer"><ArrowLeft size={13} />Início</button>
 
-      <section className="painel-destaque p-4 lg:p-5">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-sm border flex items-center justify-center shrink-0" style={{ borderColor: COR[sit], color: COR[sit] }}><Icon size={24} /></div>
-          <div className="flex-1 min-w-0">
+      <section className="painel relative overflow-hidden" style={{ minHeight: 170 }}>
+        <img src={`/img/${id}.jpg`} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: POSICAO_BANNER[id] }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 78%, transparent) 42%, transparent 85%)' }} />
+        <div className="relative p-4 lg:p-5 flex items-start gap-4">
+          <div className="w-12 h-12 rounded-md border flex items-center justify-center shrink-0" style={{ borderColor: COR[sit], color: COR[sit], background: `${COR[sit]}22` }}><Icon size={24} /></div>
+          <div className="flex-1 min-w-0 max-w-[460px]">
             <h1 className="text-2xl font-semibold">{def.nome}</h1>
-            <p className="text-mute text-[15px] mt-1 leading-snug">{def.identidade}</p>
+            <p className="text-ink text-[15px] mt-1 leading-snug opacity-90">{def.identidade}</p>
           </div>
-          <div className="text-right shrink-0">
+          <div className="text-right shrink-0 rounded-md px-3 py-2" style={{ background: 'color-mix(in srgb, var(--color-bg) 70%, transparent)' }}>
             <Pct v={pct} className="text-3xl font-semibold" />
             <div className="mt-1"><Selo sit={sit} /></div>
           </div>

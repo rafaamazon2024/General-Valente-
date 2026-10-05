@@ -25,6 +25,7 @@
   --corpo-1: #12335c;
   --corpo-2: #081423;
   --corpo-borda: #2b6fb5;
+  --corpo-blend: lighten;
   --destaque-1: #0d2040;
   --destaque-borda: #1b4180;
 }
@@ -47,6 +48,7 @@
   --corpo-1: #cfe0f5;
   --corpo-2: #e8f0fa;
   --corpo-borda: #4a86c5;
+  --corpo-blend: normal;
   --destaque-1: #e4eefc;
   --destaque-borda: #a9c4ec;
 }

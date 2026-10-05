@@ -7,7 +7,7 @@ import { useAuth } from './components/AuthContext';
 import { db, doc, onSnapshot } from './firebase';
 import { ValenteProvider, useValente } from './valente/store';
 import { rotaKey, type Ir, type Rota } from './valente/nav';
-import Capacete, { Logo } from './valente/ui/Capacete';
+import { CapaceteImg, Logo } from './valente/ui/Capacete';
 import TemaToggle from './valente/ui/TemaToggle';
 import { InicioDesktop, InicioMobile } from './valente/pages/Inicio';
 import AreaPage from './valente/pages/AreaPage';
@@ -115,7 +115,7 @@ function Casca() {
   if (carregando) {
     return (
       <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 text-cyan">
-        <Capacete size={40} />
+        <CapaceteImg altura={72} />
         <p className="rotulo animate-pulse">Carregando posição</p>
       </div>
     );
@@ -133,12 +133,13 @@ function Casca() {
       </AnimatePresence>
 
       {desktop && (
-        <aside className="w-[220px] shrink-0 sticky top-0 h-screen border-r border-line bg-panel flex flex-col">
+        <aside className="w-[220px] shrink-0 sticky top-0 h-screen border-r border-line bg-panel flex flex-col relative overflow-hidden">
+          <div className="absolute inset-x-0 bottom-0 h-[45%] opacity-40 pointer-events-none" style={{ backgroundImage: "url(/img/fundo.jpg)", backgroundSize: "cover", backgroundPosition: "center bottom", maskImage: "linear-gradient(to top, #000 30%, transparent)", WebkitMaskImage: "linear-gradient(to top, #000 30%, transparent)" }} />
           <div className="p-5 border-b border-line">
             <Logo size={36} />
             <p className="rotulo mt-3" style={{ fontSize: 10 }}>Disciplina constrói liberdade.</p>
           </div>
-          <nav className="flex-1 p-3 space-y-1">
+          <nav className="flex-1 p-3 space-y-1 relative">
             {MENU_DESKTOP.map((m) => {
               const on = ativo === m.t;
               const Icon = m.icon;
@@ -154,7 +155,7 @@ function Casca() {
               );
             })}
           </nav>
-          <div className="p-4 border-t border-line flex items-center justify-between gap-2"><span className="text-xs text-mute truncate">{user?.email}</span><TemaToggle /></div>
+          <div className="p-4 border-t border-line flex items-center justify-between gap-2 relative"><span className="text-xs text-mute truncate">{user?.email}</span><TemaToggle /></div>
         </aside>
       )}
 
@@ -175,8 +176,8 @@ function Casca() {
             if (!Icon) {
               return (
                 <button key={m.t} onClick={() => ir({ t: m.t } as Rota)} className="flex flex-col items-center justify-end pb-2 cursor-pointer relative" aria-label="General">
-                  <span className="absolute -top-6 w-14 h-14 rounded-full flex items-center justify-center bg-panel" style={{ border: `2px solid ${on ? 'var(--color-cyan)' : 'var(--color-line2)'}`, color: cor, boxShadow: on ? '0 0 18px color-mix(in srgb, var(--color-cyan) 35%, transparent)' : 'none' }}>
-                    <Capacete size={30} cor={cor} />
+                  <span className="absolute -top-7 w-16 h-16 rounded-full flex items-center justify-center bg-panel" style={{ border: `2px solid ${on ? 'var(--color-cyan)' : 'var(--color-line2)'}`, boxShadow: on ? '0 0 20px color-mix(in srgb, var(--color-cyan) 40%, transparent)' : 'none' }}>
+                    <CapaceteImg altura={42} />
                   </span>
                   <span className="rotulo mt-7" style={{ fontSize: 10, color: cor }}>{m.label}</span>
                 </button>
@@ -201,7 +202,7 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 text-cyan">
-        <Capacete size={40} />
+        <CapaceteImg altura={72} />
         <p className="rotulo animate-pulse">Iniciando sistema</p>
       </div>
     );

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ExternalLink, Lock, LogIn, Mail, User } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
-import Capacete from '../valente/ui/Capacete';
+import { CapaceteImg } from '../valente/ui/Capacete';
 import TemaToggle from '../valente/ui/TemaToggle';
 
 export default function Login() {
@@ -50,7 +50,7 @@ export default function Login() {
 
       <div className="w-full max-w-sm relative">
         <div className="flex flex-col items-center text-center mb-8">
-          <span className="text-cyan mb-4"><Capacete size={64} /></span>
+          <CapaceteImg altura={120} className="mb-3" />
           <span className="block text-[11px] tracking-[0.4em] text-mute font-mono">GENERAL</span>
           <h1 className="text-3xl font-bold tracking-[0.14em] mt-1">VALENTE</h1>
           <p className="rotulo mt-3">Disciplina constrói liberdade.</p>
