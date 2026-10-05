@@ -1,5 +1,4 @@
-import React from 'react';
-import { Bell, Search, Target, BarChart3, Play, ShieldAlert, ChevronRight } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../components/AuthContext';
 import { useResumo, saudacao } from '../useResumo';
 import type { Ir } from '../nav';
@@ -54,54 +53,20 @@ function CabecalhoMobile({ r }: { r: ReturnType<typeof useResumo> }) {
   );
 }
 
-function Atalho({ icon, titulo, sub, cor, onClick, destaque }: {
-  icon: React.ReactNode; titulo: string; sub: string; cor: string; onClick: () => void; destaque?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="painel p-3 text-left flex items-center gap-3 cursor-pointer min-w-0"
-      style={destaque ? { borderColor: `${cor}66`, background: `${cor}10` } : undefined}
-    >
-      <span className="shrink-0" style={{ color: cor }}>{icon}</span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[13px] font-medium leading-tight" style={destaque ? { color: cor } : undefined}>{titulo}</span>
-        <span className="block text-[12px] text-mute leading-tight mt-0.5 truncate">{sub}</span>
-      </span>
-      <ChevronRight size={16} className="text-dim shrink-0" />
-    </button>
-  );
-}
-
-const rolar = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
 export function InicioMobile({ ir }: { ir: Ir }) {
   const r = useResumo();
   return (
     <div className="pb-6">
       <CabecalhoMobile r={r} />
-      <div className="px-2">
-        <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[460px] mx-auto" />
-      </div>
       <div className="px-4 space-y-3 mt-2">
-        <div className="grid grid-cols-2 gap-2">
-          <Atalho icon={<Target size={22} />} titulo="Missão do dia" sub={`${r.execHoje.feito} de ${r.execHoje.planejado} concluídas`} cor="#fbbf24" onClick={() => rolar('missoes')} />
-          <Atalho icon={<BarChart3 size={22} />} titulo="Big 3 da semana" sub={r.big3.length ? `${r.big3.length} em andamento` : 'Defina os 3'} cor="#3b82f6" onClick={() => rolar('big3')} />
-          <Atalho
-            icon={<Play size={22} />} titulo="Próxima ação" cor="#22d3ee" onClick={() => rolar('proxima')}
-            sub={r.proxima ? `${r.proxima.missao.titulo}${r.proxima.missao.duracao ? ` · ${r.proxima.missao.duracao} min` : ''}` : 'Tudo fechado'}
-          />
-          <Atalho
-            icon={<ShieldAlert size={22} />} titulo="Alerta do General" cor="#f87171" destaque={!!r.alerta}
-            sub={r.alerta ? r.alerta.texto.split(':')[0] : 'Sem alertas'}
-            onClick={() => { if (r.alerta?.area) ir({ t: 'area', id: r.alerta.area }); }}
-          />
-        </div>
-        <div id="missoes"><MissoesDoDia r={r} /></div>
-        <div id="proxima"><ProximaAcaoCard r={r} /></div>
-        <div id="big3"><Big3Card r={r} /></div>
+        <ProximaAcaoCard r={r} />
+        <MissoesDoDia r={r} />
+        <section className="painel px-2 pt-4">
+          <div className="px-2"><Titulo>O homem que estou construindo</Titulo></div>
+          <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[460px] mx-auto" />
+        </section>
+        <Big3Card r={r} />
         <AlertaCard r={r} ir={ir} />
-        <DiagnosticoCard r={r} ir={ir} />
       </div>
     </div>
   );
@@ -140,7 +105,7 @@ export function InicioDesktop({ ir }: { ir: Ir }) {
         </div>
       </header>
 
-      <ResumoAreas r={r} ir={ir} grade />
+      <ResumoAreas r={r} ir={ir} grade limite={3} />
 
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] xl:grid-cols-[380px_minmax(0,1fr)_310px] items-start">
         {/* Zona esquerda */}
@@ -153,7 +118,6 @@ export function InicioDesktop({ ir }: { ir: Ir }) {
         <div className="space-y-4 min-w-0">
           <MissoesDoDia r={r} comFiltros />
           <Big3Card r={r} />
-          <MapaExecucao r={r} />
         </div>
 
         {/* Zona direita */}
@@ -165,6 +129,8 @@ export function InicioDesktop({ ir }: { ir: Ir }) {
           <Consistencia r={r} />
         </div>
       </div>
+
+      <MapaExecucao r={r} />
 
       <div className="grid gap-4 xl:grid-cols-2">
         <EvolucaoSemanal r={r} />

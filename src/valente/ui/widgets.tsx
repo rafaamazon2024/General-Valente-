@@ -210,7 +210,7 @@ export function Big3Card({ r, editavel = true }: { r: R; editavel?: boolean }) {
   return (
     <section className="painel p-4">
       <Titulo extra={<span className="rotulo num">Semana {r.semana.n}</span>}>Big 3 da semana</Titulo>
-      {r.big3.length === 0 && <Vazio>Defina os três resultados críticos desta semana.</Vazio>}
+      {r.big3.length === 0 && <Vazio>Defina os 3 resultados que tornam esta semana uma vitória.</Vazio>}
       <div className="space-y-4">
         {r.big3.map((b, i) => (
           <div key={b.id}>
@@ -234,9 +234,9 @@ export function Big3Card({ r, editavel = true }: { r: R; editavel?: boolean }) {
         ))}
       </div>
       {editavel && r.big3.length < 3 && (
-        <div className="flex gap-2 mt-4">
+        <div className="flex flex-col sm:flex-row gap-2 mt-4">
           <input value={novo} onChange={(e) => setNovo(e.target.value)} placeholder="Resultado crítico da semana" onKeyDown={(e) => e.key === 'Enter' && adicionar()} />
-          <Botao onClick={adicionar} className="shrink-0">Adicionar</Botao>
+          <Botao onClick={adicionar} className="shrink-0 sm:w-auto w-full">Adicionar resultado</Botao>
         </div>
       )}
     </section>
@@ -245,10 +245,13 @@ export function Big3Card({ r, editavel = true }: { r: R; editavel?: boolean }) {
 
 // ---------- Resumo das áreas (cards compactos) ----------
 
-export function ResumoAreas({ r, ir, grade = false }: { r: R; ir: Ir; grade?: boolean }) {
+export function ResumoAreas({ r, ir, grade = false, limite }: { r: R; ir: Ir; grade?: boolean; limite?: number }) {
+  const areas = limite
+    ? [...AREAS].sort((a, b) => (r.pcts[a.id] ?? -1) - (r.pcts[b.id] ?? -1)).slice(0, limite)
+    : AREAS;
   return (
-    <div className={grade ? 'grid grid-cols-4 xl:grid-cols-8 gap-2' : 'flex gap-2 overflow-x-auto pb-1'}>
-      {AREAS.map((a) => {
+    <div className={grade ? 'grid grid-cols-4 gap-2' : 'flex gap-2 overflow-x-auto pb-1'}>
+      {areas.map((a) => {
         const p = r.pcts[a.id];
         const sit = situacao(p);
         const Icon = a.icon;
@@ -270,6 +273,18 @@ export function ResumoAreas({ r, ir, grade = false }: { r: R; ir: Ir; grade?: bo
           </button>
         );
       })}
+      {limite && limite < AREAS.length && (
+        <button
+          onClick={() => ir({ t: 'areas' })}
+          className="painel p-3 text-left cursor-pointer hover:border-cyan transition-colors min-w-[132px] flex items-center justify-between gap-3"
+        >
+          <span>
+            <span className="rotulo block" style={{ color: 'var(--color-cyan)' }}>Visão completa</span>
+            <span className="text-sm text-mute block mt-1">Ver todas as 8 áreas</span>
+          </span>
+          <span className="text-cyan text-xl" aria-hidden="true">→</span>
+        </button>
+      )}
     </div>
   );
 }
@@ -291,9 +306,9 @@ export function MapaExecucao({ r }: { r: R }) {
           ))}
         </div>
       }>Mapa de execução</Titulo>
-      <div className="flex gap-4 items-stretch">
-      <div className="overflow-x-auto flex-1 min-w-0">
-        <table className="w-full border-separate" style={{ borderSpacing: 4 }}>
+      <div className="grid gap-4 md:grid-cols-[minmax(620px,1fr)_150px] items-stretch overflow-x-auto">
+      <div className="min-w-[620px]">
+        <table className="w-full border-separate table-fixed" style={{ borderSpacing: 4 }}>
           <thead>
             <tr>
               <th />
@@ -323,7 +338,7 @@ export function MapaExecucao({ r }: { r: R }) {
           </tbody>
         </table>
       </div>
-      <div className="hidden md:flex flex-col justify-between painel p-3 w-[130px] shrink-0">
+      <div className="hidden md:flex flex-col justify-between painel p-3 min-w-[150px]">
         <div className="rotulo" style={{ fontSize: 10 }}>Taxa da semana</div>
         <div className="text-3xl font-semibold num">{r.execSemana.pct === null ? '—' : `${r.execSemana.pct}%`}</div>
         <div className="flex items-end gap-1 h-12">
