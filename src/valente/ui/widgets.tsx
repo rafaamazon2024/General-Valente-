@@ -234,9 +234,9 @@ export function Big3Card({ r, editavel = true }: { r: R; editavel?: boolean }) {
         ))}
       </div>
       {editavel && r.big3.length < 3 && (
-        <div className="flex flex-col sm:flex-row gap-2 mt-4">
+        <div className="flex flex-col gap-2 mt-4">
           <input value={novo} onChange={(e) => setNovo(e.target.value)} placeholder="Resultado crítico da semana" onKeyDown={(e) => e.key === 'Enter' && adicionar()} />
-          <Botao onClick={adicionar} className="shrink-0 sm:w-auto w-full">Adicionar resultado</Botao>
+          <Botao onClick={adicionar} className="w-full">Adicionar resultado</Botao>
         </div>
       )}
     </section>
