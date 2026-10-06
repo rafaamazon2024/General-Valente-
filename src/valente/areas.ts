@@ -77,8 +77,8 @@ export const AREAS: AreaDef[] = [
   },
   {
     id: 'memorizacao', nome: 'Memorização', curto: 'Memoriz.', icon: Brain, corpo: 'Cabeça',
-    identidade: 'Treino de memória com revisão espaçada. Constância vale mais que volume.',
-    metaCicloPadrao: 'Memorizar blocos novos e manter a retenção com revisão espaçada.',
+    identidade: 'Operação Memória 40D: recuperar, revisar e aplicar. Constância vale mais que volume.',
+    metaCicloPadrao: 'Concluir os 40 dias de treino e aumentar a retenção real de nomes, conceitos e conteúdos profissionais.',
     metricas: [
       { key: 'blocos_memorizados', label: 'Blocos memorizados', tipo: 'num', unidade: 'un', passo: 1 },
       { key: 'cartoes_revisados', label: 'Cartões revisados', tipo: 'num', unidade: 'un', passo: 5 },

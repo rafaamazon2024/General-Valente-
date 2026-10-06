@@ -47,6 +47,7 @@ export interface ConfigValente {
   big3: Record<string, Big3Item[]>;
   revisoes: Record<string, Revisao>;
   livro?: { titulo: string; total: number; atual: number };
+  memoria40?: { inicio: string; foco: string };
 }
 
 export type EstadoMissao = 'pendente' | 'iniciada' | 'adiada' | 'feita';
@@ -158,6 +159,7 @@ export function ValenteProvider({ children }: { children: React.ReactNode }) {
     big3: configRaw?.big3 || {},
     revisoes: configRaw?.revisoes || {},
     livro: configRaw?.livro,
+    memoria40: configRaw?.memoria40,
   }), [configRaw]);
 
   const estadoMissao = useCallback((id: string, date: string = hoje): EstadoMissao => {
@@ -199,7 +201,7 @@ export function ValenteProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const setMetrica = useCallback((date: string, key: string, valor: number | boolean) =>
-    escreverMetricas(date, { valores: { [key]: valor } }), [escreverMetricas]);
+    escreverMetricas(date, { valores: { ...(metricas[date]?.valores || {}), [key]: valor } }), [escreverMetricas, metricas]);
 
   const addRefeicao = useCallback((date: string, nome: string, kcal: number, atuais: Refeicao[]) =>
     escreverMetricas(date, { refeicoes: [...atuais, { id: String(Date.now()), nome, kcal }] }), [escreverMetricas]);

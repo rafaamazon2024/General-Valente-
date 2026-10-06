@@ -223,6 +223,112 @@ function CarreiraResumo({ r }: { r: R }) {
   );
 }
 
+const FASES_MEMORIA = [
+  { ate: 5, nome: 'Diagnóstico', objetivo: 'Medir sua memória atual e eliminar a releitura passiva.' },
+  { ate: 12, nome: 'Codificação', objetivo: 'Criar associações, imagens mentais e blocos de informação.' },
+  { ate: 20, nome: 'Recuperação', objetivo: 'Recordar sem olhar e usar revisões espaçadas.' },
+  { ate: 27, nome: 'Palácio da Memória', objetivo: 'Guardar listas, nomes e sequências em locais mentais.' },
+  { ate: 34, nome: 'Aplicação real', objetivo: 'Misturar temas e usar o método no trabalho e nos estudos.' },
+  { ate: 39, nome: 'Sob pressão', objetivo: 'Recordar com tempo, ensinar e apresentar sem roteiro.' },
+  { ate: 40, nome: 'Teste final', objetivo: 'Repetir o diagnóstico e definir a manutenção.' },
+] as const;
+
+const ETAPAS_MEMORIA = [
+  { key: 'mem40_preparacao', tempo: 5, titulo: 'Preparação', texto: 'Sem celular. Defina exatamente o que será lembrado hoje.' },
+  { key: 'mem40_codificacao', tempo: 10, titulo: 'Codificação profunda', texto: 'Transforme o conteúdo em blocos, imagens e relações com algo conhecido.' },
+  { key: 'mem40_recuperacao', tempo: 15, titulo: 'Recuperação ativa', texto: 'Feche o material e escreva, fale ou responda sem consultar. Depois confira.' },
+  { key: 'mem40_tecnica', tempo: 5, titulo: 'Técnica de memória', texto: 'Treine nomes, números, associações ou um percurso do Palácio da Memória.' },
+  { key: 'mem40_registro', tempo: 5, titulo: 'Teste e registro', texto: 'Registre acertos, erros e programe a próxima revisão.' },
+] as const;
+
+function diasEntre(inicio: string, fim: string): number {
+  const a = new Date(`${inicio}T12:00:00`).getTime();
+  const b = new Date(`${fim}T12:00:00`).getTime();
+  return Math.max(0, Math.floor((b - a) / 86_400_000));
+}
+
+function OperacaoMemoria40({ r }: { r: R }) {
+  const campanha = r.config.memoria40;
+  const [foco, setFoco] = useState(campanha?.foco || '');
+  const [salvando, setSalvando] = useState<string | null>(null);
+  useEffect(() => setFoco(campanha?.foco || ''), [campanha?.foco]);
+
+  const dia = campanha ? Math.min(40, diasEntre(campanha.inicio, r.hoje) + 1) : 1;
+  const fase = FASES_MEMORIA.find((x) => dia <= x.ate) || FASES_MEMORIA[FASES_MEMORIA.length - 1];
+  const valores = r.metricas[r.hoje]?.valores || {};
+  const feitas = ETAPAS_MEMORIA.filter((x) => valores[x.key] === true).length;
+  const diasCompletos = campanha ? Object.entries(r.metricas).filter(([data, m]) => (
+    data >= campanha.inicio && data <= r.hoje && ETAPAS_MEMORIA.every((x) => m.valores[x.key] === true)
+  )).length : 0;
+
+  const iniciar = () => r.salvarConfig({ memoria40: { inicio: r.hoje, foco: foco.trim() } });
+  const salvarFoco = () => campanha && r.salvarConfig({ memoria40: { ...campanha, foco: foco.trim() } });
+  const marcar = async (key: string) => {
+    setSalvando(key);
+    try {
+      await r.setMetrica(r.hoje, key, valores[key] !== true);
+    } finally {
+      setSalvando(null);
+    }
+  };
+
+  return (
+    <section className="painel-destaque p-4">
+      <Titulo extra={<span className="rotulo" style={{ color: 'var(--color-cyan)' }}>{campanha ? `Dia ${dia} de 40` : '40 dias'}</span>}>Operação Memória 40D</Titulo>
+      <p className="text-[15px] leading-relaxed">Treino diário de 40 minutos para lembrar melhor nomes, conceitos, leituras e conteúdos profissionais.</p>
+
+      {!campanha ? (
+        <div className="mt-4 space-y-3">
+          <label className="rotulo" style={{ fontSize: 10 }}>O que você mais quer memorizar?
+            <input value={foco} onChange={(e) => setFoco(e.target.value)} placeholder="Ex.: nomes, livros e conteúdo da agência" className="mt-1" />
+          </label>
+          <Botao variante="primario" onClick={iniciar}>Iniciar operação hoje</Botao>
+          <p className="text-xs text-mute">O Dia 1 começa hoje. O progresso fica salvo na sua conta.</p>
+        </div>
+      ) : (
+        <>
+          <div className="mt-4 flex items-end justify-between gap-3">
+            <div>
+              <div className="rotulo" style={{ color: 'var(--color-cyan)' }}>Fase atual · {fase.nome}</div>
+              <p className="text-sm mt-1 leading-relaxed">{fase.objetivo}</p>
+            </div>
+            <span className="num text-lg shrink-0">{diasCompletos} / 40</span>
+          </div>
+          <div className="mt-2"><Barra pct={Math.round((diasCompletos / 40) * 100)} alt={6} /></div>
+
+          <label className="rotulo block mt-4" style={{ fontSize: 10 }}>Foco da campanha
+            <input value={foco} onChange={(e) => setFoco(e.target.value)} onBlur={salvarFoco} placeholder="Conteúdo principal" className="mt-1" />
+          </label>
+
+          <div className="flex items-center justify-between gap-3 mt-5 mb-1">
+            <h3 className="rotulo" style={{ color: 'var(--color-cyan)' }}>Protocolo de hoje · 40 min</h3>
+            <span className="num text-sm">{feitas} / {ETAPAS_MEMORIA.length}</span>
+          </div>
+          <div>
+            {ETAPAS_MEMORIA.map((etapa) => {
+              const concluida = valores[etapa.key] === true;
+              return (
+                <button key={etapa.key} type="button" disabled={salvando !== null} aria-pressed={concluida} onClick={() => marcar(etapa.key)} className="w-full flex items-start gap-3 text-left py-3 border-b border-line last:border-0 cursor-pointer disabled:opacity-60">
+                  <span className="w-5 h-5 rounded-sm border flex items-center justify-center shrink-0" style={{ borderColor: concluida ? COR.otimo : 'var(--color-line2)', color: COR.otimo, background: concluida ? `${COR.otimo}20` : 'transparent' }}>{concluida ? '✓' : ''}</span>
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-semibold">{etapa.titulo} <span className="num text-xs text-cyan">· {etapa.tempo} min</span></span>
+                    <span className="block text-sm text-mute leading-relaxed mt-1">{etapa.texto}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 border-t border-line pt-3">
+            <h3 className="rotulo" style={{ color: 'var(--color-cyan)' }}>Agenda de revisão</h3>
+            <p className="text-sm mt-2 leading-relaxed">Revise o conteúdo de hoje em <strong>1, 3, 7, 14 e 30 dias</strong>. Se não lembrar, encurte o intervalo; se lembrar com facilidade, avance.</p>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
 const PRATICAS_CARISMA = [
   { key: 'carisma_presenca', titulo: 'Presença', texto: '5 min: postura relaxada, voz audível e pausas. Grave uma apresentação de 60 segundos.' },
   { key: 'carisma_conversa', titulo: 'Conversa', texto: '10 min: inicie um assunto e desenvolva duas perguntas abertas a partir da resposta.' },
@@ -466,6 +572,7 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
           {id === 'alimentacao' && <Refeicoes r={r} />}
           {id === 'carreira' && <CarreiraResumo r={r} />}
           {id === 'comunicacao' && <PresencaCarisma r={r} />}
+          {id === 'memorizacao' && <OperacaoMemoria40 r={r} />}
 
           <section className="painel p-4">
             <Titulo>Indicadores de hoje</Titulo>
