@@ -223,6 +223,107 @@ function CarreiraResumo({ r }: { r: R }) {
   );
 }
 
+const PRATICAS_CARISMA = [
+  { key: 'carisma_presenca', titulo: 'Presença', texto: '5 min: postura relaxada, voz audível e pausas. Grave uma apresentação de 60 segundos.' },
+  { key: 'carisma_conversa', titulo: 'Conversa', texto: '10 min: inicie um assunto e desenvolva duas perguntas abertas a partir da resposta.' },
+  { key: 'carisma_conexao', titulo: 'Conexão', texto: '10 min: escute sem interromper e retome um detalhe que a pessoa contou.' },
+  { key: 'carisma_historia', titulo: 'Humor e histórias', texto: '10 min: conte uma história curta com contexto, acontecimento e desfecho. Use humor sem diminuir alguém.' },
+  { key: 'carisma_revisao', titulo: 'Revisão', texto: '5 min: reveja sua gravação e escolha um ajuste para amanhã. Use os exercícios do Assunto Infinito como repertório.' },
+] as const;
+
+const MISSOES_CARISMA = [
+  'Inicie uma conversa breve com alguém conhecido e faça uma pergunta aberta.',
+  'Cumprimente alguém pelo nome e retome um assunto que essa pessoa já contou.',
+  'Conte uma história de até 90 segundos e dê espaço para a outra pessoa participar.',
+  'Puxe um assunto a partir do ambiente e desenvolva a resposta com curiosidade.',
+  'Faça um elogio específico e sincero, sem esperar nada em troca.',
+  'Convide alguém conhecido para uma atividade simples, respeitando a resposta.',
+  'Converse sem olhar o celular e encerre agradecendo a troca.',
+] as const;
+
+function PresencaCarisma({ r }: { r: R }) {
+  const [salvando, setSalvando] = useState<string | null>(null);
+  const [erro, setErro] = useState('');
+  const semanaDatas = datasDaSemana(r.config, r.semana.n);
+  const desafios = [
+    ...PRATICAS_CARISMA,
+    {
+      key: 'carisma_missao_real',
+      titulo: 'Missão real do dia',
+      texto: MISSOES_CARISMA[new Date(`${r.hoje}T12:00:00`).getDay()],
+    },
+  ];
+  const valores = r.metricas[r.hoje]?.valores || {};
+  const xp = Object.entries(r.metricas).reduce((total, [data, dia]) => {
+    if (data < r.config.ciclo_inicio || data > r.hoje) return total;
+    return total + desafios.reduce((n, d) => n + (dia.valores[d.key] === true ? 10 : 0), 0);
+  }, 0);
+  const nivel = Math.floor(xp / 200) + 1;
+  const nomes = ['Primeiro passo', 'Presença firme', 'Conversa fluida', 'Conexão', 'Carisma em ação'];
+  const diasReais = semanaDatas.filter((data) => data <= r.hoje && r.metricas[data]?.valores.carisma_missao_real === true).length;
+
+  const marcar = async (key: string) => {
+    setSalvando(key);
+    setErro('');
+    try {
+      await r.setMetrica(r.hoje, key, valores[key] !== true);
+    } catch {
+      setErro('Não foi possível salvar. Tente novamente.');
+    } finally {
+      setSalvando(null);
+    }
+  };
+
+  return (
+    <section className="painel-destaque p-4">
+      <Titulo extra={<span className="rotulo" style={{ color: 'var(--color-cyan)' }}>Nível {nivel}</span>}>Presença &amp; Carisma</Titulo>
+      <p className="text-[15px] leading-relaxed">Conversar com naturalidade, criar conexão e ser alguém com quem as pessoas gostam de estar.</p>
+
+      <div className="flex items-center justify-between gap-3 mt-4 mb-2 text-sm">
+        <span>{nomes[Math.min(nivel - 1, nomes.length - 1)]}</span>
+        <span className="num text-cyan">{xp} XP</span>
+      </div>
+      <Barra pct={(xp % 200) / 2} alt={5} />
+      <p className="text-xs text-mute mt-2">10 XP por prática concluída · 200 XP por nível · progresso neste ciclo</p>
+
+      <h3 className="rotulo mt-5 mb-2" style={{ color: 'var(--color-cyan)' }}>Seu treino de 40 minutos</h3>
+      <p className="text-xs text-mute mb-2">Estas etapas compõem o bloco de Comunicação da sua rotina.</p>
+      <div>
+        {desafios.map((d) => {
+          const concluido = valores[d.key] === true;
+          return (
+            <button
+              key={d.key}
+              type="button"
+              disabled={salvando !== null}
+              aria-pressed={concluido}
+              onClick={() => marcar(d.key)}
+              className="w-full flex items-start gap-3 text-left py-3 border-b border-line last:border-0 cursor-pointer disabled:opacity-60"
+            >
+              <span
+                className="w-5 h-5 rounded-sm border flex items-center justify-center shrink-0"
+                style={{ borderColor: concluido ? COR.otimo : 'var(--color-line2)', color: COR.otimo, background: concluido ? `${COR.otimo}20` : 'transparent' }}
+              >{concluido ? '✓' : ''}</span>
+              <span>
+                <span className="block text-[15px] font-semibold">{d.titulo}</span>
+                <span className="block text-sm text-mute leading-relaxed mt-1">{d.texto}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      {erro && <p role="alert" className="text-sm text-bad mt-2">{erro}</p>}
+
+      <div className="mt-4 border-t border-line pt-3">
+        <h3 className="rotulo" style={{ color: 'var(--color-cyan)' }}>Desafio semanal</h3>
+        <p className="text-sm mt-2">Cumprir uma missão real em 5 dias diferentes. Faça sua parte e respeite o espaço da outra pessoa.</p>
+        <p className="num mt-2">{diasReais} / 5 dias {diasReais >= 5 ? '· Desafio concluído ✓' : ''}</p>
+        <Barra pct={Math.min(100, diasReais * 20)} alt={5} />
+      </div>
+    </section>
+  );
+}
+
 // ---------- Evolução da área ----------
 
 function EvolucaoArea({ r, area }: { r: R; area: AreaId }) {
@@ -364,6 +465,7 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
           {id === 'leitura' && <Livro r={r} />}
           {id === 'alimentacao' && <Refeicoes r={r} />}
           {id === 'carreira' && <CarreiraResumo r={r} />}
+          {id === 'comunicacao' && <PresencaCarisma r={r} />}
 
           <section className="painel p-4">
             <Titulo>Indicadores de hoje</Titulo>
