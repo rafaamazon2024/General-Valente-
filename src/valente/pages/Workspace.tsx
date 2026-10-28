@@ -134,12 +134,15 @@ export function AreaRecords({ area }: { area: AreaId }) {
   const { entries, loading, error } = useWorkspace();
   const [adding, setAdding] = useState(false);
   const list = entries.filter(e => matches(e, area) && !e.data.archived);
+  const current = list.filter(e => e.type.startsWith('gv_'));
+  const previous = list.filter(e => !e.type.startsWith('gv_'));
   return <section className="painel p-4 space-y-3"><Titulo extra={<Botao onClick={() => setAdding(!adding)}>+ Registrar</Botao>}>Planos, materiais e anotações</Titulo>
     <p className="text-sm text-mute">Guarde seu plano, instruções, estudos e registros desta área. Planos confirmados aparecem no Hoje.</p>
     <ErrorText text={error} />
     {adding && <EntryEditor area={area} kind="gv_plan" onClose={() => setAdding(false)} />}
-    {loading ? <Vazio>Carregando…</Vazio> : !list.length && <Vazio>Nenhum plano confirmado disponível nesta área. Adicione seu material para começar.</Vazio>}
-    {list.map(e => <EntryCard entry={e} key={e.id} />)}
+    {loading ? <Vazio>Carregando…</Vazio> : !current.length && <Vazio>Nenhum novo plano confirmado disponível nesta área. Adicione seu material ou consulte seus registros anteriores abaixo.</Vazio>}
+    {current.map(e => <EntryCard entry={e} key={e.id} />)}
+    {previous.length > 0 && <details><summary className="text-sm text-cyan cursor-pointer">Consultar registros anteriores desta área ({previous.length})</summary><div className="mt-3 space-y-3">{previous.map(e => <EntryCard entry={e} key={e.id} />)}</div></details>}
   </section>;
 }
 
