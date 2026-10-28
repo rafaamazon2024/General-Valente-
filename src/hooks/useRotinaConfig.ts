@@ -17,7 +17,7 @@ export function useRotinaConfig() {
     const ref = doc(db, 'rotina_config', user.uid);
     return onSnapshot(ref, (snap) => {
       const data = snap.data();
-      setBlocos(data?.blocos?.length ? data.blocos as BlocoRotina[] : ROTINA);
+      setBlocos(Array.isArray(data?.blocos) ? data.blocos as BlocoRotina[] : ROTINA);
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.GET, `rotina_config/${user.uid}`);

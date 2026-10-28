@@ -1,6 +1,6 @@
 // Cálculos puros do General Valente. Tudo derivado de rotina_logs + valente_metricas + valente_config.
 
-import type { DiaSemana } from '../config/rotinaSeed';
+import type { DiaSemana, BlocoRotina } from '../config/rotinaSeed';
 import { dateStr } from '../utils/date';
 import {
   AREAS, AREA_POR_ID, MISSAO_POR_ID, META_KCAL, missoesDoDia, situacao,
@@ -66,14 +66,14 @@ function feitosDoDia(logs: Record<string, LogDia>, date: string): string[] {
 
 /** Execução somando só os dias já iniciados (<= hoje). */
 export function execucaoDatas(
-  datas: string[], logs: Record<string, LogDia>, hoje: string, area?: AreaId,
+  datas: string[], logs: Record<string, LogDia>, hoje: string, area?: AreaId, rotina?: BlocoRotina[],
 ): Execucao {
   let planejado = 0;
   let feito = 0;
   for (const d of datas) {
     if (d > hoje) continue;
     const feitos = feitosDoDia(logs, d);
-    for (const m of missoesDoDia(diaDe(d))) {
+    for (const m of missoesDoDia(diaDe(d), rotina)) {
       if (area && m.area !== area) continue;
       planejado++;
       if (feitos.includes(m.id)) feito++;
@@ -83,20 +83,20 @@ export function execucaoDatas(
 }
 
 export function execucaoSemana(config: ConfigValente, n: number, logs: Record<string, LogDia>, hoje: string, area?: AreaId): Execucao {
-  return execucaoDatas(datasDaSemana(config, n), logs, hoje, area);
+  return execucaoDatas(datasDaSemana(config, n), logs, hoje, area, config.rotina);
 }
 
-export function execucaoDia(date: string, logs: Record<string, LogDia>): Execucao {
+export function execucaoDia(date: string, logs: Record<string, LogDia>, rotina?: BlocoRotina[]): Execucao {
   const feitos = feitosDoDia(logs, date);
-  const lista = missoesDoDia(diaDe(date));
+  const lista = missoesDoDia(diaDe(date), rotina);
   const feito = lista.filter((m) => feitos.includes(m.id)).length;
   return { planejado: lista.length, feito, pct: pct(feito, lista.length) };
 }
 
 export type CelulaHeat = 'feito' | 'parcial' | 'falha' | 'futuro' | 'vazio';
 
-export function celulaHeat(area: AreaId, date: string, logs: Record<string, LogDia>, hoje: string): CelulaHeat {
-  const lista = missoesDoDia(diaDe(date)).filter((m) => m.area === area);
+export function celulaHeat(area: AreaId, date: string, logs: Record<string, LogDia>, hoje: string, rotina?: BlocoRotina[]): CelulaHeat {
+  const lista = missoesDoDia(diaDe(date), rotina).filter((m) => m.area === area);
   if (lista.length === 0) return 'vazio';
   if (date > hoje) return 'futuro';
   const feitos = feitosDoDia(logs, date);
@@ -112,7 +112,7 @@ export function metaSemanalMissoes(config: ConfigValente, n: number, area: AreaI
   let missoes = 0;
   let minutos = 0;
   for (const d of datasDaSemana(config, n)) {
-    for (const m of missoesDoDia(diaDe(d))) {
+    for (const m of missoesDoDia(diaDe(d), config.rotina)) {
       if (m.area !== area) continue;
       missoes++;
       minutos += m.duracao || 0;
@@ -126,7 +126,7 @@ export function minutosFeitosSemana(config: ConfigValente, n: number, logs: Reco
   for (const d of datasDaSemana(config, n)) {
     if (d > hoje) continue;
     const feitos = feitosDoDia(logs, d);
-    for (const m of missoesDoDia(diaDe(d))) {
+    for (const m of missoesDoDia(diaDe(d), config.rotina)) {
       if (m.area === area && feitos.includes(m.id)) min += m.duracao || 0;
     }
   }
@@ -156,10 +156,11 @@ export function ultimoPeso(metricas: Record<string, MetricasDia>): { peso: numbe
   return { peso: metricas[d].valores.peso as number, data: d };
 }
 
-export function aderenciaAlimentar(metricas: Record<string, MetricasDia>, datas: string[], hoje: string): number | null {
+export function aderenciaAlimentar(metricas: Record<string, MetricasDia>, datas: string[], hoje: string, meta?: number): number | null {
+  if (!meta || meta <= 0) return null;
   const registrados = datas.filter((d) => d <= hoje && (metricas[d]?.refeicoes?.length || 0) > 0);
   if (!registrados.length) return null;
-  const dentro = registrados.filter((d) => kcalDoDia(metricas, d) <= META_KCAL).length;
+  const dentro = registrados.filter((d) => kcalDoDia(metricas, d) <= meta).length;
   return Math.round((dentro / registrados.length) * 100);
 }
 
@@ -180,14 +181,14 @@ export function sequencia(config: ConfigValente, logs: Record<string, LogDia>, h
   let dias = 0, cheios = 0, minimos = 0;
   let d = hoje;
   const piso = config.ciclo_inicio;
-  const hojeEx = execucaoDia(hoje, logs).pct ?? 0;
+  const hojeEx = execucaoDia(hoje, logs, config.rotina).pct ?? 0;
   if (hojeEx >= LIMITE_DIA_MINIMO) {
     dias++;
     if (hojeEx >= LIMITE_DIA_CHEIO) cheios++; else minimos++;
   }
   d = somaDias(hoje, -1);
   while (d >= piso) {
-    const p = execucaoDia(d, logs).pct ?? 0;
+    const p = execucaoDia(d, logs, config.rotina).pct ?? 0;
     if (p < LIMITE_DIA_MINIMO) break;
     dias++;
     if (p >= LIMITE_DIA_CHEIO) cheios++; else minimos++;
@@ -198,7 +199,7 @@ export function sequencia(config: ConfigValente, logs: Record<string, LogDia>, h
   if (d >= piso && dias > 0 && dias < 3) {
     let maior = 0, cur = 0;
     for (let x = piso; x <= hoje; x = somaDias(x, 1)) {
-      const p = execucaoDia(x, logs).pct ?? 0;
+      const p = execucaoDia(x, logs, config.rotina).pct ?? 0;
       if (p >= LIMITE_DIA_MINIMO) { cur++; maior = Math.max(maior, cur); } else cur = 0;
     }
     emRecuperacao = maior > dias;
@@ -219,9 +220,9 @@ function minutosDe(hhmm: string): number {
 }
 
 export function proximaAcao(
-  hoje: string, agora: Date, estado: (id: string, date?: string) => EstadoMissao,
+  hoje: string, agora: Date, estado: (id: string, date?: string) => EstadoMissao, rotina?: BlocoRotina[],
 ): ProximaAcao | null {
-  const lista = missoesDoDia(diaDe(hoje));
+  const lista = missoesDoDia(diaDe(hoje), rotina);
   const abertas = lista.filter((m) => estado(m.id, hoje) !== 'feita');
   const andamento = abertas.find((m) => estado(m.id, hoje) === 'iniciada');
   if (andamento) return { missao: andamento, motivo: 'em-andamento' };
@@ -263,8 +264,8 @@ export function alertaGeneral(
   config: ConfigValente, n: number, logs: Record<string, LogDia>, metricas: Record<string, MetricasDia>, hoje: string,
 ): Alerta | null {
   const kcal = kcalDoDia(metricas, hoje);
-  if (kcal > META_KCAL) {
-    return { area: 'alimentacao', texto: `Alimentação: ${kcal} kcal registradas hoje, ${kcal - META_KCAL} acima da meta de ${META_KCAL}. Feche o dia com água e sem novos registros.` };
+  if (config.metaKcal && kcal > config.metaKcal) {
+    return { area: 'alimentacao', texto: `Alimentação: ${kcal} kcal registradas hoje. Consulte seu plano confirmado e continue registrando as refeições.` };
   }
   const medidas = porArea(config, n, logs, hoje).filter((x) => x.exec.pct !== null);
   if (!medidas.length) return null;
@@ -308,7 +309,7 @@ export function diagnostico(
   if (fracas.length) frases.push(`Pedem atenção: ${fracas.join(', ')}.`);
 
   const kcal = kcalDoDia(metricas, hoje);
-  if (kcal > 0) frases.push(`Alimentação de hoje: ${kcal} de ${META_KCAL} kcal.`);
+  if (kcal > 0) frases.push(`Alimentação de hoje: ${kcal} kcal registradas.`);
 
   if (proxima) {
     const m = proxima.missao;

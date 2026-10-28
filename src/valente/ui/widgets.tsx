@@ -39,7 +39,7 @@ function MissaoLinha({ m, r }: { m: MissaoComEstado; r: R }) {
       <div className="flex items-center gap-3 py-3">
         <button
           aria-label={feita ? 'Reabrir missão' : 'Concluir missão'}
-          onClick={() => r.mudarMissao(m.id, feita ? 'reabrir' : 'concluir')}
+          onClick={() => r.mudarMissao(m.id, feita ? 'reabrir' : 'concluir').catch(() => undefined)}
           className="w-6 h-6 shrink-0 rounded-sm border flex items-center justify-center cursor-pointer transition-colors"
           style={{ borderColor: feita ? COR.otimo : 'var(--color-line2)', background: feita ? `${COR.otimo}25` : 'transparent' }}
         >
@@ -63,12 +63,12 @@ function MissaoLinha({ m, r }: { m: MissaoComEstado; r: R }) {
           {m.nota && <p className="text-sm text-mute leading-relaxed">{m.nota}</p>}
           <div className="flex gap-2 flex-wrap">
             {!feita && m.estado !== 'iniciada' && (
-              <Botao onClick={() => r.mudarMissao(m.id, 'iniciar')}><Play size={12} className="inline mr-1" />Iniciar</Botao>
+              <Botao onClick={() => r.mudarMissao(m.id, 'iniciar').catch(() => undefined)}><Play size={12} className="inline mr-1" />Iniciar</Botao>
             )}
             {!feita && m.estado !== 'adiada' && (
-              <Botao onClick={() => r.mudarMissao(m.id, 'adiar')}><Pause size={12} className="inline mr-1" />Adiar</Botao>
+              <Botao onClick={() => r.mudarMissao(m.id, 'adiar').catch(() => undefined)}><Pause size={12} className="inline mr-1" />Adiar</Botao>
             )}
-            {m.estado !== 'pendente' && !feita && <Botao onClick={() => r.mudarMissao(m.id, 'reabrir')}>Voltar a pendente</Botao>}
+            {m.estado !== 'pendente' && !feita && <Botao onClick={() => r.mudarMissao(m.id, 'reabrir').catch(() => undefined)}>Voltar a pendente</Botao>}
           </div>
         </div>
       )}
@@ -142,7 +142,7 @@ export function ProximaAcaoCard({ r }: { r: R }) {
           <Botao
             variante="primario"
             className="w-full mt-4 py-3"
-            onClick={() => r.mudarMissao(p.missao.id, p.motivo === 'em-andamento' ? 'concluir' : 'iniciar')}
+            onClick={() => r.mudarMissao(p.missao.id, p.motivo === 'em-andamento' ? 'concluir' : 'iniciar').catch(() => undefined)}
           >
             {p.motivo === 'em-andamento' ? 'Concluir' : 'Iniciar'}
           </Botao>
@@ -322,7 +322,7 @@ export function MapaExecucao({ r }: { r: R }) {
               <tr key={a.id}>
                 <td className="text-[13px] pr-2 whitespace-nowrap text-mute">{a.curto}</td>
                 {datas.map((d) => {
-                  const c = celulaHeat(a.id, d, r.logs, r.hoje);
+                  const c = celulaHeat(a.id, d, r.logs, r.hoje, r.config.rotina);
                   return (
                     <td key={d}>
                       <div
@@ -361,15 +361,16 @@ export function AlimentacaoHoje({ r, ir }: { r: R; ir: Ir }) {
   const kcal = kcalDoDia(r.metricas, r.hoje);
   const m = r.metricas[r.hoje];
   const agua = typeof m?.valores?.agua_ml === 'number' ? (m.valores.agua_ml as number) : 0;
-  const ader = aderenciaAlimentar(r.metricas, datasDaSemana(r.config, r.semana.n), r.hoje);
-  const pct = Math.min(100, Math.round((kcal / META_KCAL) * 100));
-  const cor = kcal > META_KCAL ? COR.critico : COR.otimo;
+  const meta = r.config.metaKcal;
+  const ader = aderenciaAlimentar(r.metricas, datasDaSemana(r.config, r.semana.n), r.hoje, meta);
+  const pct = meta ? Math.min(100, Math.round((kcal / meta) * 100)) : null;
+  const cor = COR.otimo;
   return (
     <section className="painel p-4">
       <Titulo extra={<button className="rotulo cursor-pointer" style={{ color: 'var(--color-cyan)' }} onClick={() => ir({ t: 'area', id: 'alimentacao' })}>Abrir →</button>}>Alimentação hoje</Titulo>
       <div className="flex items-baseline gap-2">
         <span className="text-3xl font-semibold num" style={{ color: kcal > 0 ? cor : undefined }}>{kcal}</span>
-        <span className="text-mute text-sm">de {META_KCAL.toLocaleString('pt-BR')} kcal</span>
+        <span className="text-mute text-sm">{meta ? `de ${meta.toLocaleString('pt-BR')} kcal` : 'kcal registradas · sem meta confirmada'}</span>
       </div>
       <div className="my-3"><Barra pct={pct} cor={cor} alt={5} /></div>
       <dl className="grid grid-cols-3 gap-2 text-sm">

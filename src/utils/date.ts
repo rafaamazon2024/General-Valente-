@@ -1,5 +1,5 @@
 export function todayStr(): string {
-  return dateStr(new Date());
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Manaus' });
 }
 
 export function dateStr(d: Date): string {

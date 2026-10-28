@@ -15,6 +15,8 @@ import { MissaoLinhaPublica } from '../ui/widgets';
 import { TREINO_SPLIT } from '../../config/treinoSplit';
 import { useTreinoHoje } from '../../hooks/useTreinoHoje';
 import { useExercicios } from '../../hooks/useExercicios';
+import { AreaRecords } from './Workspace';
+import BibliotecaExercicios from '../../components/dynamic/BibliotecaExercicios';
 
 type R = ReturnType<typeof useResumo>;
 
@@ -118,10 +120,13 @@ function Livro({ r }: { r: R }) {
 function Refeicoes({ r }: { r: R }) {
   const lista = r.metricas[r.hoje]?.refeicoes || [];
   const kcal = kcalDoDia(r.metricas, r.hoje);
+  const meta = r.config.metaKcal;
+  const [target, setTarget] = useState(String(meta || ''));
+  const [targetError, setTargetError] = useState('');
   const [nome, setNome] = useState('');
   const [k, setK] = useState('');
   const peso = ultimoPeso(r.metricas);
-  const ader = aderenciaAlimentar(r.metricas, datasDaSemana(r.config, r.semana.n), r.hoje);
+  const ader = aderenciaAlimentar(r.metricas, datasDaSemana(r.config, r.semana.n), r.hoje, meta);
   const add = () => {
     const kc = parseInt(k, 10);
     if (!nome.trim() || Number.isNaN(kc)) return;
@@ -130,8 +135,9 @@ function Refeicoes({ r }: { r: R }) {
   };
   return (
     <section className="painel p-4">
-      <Titulo extra={<span className={`num text-lg font-semibold`} style={{ color: kcal > META_KCAL ? COR.critico : undefined }}>{kcal} / {META_KCAL}</span>}>Refeições de hoje</Titulo>
-      <Barra pct={Math.min(100, Math.round((kcal / META_KCAL) * 100))} cor={kcal > META_KCAL ? COR.critico : COR.otimo} alt={6} />
+      <Titulo extra={<span className="num text-lg font-semibold">{kcal} kcal{meta ? ` / ${meta}` : ''}</span>}>Refeições de hoje</Titulo>
+      {meta ? <Barra pct={Math.min(100, Math.round((kcal / meta) * 100))} alt={6} /> : <p className="text-sm text-mute">Sem meta calórica confirmada. O plano alimentar pode ser salvo na seção acima.</p>}
+      <details className="mt-3"><summary className="text-sm text-cyan cursor-pointer">Referência calórica do seu plano (opcional)</summary><label className="block text-sm mt-2">Valor definido no seu plano<input inputMode="numeric" value={target} onChange={e => setTarget(e.target.value)} placeholder="Sem referência" /></label><Botao onClick={async () => { const value = Number(target); if (!Number.isFinite(value) || value < 0) { setTargetError('Informe um valor válido ou deixe vazio.'); return; } try { await r.salvarConfig({ metaKcal: value }); setTargetError(''); } catch { setTargetError('Não foi possível salvar.'); } }}>Salvar referência</Botao>{targetError && <p role="alert" className="text-sm text-bad">{targetError}</p>}</details>
       <div className="mt-3">
         {lista.length === 0 && <Vazio>Nenhuma refeição registrada hoje.</Vazio>}
         {lista.map((x) => (
@@ -461,11 +467,11 @@ function sequenciaArea(r: R, area: AreaId): number {
   let n = 0;
   let d = r.hoje;
   // hoje ainda aberto não quebra a sequência
-  const ex = execucaoDatas([d], r.logs, r.hoje, area);
+  const ex = execucaoDatas([d], r.logs, r.hoje, area, r.config.rotina);
   if (ex.planejado > 0 && ex.feito === ex.planejado) n++;
   d = somaDias(d, -1);
   while (d >= r.config.ciclo_inicio) {
-    const e = execucaoDatas([d], r.logs, r.hoje, area);
+    const e = execucaoDatas([d], r.logs, r.hoje, area, r.config.rotina);
     if (e.planejado === 0) { d = somaDias(d, -1); continue; }
     if (e.feito < e.planejado) break;
     n++;
@@ -537,6 +543,7 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
         </div>
       </section>
 
+      <AreaRecords area={id} />
       <div className="grid gap-4 lg:grid-cols-2 items-start">
         <div className="space-y-4 min-w-0">
           <section className="painel p-4">
@@ -546,7 +553,7 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
                 <textarea rows={3} value={rascunho} onChange={(e) => setRascunho(e.target.value)} />
                 <Botao variante="primario" onClick={() => { r.salvarConfig({ metas: { [id]: rascunho.trim() } }); setEditando(false); }}>Salvar</Botao>
               </div>
-            ) : <p className="text-[15px] leading-relaxed">{metaCiclo}</p>}
+            ) : <><p className="text-[15px] leading-relaxed">{metaCiclo}</p>{!r.config.metas[id] && <p className="text-xs text-warn mt-2">Sugestão existente no aplicativo, ainda sem confirmação. Edite e salve sua meta para este ciclo.</p>}</>}
           </section>
 
           <section className="painel p-4">
@@ -564,7 +571,7 @@ export default function AreaPage({ id, ir }: { id: AreaId; ir: Ir }) {
             {missoes.length === 0 ? <Vazio>Sem missão desta área hoje ({diaDe(r.hoje) === 'SU' ? 'domingo' : 'dia livre'}).</Vazio> : missoes.map((m) => <MissaoLinhaPublica key={m.id} m={m} r={r} />)}
           </section>
 
-          {id === 'esporte' && <Treino r={r} />}
+          {id === 'esporte' && <><Treino r={r} /><section className="legado-claro"><BibliotecaExercicios /></section></>}
         </div>
 
         <div className="space-y-4 min-w-0">

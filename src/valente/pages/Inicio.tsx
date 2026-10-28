@@ -1,143 +1,28 @@
-import { Bell, Search } from 'lucide-react';
-import { useAuth } from '../../components/AuthContext';
+import { ArrowUpRight, BookOpen, CalendarRange, Sparkles } from 'lucide-react';
 import { useResumo, saudacao } from '../useResumo';
 import type { Ir } from '../nav';
-import Capacete, { Logo } from '../ui/Capacete';
+import { AREAS } from '../areas';
 import CorpoMapa from '../ui/CorpoMapa';
-import { Barra, Pct, Titulo } from '../ui/kit';
-import {
-  AlertaCard, AlimentacaoHoje, Big3Card, Consistencia, DiagnosticoCard, EvolucaoAreas, EvolucaoSemanal,
-  MapaExecucao, MissoesDoDia, ProximaAcaoCard, ResumoAreas, TreinoHoje,
-} from '../ui/widgets';
+import { Big3Card, MissoesDoDia } from '../ui/widgets';
+import { TodayEntries } from './Workspace';
 
-function SegmentosSemana({ n }: { n: number }) {
-  return (
-    <div className="flex gap-[3px] mt-1.5 justify-end">
-      {Array.from({ length: 12 }, (_, i) => (
-        <span key={i} className="h-[5px] w-[11px] rounded-[1px]" style={{ background: i < n ? '#2563eb' : 'var(--color-line)' }} />
-      ))}
-    </div>
-  );
-}
-
-function Delta({ v }: { v: number | null }) {
-  if (v === null) return null;
-  return <span className="text-xs num" style={{ color: v >= 0 ? '#34d399' : '#fbbf24' }}>{v >= 0 ? '▲' : '▼'} {Math.abs(v)}%</span>;
-}
-
-function CabecalhoMobile({ r }: { r: ReturnType<typeof useResumo> }) {
-  return (
-    <header className="px-4 pt-4 pb-3">
-      <div className="flex items-center justify-center relative mb-4">
-        <Logo size={28} />
-        <Bell size={18} className="absolute right-0 text-mute" />
-      </div>
-      <div className="flex items-end justify-between">
-        <h1 className="text-[22px] font-semibold whitespace-nowrap">{saudacao(r.agora)}, {r.nome}</h1>
-        <div className="text-right shrink-0">
-          <div className="text-[12px] text-ink num">Semana {r.semana.n} de 12</div>
-          <SegmentosSemana n={r.semana.n} />
-        </div>
-      </div>
-      <div className="painel-destaque px-4 py-3 mt-4">
-        <div className="flex items-baseline justify-between">
-          <span className="text-[15px]">Execução da semana: <Pct v={r.execSemana.pct} className="text-xl font-semibold" /></span>
-          <Delta v={r.delta} />
-        </div>
-        <div className="mt-2"><Barra pct={r.execSemana.pct} cor="#3b82f6" alt={6} /></div>
-      </div>
-      <p className="mt-3 text-[15px] text-mute italic leading-snug border border-line rounded-md px-4 py-3">
-        “{r.frase}” <span className="rotulo not-italic ml-1" style={{ fontSize: 9 }}>General Valente</span>
-      </p>
-    </header>
-  );
-}
-
-export function InicioMobile({ ir }: { ir: Ir }) {
+function Inicio({ ir }: { ir: Ir }) {
   const r = useResumo();
-  return (
-    <div className="pb-6">
-      <CabecalhoMobile r={r} />
-      <div className="px-4 space-y-3 mt-2">
-        <ProximaAcaoCard r={r} />
-        <MissoesDoDia r={r} />
-        <section className="painel px-2 pt-4">
-          <div className="px-2"><Titulo>O homem que estou construindo</Titulo></div>
-          <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[460px] mx-auto" />
-        </section>
-        <Big3Card r={r} />
-        <AlertaCard r={r} ir={ir} />
+  return <div className="gv-page space-y-6">
+    <header className="gv-page-header"><div><p className="text-cyan text-sm">Seu desenvolvimento, um dia de cada vez</p><h1>{saudacao(r.agora)}, {r.nome}.</h1><p>Veja o plano, realize a atividade e dê check.</p></div><button className="gv-pill" onClick={() => ir({ t: 'ciclo' })}><CalendarRange size={16} />Semana {r.semana.n} de 12<ArrowUpRight size={14} /></button></header>
+    <div className="grid gap-5 xl:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.1fr)] items-start">
+      <section className="painel-destaque p-5 xl:sticky xl:top-5">
+        <p className="text-xs text-cyan tracking-widest uppercase">General Valente</p><h2 className="text-xl font-semibold mt-2">O homem que estou construindo</h2><p className="text-sm text-mute mt-2">Toque em uma área para abrir seu plano, práticas e registros.</p>
+        <CorpoMapa pcts={r.pcts} onSelect={id => ir({ t: 'area', id })} className="max-w-[470px] mx-auto mt-7" />
+        <p className="text-xs text-mute text-center">Indicadores do mapa: execução da rotina existente na semana.</p>
+      </section>
+      <div className="space-y-5"><TodayEntries /><Big3Card r={r} />
+        <section className="painel p-4"><h2 className="font-medium">Sua rotina existente</h2><p className="text-sm text-mute mt-1 mb-3">Preservada do aplicativo anterior. Revise os horários e objetivos antes de usá-la como seu plano atual.</p><details><summary className="text-cyan cursor-pointer text-sm">Abrir rotina e checks</summary><div className="mt-3"><MissoesDoDia r={r} comFiltros /><button className="gv-link mt-3" onClick={() => ir({ t: 'rotina' })}>Editar agenda semanal →</button></div></details></section>
+        <div className="grid sm:grid-cols-2 gap-3"><button className="gv-quick" onClick={() => ir({ t: 'biblioteca' })}><BookOpen size={20} /><span><strong>Diário e arquivos</strong><small>Anote, envie e encontre materiais</small></span><ArrowUpRight size={16} /></button><button className="gv-quick" onClick={() => ir({ t: 'assistente' })}><Sparkles size={20} /><span><strong>Falar com o General</strong><small>Organize o próximo passo</small></span><ArrowUpRight size={16} /></button></div>
       </div>
     </div>
-  );
+    <section><h2 className="text-lg font-semibold mb-3">Explore suas áreas</h2><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{AREAS.map(a => { const Icon = a.icon; return <button key={a.id} className="gv-area" onClick={() => ir({ t: 'area', id: a.id })}><Icon size={20} className="text-cyan" /><span>{a.nome}</span><ArrowUpRight size={14} className="text-mute" /></button>; })}</div></section>
+  </div>;
 }
-
-export function InicioDesktop({ ir }: { ir: Ir }) {
-  const r = useResumo();
-  const { user } = useAuth();
-  return (
-    <div className="p-6 space-y-4 max-w-[1700px] mx-auto">
-      <header className="flex items-center justify-between gap-6">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold">{saudacao(r.agora)}, {r.nome}</h1>
-          <p className="text-mute text-[15px] italic mt-0.5 truncate">“{r.frase}”</p>
-        </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="painel px-4 py-2.5 w-[250px]">
-            <div className="flex items-baseline justify-between text-sm">
-              <span>Execução da semana: <Pct v={r.execSemana.pct} className="text-lg font-semibold" /></span>
-              <Delta v={r.delta} />
-            </div>
-            <div className="mt-1.5"><Barra pct={r.execSemana.pct} cor="#3b82f6" alt={5} /></div>
-          </div>
-          <div className="painel px-4 py-2.5">
-            <div className="text-sm num">Semana {r.semana.n} de 12</div>
-            <SegmentosSemana n={r.semana.n} />
-          </div>
-          <button className="painel p-2.5 cursor-pointer" aria-label="Buscar"><Search size={16} className="text-mute" /></button>
-          <button className="painel p-2.5 cursor-pointer" aria-label="Notificações" onClick={() => ir({ t: 'perfil' })}><Bell size={16} /></button>
-          <button onClick={() => ir({ t: 'perfil' })} className="flex items-center gap-2 cursor-pointer">
-            {user?.photoURL
-              ? <img src={user.photoURL} alt="" referrerPolicy="no-referrer" className="w-9 h-9 rounded-full border border-line2" />
-              : <span className="w-9 h-9 rounded-full border border-line2 bg-panel2 flex items-center justify-center text-cyan"><Capacete size={18} /></span>}
-            <span className="text-sm hidden 2xl:block">{r.nome}</span>
-          </button>
-        </div>
-      </header>
-
-      <ResumoAreas r={r} ir={ir} grade limite={3} />
-
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] xl:grid-cols-[380px_minmax(0,1fr)_310px] items-start">
-        {/* Zona esquerda */}
-        <section className="painel p-4 lg:row-span-2 xl:row-span-1">
-          <Titulo>O homem que estou construindo</Titulo>
-          <CorpoMapa pcts={r.pcts} onSelect={(id) => ir({ t: 'area', id })} className="max-w-[440px] mx-auto" />
-        </section>
-
-        {/* Zona central */}
-        <div className="space-y-4 min-w-0">
-          <MissoesDoDia r={r} comFiltros />
-          <Big3Card r={r} />
-        </div>
-
-        {/* Zona direita */}
-        <div className="space-y-4 min-w-0 lg:col-span-2 xl:col-span-1 grid gap-4 lg:grid-cols-2 xl:grid-cols-1 content-start">
-          <ProximaAcaoCard r={r} />
-          <AlertaCard r={r} ir={ir} />
-          <AlimentacaoHoje r={r} ir={ir} />
-          <TreinoHoje r={r} ir={ir} />
-          <Consistencia r={r} />
-        </div>
-      </div>
-
-      <MapaExecucao r={r} />
-
-      <div className="grid gap-4 xl:grid-cols-2">
-        <EvolucaoSemanal r={r} />
-        <EvolucaoAreas r={r} />
-      </div>
-
-      <DiagnosticoCard r={r} ir={ir} largo />
-    </div>
-  );
-}
+export const InicioDesktop = Inicio;
+export const InicioMobile = Inicio;

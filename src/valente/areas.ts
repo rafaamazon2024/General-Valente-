@@ -4,7 +4,7 @@
 import {
   Cross, Mic, BookOpen, Brain, Briefcase, Wind, Utensils, Dumbbell, type LucideIcon,
 } from 'lucide-react';
-import { ROTINA, duracaoMin, type DiaSemana } from '../config/rotinaSeed';
+import { ROTINA, duracaoMin, type DiaSemana, type BlocoRotina } from '../config/rotinaSeed';
 
 export type AreaId =
   | 'espiritual' | 'comunicacao' | 'leitura' | 'memorizacao'
@@ -88,7 +88,7 @@ export const AREAS: AreaDef[] = [
     principal: 'blocos_memorizados',
   },
   {
-    id: 'carreira', nome: 'Carreira', curto: 'Carreira', icon: Briefcase, corpo: 'Braços',
+    id: 'carreira', nome: 'Carreira e estudo', curto: 'Carreira', icon: Briefcase, corpo: 'Braços',
     identidade: 'Construção da agência de IA: 5 horas de trabalho e 3 de estudo por dia útil, mais vendas.',
     metaCicloPadrao: 'Agência de IA funcionando, com pipeline ativo e as primeiras vendas fechadas.',
     metricas: [
@@ -101,7 +101,7 @@ export const AREAS: AreaDef[] = [
     principal: 'prospeccoes',
   },
   {
-    id: 'mindfulness', nome: 'Mindfulness', curto: 'Mindful.', icon: Wind, corpo: 'Cabeça',
+    id: 'mindfulness', nome: 'Mente e atenção', curto: 'Mente', icon: Wind, corpo: 'Cabeça',
     identidade: 'Equilíbrio sem sobrecarga. Meditação, respiração e silêncio como base da atenção.',
     metaCicloPadrao: 'Prática diária de meditação e respiração, com estresse e humor acompanhados.',
     metricas: [
@@ -115,8 +115,8 @@ export const AREAS: AreaDef[] = [
   },
   {
     id: 'alimentacao', nome: 'Alimentação', curto: 'Aliment.', icon: Utensils, corpo: 'Abdômen',
-    identidade: 'Meta de 1.500 kcal por dia, rumo aos 30 kg a menos.',
-    metaCicloPadrao: 'Fechar os dias em até 1.500 kcal e registrar o peso toda semana.',
+    identidade: 'Seu plano alimentar, refeições, hidratação e acompanhamento em um só lugar.',
+    metaCicloPadrao: 'Cadastrar o plano alimentar confirmado e acompanhar sua execução.',
     metricas: [
       { key: 'agua_ml', label: 'Água', tipo: 'num', unidade: 'ml', passo: 250 },
       { key: 'peso', label: 'Peso', tipo: 'num', unidade: 'kg', passo: 0.1 },
@@ -124,11 +124,12 @@ export const AREAS: AreaDef[] = [
     ],
   },
   {
-    id: 'esporte', nome: 'Esporte e Academia', curto: 'Esporte', icon: Dumbbell, corpo: 'Pernas',
+    id: 'esporte', nome: 'Saúde e treinos', curto: 'Saúde', icon: Dumbbell, corpo: 'Pernas',
     identidade: 'Corpo como instrumento: treino de força, trote e cardio, com carga registrada.',
     metaCicloPadrao: 'Cumprir os treinos da semana e progredir a carga nos exercícios principais.',
     metricas: [
       { key: 'km', label: 'Corrida / cardio', tipo: 'num', unidade: 'km', passo: 0.5 },
+      { key: 'sono_horas', label: 'Horas de sono', tipo: 'num', unidade: 'h', passo: 0.5 },
       { key: 'series', label: 'Séries feitas', tipo: 'num', unidade: 'un', passo: 1 },
       { key: 'carga_max', label: 'Maior carga do dia', tipo: 'num', unidade: 'kg', passo: 2.5 },
       { key: 'execucao', label: 'Qualidade da execução', tipo: 'escala', escala: ['ruim', 'ótima'] },
@@ -191,15 +192,21 @@ export const MISSOES: Missao[] = [
   })),
   {
     id: 'alimentacao_dia',
-    titulo: 'Fechar o dia em até 1.500 kcal',
+    titulo: 'Registrar alimentação do dia',
     area: 'alimentacao',
     dias: TODOS,
-    nota: 'Registre as refeições e marque ao fechar o dia dentro da meta.',
+    nota: 'Registre as refeições e siga seu plano alimentar confirmado.',
   },
 ];
 
-export function missoesDoDia(dia: DiaSemana): Missao[] {
-  return MISSOES.filter((m) => m.dias.includes(dia)).sort((a, b) => {
+export function missoesDoDia(dia: DiaSemana, blocos?: BlocoRotina[]): Missao[] {
+  const frentes: Record<string, AreaId> = { espiritualidade: 'espiritual', saude: 'esporte', carreira: 'carreira', financeira: 'carreira', emocional: 'mindfulness', relacionamento: 'comunicacao' };
+  const rotina = blocos ? blocos.flatMap<Missao>(b => {
+    const area = b.id in AREA_DO_BLOCO ? AREA_DO_BLOCO[b.id] : frentes[b.frenteId];
+    return area ? [{ id: b.id, titulo: b.titulo, area, inicio: b.inicio, fim: b.fim, dias: b.dias, duracao: duracaoMin(b), nota: b.nota }] : [];
+  }) : MISSOES;
+  const fonte = blocos ? [...rotina, MISSOES.find(m => m.id === 'alimentacao_dia')!] : rotina;
+  return fonte.filter((m) => m.dias.includes(dia)).sort((a, b) => {
     if (a.inicio && b.inicio) return a.inicio.localeCompare(b.inicio);
     if (a.inicio) return -1;
     if (b.inicio) return 1;

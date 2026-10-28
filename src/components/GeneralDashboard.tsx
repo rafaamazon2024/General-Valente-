@@ -235,8 +235,6 @@ export default function GeneralDashboard({ onNavigate }: GeneralDashboardProps) 
                   fill="#d97706"
                   fillOpacity={0.3}
                   animationDuration={1000}
-                  onClick={(data) => onNavigate?.(data.id)}
-                  className="cursor-pointer hover:fill-opacity-50 transition-all"
                 />
               </RadarChart>
             </ResponsiveContainer>

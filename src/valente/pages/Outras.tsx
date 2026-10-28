@@ -310,7 +310,7 @@ export function RelatoriosPagina({ ir }: { ir: Ir }) {
               const ant = r.semana.n > 1 ? execucaoSemana(r.config, r.semana.n - 1, r.logs, r.hoje, a.id).pct : null;
               const todas: string[] = [];
               for (let d = r.config.ciclo_inicio; d <= r.hoje; d = somaDias(d, 1)) todas.push(d);
-              const ciclo = execucaoDatas(todas, r.logs, r.hoje, a.id).pct;
+              const ciclo = execucaoDatas(todas, r.logs, r.hoje, a.id, r.config.rotina).pct;
               return (
                 <tr key={a.id} className="border-t border-line">
                   <td className="py-2.5"><button className="cursor-pointer hover:text-cyan" onClick={() => ir({ t: 'area', id: a.id })}>{a.nome}</button></td>

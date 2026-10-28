@@ -10,6 +10,9 @@ export type Rota =
   | { t: 'big3' }
   | { t: 'relatorios' }
   | { t: 'revisao' }
+  | { t: 'biblioteca' }
+  | { t: 'assistente' }
+  | { t: 'rotina' }
   | { t: 'area'; id: AreaId };
 
 export type Ir = (r: Rota) => void;

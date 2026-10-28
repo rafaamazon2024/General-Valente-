@@ -48,7 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+      setLoading(false);
       if (user) {
+        try {
         // ... (existing sync logic)
         const userRef = doc(db, 'users', user.uid);
         const userDoc = await getDoc(userRef);
@@ -56,14 +59,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!userDoc.exists()) {
           await setDoc(userRef, {
             email: user.email,
-            displayName: user.displayName,
+            displayName: user.displayName || '',
             photoURL: user.photoURL,
             created_at: new Date().toISOString(),
             alerts_enabled: true,
             alert_time: '08:00'
           });
         }
-        setUser(user);
+        } catch { console.error('Não foi possível sincronizar o perfil. Os registros podem estar indisponíveis.'); }
       } else {
         setUser(null);
       }
@@ -117,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       // Update local state and reflect the new displayName locally
-      setUser({ ...userCredential.user, displayName: name });
+      setUser(userCredential.user);
     } catch (error: any) {
       console.error('Registration error:', error);
       throw error;

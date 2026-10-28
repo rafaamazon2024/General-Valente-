@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { db, collection, query, where, onSnapshot, addDoc, updateDoc, deleteDoc, doc, handleFirestoreError, OperationType } from '../firebase';
 import { useAuth } from '../components/AuthContext';
 import { Exercicio } from '../types';
-import { EXERCICIOS_SEED } from '../config/exerciciosSeed';
 
 export function useExercicios() {
   const { user } = useAuth();
@@ -10,7 +9,6 @@ export function useExercicios() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
-  const seeded = useRef(false);
 
   useEffect(() => {
     if (!user) {
@@ -25,28 +23,7 @@ export function useExercicios() {
     const q = query(collection(db, 'exercicios'), where('uid', '==', user.uid));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
-      // Pré-cadastro (uma vez só): se o usuário nunca teve nenhum exercício, popula a Biblioteca
-      // com EXERCICIOS_SEED. `seeded` evita reseedar em cada re-render antes do snapshot atualizar.
-      if (snapshot.empty && !seeded.current) {
-        seeded.current = true;
-        try {
-          for (const ex of EXERCICIOS_SEED) {
-            await addDoc(collection(db, 'exercicios'), {
-              ...ex,
-              uid: user.uid,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            });
-          }
-        } catch (err) {
-          seeded.current = false; // permite tentar de novo (ex.: após corrigir as regras)
-          const message = handleFirestoreError(err, OperationType.CREATE, 'exercicios');
-          setError(message);
-          setLoading(false);
-        }
-        return; // sucesso: o próprio addDoc vai disparar um novo snapshot com os dados
-      }
-
+      // Somente exercícios existentes ou cadastrados explicitamente pelo usuário.
       const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Exercicio[];
       setExercicios(data);
       setLoading(false);

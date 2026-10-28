@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { BarChart3, CalendarRange, Home, LayoutGrid, Repeat, Target, User as UserIcon } from 'lucide-react';
+import { BarChart3, CalendarRange, Home, LayoutGrid, Repeat, Target, BookOpen, Sparkles, User as UserIcon } from 'lucide-react';
+import { WorkspaceProvider } from './valente/workspace';
+import { AssistantPage, LibraryPage } from './valente/pages/Workspace';
+import Rotina from './pages/Rotina';
 import LockScreen from './components/LockScreen';
 import Login from './pages/Login';
 import { useAuth } from './components/AuthContext';
@@ -30,6 +33,9 @@ export function useDesktop(): boolean {
 export function Pagina({ rota, ir, desktop }: { rota: Rota; ir: Ir; desktop: boolean }) {
   switch (rota.t) {
     case 'inicio': return desktop ? <InicioDesktop ir={ir} /> : <InicioMobile ir={ir} />;
+    case 'biblioteca': return <LibraryPage />;
+    case 'assistente': return <AssistantPage ir={ir} />;
+    case 'rotina': return <div className="gv-page"><Rotina onNavigate={() => ir({ t: 'areas' })} /></div>;
     case 'ciclo': return <CicloPagina ir={ir} />;
     case 'general': return <GeneralPagina ir={ir} />;
     case 'habitos': return <HabitosPagina />;
@@ -44,24 +50,27 @@ export function Pagina({ rota, ir, desktop }: { rota: Rota; ir: Ir; desktop: boo
 
 // Qual item do menu fica aceso para cada rota.
 function itemAtivo(rota: Rota, desktop: boolean): string {
-  if (rota.t === 'area') return desktop ? 'areas' : 'inicio';
+  if (rota.t === 'area') return 'areas';
   if (rota.t === 'revisao') return 'ciclo';
   if (rota.t === 'general' && desktop) return 'relatorios';
   return rota.t;
 }
 
 const MENU_MOBILE: { t: Rota['t']; label: string; icon?: React.ComponentType<{ size?: number }> }[] = [
-  { t: 'inicio', label: 'Início', icon: Home },
-  { t: 'ciclo', label: 'Ciclo', icon: CalendarRange },
-  { t: 'general', label: 'General' },
-  { t: 'habitos', label: 'Hábitos', icon: Repeat },
-  { t: 'perfil', label: 'Perfil', icon: UserIcon },
+  { t: 'inicio', label: 'Hoje', icon: Home },
+  { t: 'areas', label: 'Áreas', icon: LayoutGrid },
+  { t: 'ciclo', label: '12 semanas', icon: CalendarRange },
+  { t: 'biblioteca', label: 'Diário', icon: BookOpen },
+  { t: 'assistente', label: 'Assistente', icon: Sparkles },
 ];
 
 const MENU_DESKTOP: { t: Rota['t']; label: string; icon: React.ComponentType<{ size?: number }> }[] = [
-  { t: 'inicio', label: 'Início', icon: Home },
-  { t: 'ciclo', label: 'Ciclo', icon: CalendarRange },
+  { t: 'inicio', label: 'Hoje', icon: Home },
+  { t: 'ciclo', label: 'Plano de 12 semanas', icon: CalendarRange },
   { t: 'areas', label: 'Áreas da Vida', icon: LayoutGrid },
+  { t: 'biblioteca', label: 'Diário e arquivos', icon: BookOpen },
+  { t: 'assistente', label: 'Assistente IA', icon: Sparkles },
+  { t: 'rotina', label: 'Agenda semanal', icon: CalendarRange },
   { t: 'habitos', label: 'Hábitos', icon: Repeat },
   { t: 'big3', label: 'Big 3', icon: Target },
   { t: 'relatorios', label: 'Relatórios', icon: BarChart3 },
@@ -70,7 +79,7 @@ const MENU_DESKTOP: { t: Rota['t']; label: string; icon: React.ComponentType<{ s
 
 function Casca() {
   const { user } = useAuth();
-  const { carregando } = useValente();
+  const { carregando, erro } = useValente();
   const desktop = useDesktop();
   const [rota, setRota] = useState<Rota>({ t: 'inicio' });
   const [bloqueado, setBloqueado] = useState(() => localStorage.getItem('isLocked') === 'true');
@@ -160,6 +169,8 @@ function Casca() {
       )}
 
       <main className="flex-1 min-w-0" style={{ paddingBottom: desktop ? 0 : 76 }}>
+        {erro && <p role="alert" className="m-4 p-3 border border-bad rounded-lg text-bad text-sm">{erro}</p>}
+        {!desktop && <div className="flex justify-between items-center px-4 py-3 border-b border-line"><Logo size={28} /><button className="gv-link" onClick={() => ir({ t: 'perfil' })}>Perfil e ajustes</button></div>}
         <AnimatePresence mode="wait">
           <motion.div key={rotaKey(rota)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }}>
             <Pagina rota={rota} ir={ir} desktop={desktop} />
@@ -210,8 +221,8 @@ export default function App() {
   if (!user) return <Login />;
 
   return (
-    <ValenteProvider>
-      <Casca />
+    <ValenteProvider key={user.uid}>
+      <WorkspaceProvider><Casca /></WorkspaceProvider>
     </ValenteProvider>
   );
 }

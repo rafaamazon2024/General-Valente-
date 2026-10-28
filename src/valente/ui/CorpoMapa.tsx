@@ -29,7 +29,7 @@ export default function CorpoMapa({ pcts, onSelect, className = '' }: Props) {
     <div className={`relative w-full @container ${className}`} style={{ aspectRatio: '0.82' }}>
       <img
         src="/img/corpo.jpg"
-        alt=""
+        alt="Homem General Valente, mapa interativo das áreas de desenvolvimento pessoal"
         className="absolute top-0 h-full select-none pointer-events-none"
         style={{ left: `${IMG_L}%`, width: `${IMG_W}%`, objectFit: 'cover', mixBlendMode: 'var(--corpo-blend)' as any, maskImage: 'radial-gradient(ellipse closest-side, #000 62%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse closest-side, #000 62%, transparent 100%)' }}
       />

@@ -43,13 +43,13 @@ export function useResumo() {
     const { config, logs, metricas, hoje, estadoMissao } = v;
     const semana = semanaAtual(config, hoje);
     const execSemana = execucaoSemana(config, semana.n, logs, hoje);
-    const execHoje = execucaoDia(hoje, logs);
+    const execHoje = execucaoDia(hoje, logs, config.rotina);
     const anterior = semana.n > 1 ? execucaoSemana(config, semana.n - 1, logs, hoje).pct : null;
     const delta = execSemana.pct !== null && anterior !== null ? execSemana.pct - anterior : null;
     const areas = porArea(config, semana.n, logs, hoje);
     const pcts = Object.fromEntries(areas.map((a) => [a.area, a.exec.pct])) as Record<AreaId, number | null>;
-    const missoes: MissaoComEstado[] = missoesDoDia(diaDe(hoje)).map((m) => ({ ...m, estado: estadoMissao(m.id, hoje) }));
-    const proxima = proximaAcao(hoje, agora, estadoMissao);
+    const missoes: MissaoComEstado[] = missoesDoDia(diaDe(hoje), config.rotina).map((m) => ({ ...m, estado: estadoMissao(m.id, hoje) }));
+    const proxima = proximaAcao(hoje, agora, estadoMissao, config.rotina);
     const alerta = alertaGeneral(config, semana.n, logs, metricas, hoje);
     const nome = primeiroNome(user?.displayName);
     const diag = diagnostico(config, semana.n, logs, metricas, hoje, proxima, nome);

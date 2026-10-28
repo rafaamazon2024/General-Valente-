@@ -8,7 +8,7 @@ interface DynamicTableProps {
   records: GenericRecord[];
   selectedType: string;
   onEdit: (record: GenericRecord) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string | number) => void;
   color: string;
   externalFilters?: {
     searchTerm?: string;
